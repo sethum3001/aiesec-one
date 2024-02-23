@@ -1,16 +1,16 @@
 .main {
-    background-color: $aiesec-blue;
-    color: $aiesec-white;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 4rem;
-    min-height: 100vh;
-    text-align: center;
+  background-color: $aiesec-blue;
+  color: $aiesec-white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 4rem;
+  min-height: 100vh;
+  text-align: center;
 
-    img {
-        margin: 20px;
-        border-radius: 10px;
-    }
+  img {
+    margin: 20px;
+    border-radius: 10px;
+  }
 }
