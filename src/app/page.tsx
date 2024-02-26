@@ -16,10 +16,13 @@ export default function Home() {
         <Title order={1} mt="md" mb="lg">
           AIESEC One
         </Title>
-        <Title order={2} mb="xs">
+        <hr />
+        <Title order={2} mb="xs" mt="lg">
           Welcome {session?.user?.name}
         </Title>
-        <Text>Your email is {session?.user?.email}</Text>
+        <Text mb={4}>Your email is: {session?.user?.email}</Text>
+        <Text mb={4}>Your entity is: {session?.user?.entity}</Text>
+        <Text mb={4}>Your role is: {session?.user?.role}</Text>
       </Container>
       <Button mt="sm" onClick={() => signOut()}>
         Sign out

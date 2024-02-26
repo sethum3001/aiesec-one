@@ -1,24 +1,40 @@
 "use client";
 
-import { Card, Divider, Group, Text, Title } from "@mantine/core";
+import {
+  Card,
+  Container,
+  Divider,
+  Group,
+  Loader,
+  Text,
+  Title,
+  Alert
+} from "@mantine/core";
 import { GoogleButton } from "../components/GoogleButton";
 import { signIn, useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import styles from "./styles.module.scss";
 import Image from "next/image";
 import aiesecHuman from "@app/../../public/aiesec-human-white.png";
 import React, { useState } from "react";
 
 export default function Login() {
+  const searchParams = useSearchParams();
   const { data: session } = useSession();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
+
+  // Check for error message in query params
+  const errorMessage = searchParams.get("error");
 
   const login = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     setIsLoading(true);
     try {
-      await signIn("google", { callbackUrl: process.env.NEXTAUTH_URL });
+      await signIn("google", {
+        callbackUrl: process.env.NEXTAUTH_URL,
+        redirect: true
+      });
     } catch (error) {
       console.error("Sign-in error:", error);
     } finally {
@@ -27,11 +43,17 @@ export default function Login() {
   };
 
   if (session != null) {
-    router.push("/");
-    return null;
+    setTimeout(() => {
+      router.push("/");
+    }, 1000);
+    return (
+      <Container fluid className={styles.fullpage}>
+        <Loader color="#037ef3" type="dots" />
+      </Container>
+    );
   } else {
     return (
-      <main className={styles.login}>
+      <Container fluid className={styles.login}>
         <Card
           shadow="sm"
           padding="lg"
@@ -58,8 +80,19 @@ export default function Login() {
               </Text>
             </GoogleButton>
           </Group>
+          {errorMessage && (
+            <Alert
+              color="red"
+              title="Error"
+              mt="8"
+              radius="lg"
+              className={styles.error}
+            >
+              {errorMessage}
+            </Alert>
+          )}
         </Card>
-      </main>
+      </Container>
     );
   }
 }
