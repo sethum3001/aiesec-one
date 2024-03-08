@@ -20,8 +20,6 @@ export const POST = async (req: Request) => {
     const collection = db.collection("resources");
     await collection.insertOne(newResource);
 
-    // await newResource.save();
-
     return new Response(JSON.stringify(newResource), { status: 201 });
   } catch (error) {
     return new Response("Failed to create a new resource", { status: 500 });

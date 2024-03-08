@@ -1,5 +1,4 @@
 import clientPromise from "@/app/lib/mongodb";
-// import Resource from "@/models/Resource";
 
 export const GET = async () => {
   try {
@@ -7,8 +6,6 @@ export const GET = async () => {
 
     const collection = db.collection("resources");
     const resources = await collection.find({}).toArray();
-
-    // const resources = await Resource.find();
 
     return new Response(JSON.stringify(resources), { status: 200 });
   } catch (error) {
