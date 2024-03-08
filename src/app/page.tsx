@@ -4,7 +4,7 @@ import styles from "./page.module.scss";
 import { signOut, useSession } from "next-auth/react";
 import { Button, Container, Text, Title } from "@mantine/core";
 import Image from "next/image";
-import aiesecHuman from "@app/../../public/aiesec-human-white.png";
+import aiesecHuman from "@app/../../public/aiesec-human-blue.jpg";
 
 export default function Home() {
   const { data: session } = useSession();
