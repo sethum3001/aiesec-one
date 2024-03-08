@@ -13,6 +13,7 @@ import {
 import Image from "next/image";
 import classes from "./styles.module.scss";
 import aiesecHuman from "@app/../../public/aiesec-human-blue.jpg";
+import { signOut } from "next-auth/react";
 
 interface NavbarLinkProps {
   icon: typeof IconHome2;
@@ -78,7 +79,11 @@ export default function Page() {
       </div>
 
       <Stack justify="center" gap={0}>
-        <NavbarLink icon={IconLogout} label="Logout" />
+        <NavbarLink
+          icon={IconLogout}
+          label="Logout"
+          onClick={() => signOut()}
+        />
       </Stack>
     </nav>
   );
