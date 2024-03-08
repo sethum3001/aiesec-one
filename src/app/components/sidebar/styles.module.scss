@@ -4,34 +4,34 @@
     padding: var(--mantine-spacing-xs);
     display: flex;
     flex-direction: column;
-    background-color: var(--mantine-color-blue-filled);
-  }
-  
-  .navbarMain {
+    background-color: $aiesec-blue;
+}
+
+.navbarMain {
     flex: 1;
     margin-top: rem(20px);
-  }
-  
-  .link {
+}
+
+.link {
     width: rem(50px);
     height: rem(50px);
     border-radius: var(--mantine-radius-md);
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--mantine-color-white);
-  
+    color: $aiesec-white;
+
     &:hover {
-      background-color: var(--mantine-color-blue-6);
+        background-color: $aiesec-blue;
     }
-  
+
     &[data-active] {
-      &,
-      &:hover {
-        box-shadow: var(--mantine-shadow-sm);
-        background-color: var(--mantine-color-white);
-        color: var(--mantine-color-blue-6);
-      }
+        &,
+        &:hover {
+            box-shadow: var(--mantine-shadow-sm);
+            background-color: $aiesec-white;
+            color: $aiesec-blue;
+        }
     }
-  }
+}
   

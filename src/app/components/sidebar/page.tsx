@@ -6,21 +6,19 @@ import {
   IconHome2,
   IconGauge,
   IconDeviceDesktopAnalytics,
-  IconFingerprint,
   IconCalendarStats,
   IconUser,
-  IconSettings,
-  IconLogout,
-  IconSwitchHorizontal
+  IconLogout
 } from "@tabler/icons-react";
-//import { AIESECHuman } from "@app/../../public/Walk no background.gif";
 import Image from "next/image";
-import classes from "./navbar.module.css";
+import classes from "./styles.module.scss";
+import aiesecHuman from "@app/../../public/aiesec-human-blue.jpg";
 
 interface NavbarLinkProps {
   icon: typeof IconHome2;
   label: string;
   active?: boolean;
+
   onClick?(): void;
 }
 
@@ -46,7 +44,7 @@ const mockdata = [
   { icon: IconUser, label: "CRM" }
 ];
 
-export default function Sidebar() {
+export default function Page() {
   const [active, setActive] = useState(2);
 
   const links = mockdata.map((link, index) => (
@@ -59,17 +57,16 @@ export default function Sidebar() {
   ));
 
   const imageStyles: React.CSSProperties = {
-    marginTop: -10
+    marginTop: rem(8)
   };
 
   return (
     <nav className={classes.navbar}>
       <Center>
         <Image
-          src="/Walk no background.gif"
+          src={aiesecHuman}
           alt="AIESEC Human"
-          width={70}
-          height={70}
+          width={72}
           style={imageStyles}
         />
       </Center>
@@ -81,7 +78,6 @@ export default function Sidebar() {
       </div>
 
       <Stack justify="center" gap={0}>
-        <NavbarLink icon={IconSwitchHorizontal} label="Change account" />
         <NavbarLink icon={IconLogout} label="Logout" />
       </Stack>
     </nav>
