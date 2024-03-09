@@ -1,6 +1,6 @@
 "use client";
 
-import Page from "@/app/components/sidebar/page";
+import Sidebar from "@/app/components/sidebar/sidebar";
 import { AppShell } from "@mantine/core";
 import { useSession } from "next-auth/react";
 import Loading from "@/app/loading";
@@ -17,7 +17,7 @@ export default function MainAppShell({
     return (
       <AppShell>
         <AppShell.Navbar>
-          <Page />
+          <Sidebar />
         </AppShell.Navbar>
         <AppShell.Main>{children}</AppShell.Main>
       </AppShell>

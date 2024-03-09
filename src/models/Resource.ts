@@ -1,37 +1,30 @@
-/* eslint-disable indent */
-import { Schema, model, models } from "mongoose";
+import mongoose, { model, Schema } from "mongoose";
+import { COLLECTIONS } from "@/app/lib/constants";
 
-const resourceSchema = new Schema(
-  {
-    title: {
-      type: String,
-      required: [true, "Title is required!"]
-    },
-    url: {
-      type: String,
-      required: [true, "URL is required!"],
-      unique: true
-    },
-    description: String,
-    link: {
-      type: String,
-      required: [true, "Link is required!"],
-      unique: true
-    },
-    functions: {
-      type: String,
-      required: [true, "Function is required!"]
-    },
-    keywords: {
-      type: String,
-      required: [true, "Keyword is required!"]
-    }
+const resourceSchema = new Schema({
+  title: {
+    type: String,
+    required: true
+  },
+  url: {
+    type: String,
+    unique: true
+  },
+  description: String,
+  link: {
+    type: String,
+    required: true,
+    unique: true
+  },
+  functions: {
+    type: Array<String>,
+    required: true
+  },
+  keywords: {
+    type: Array<String>,
+    required: true
   }
-  // {
-  //     collection: "resources"
-  // }
-);
+});
 
-const Resource = models.Resource || model("Resource", resourceSchema);
-
-export default Resource;
+export default mongoose.models.Resource ||
+  mongoose.model("Resource", resourceSchema);

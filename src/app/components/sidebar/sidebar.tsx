@@ -45,7 +45,7 @@ const mockdata = [
   { icon: IconUser, label: "CRM" }
 ];
 
-export default function Page() {
+export default function Sidebar() {
   const [active, setActive] = useState(2);
 
   const links = mockdata.map((link, index) => (
