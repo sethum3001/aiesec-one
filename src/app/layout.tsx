@@ -2,7 +2,10 @@ import { Inter } from "next/font/google";
 import "@mantine/core/styles.css";
 import { ColorSchemeScript } from "@mantine/core";
 import Providers from "@/app/components/Providers";
+import MainAppShell from "@/app/components/MainAppShell";
 import { Metadata } from "next";
+import { Suspense } from "react";
+import Loading from "@/app/loading";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,8 +23,13 @@ export default function RootLayout({
         <ColorSchemeScript />
         <title>AIESEC One</title>
       </head>
+
       <body className={inter.className}>
-        <Providers>{children}</Providers>
+        <Suspense fallback={<Loading />}>
+          <Providers>
+            <MainAppShell>{children}</MainAppShell>
+          </Providers>
+        </Suspense>
       </body>
     </html>
   );

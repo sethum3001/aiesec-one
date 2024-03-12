@@ -1,4 +1,5 @@
 import mongoose, { Schema } from "mongoose";
+import { COLLECTIONS } from "@/app/lib/constants";
 
 const UserSchema = new Schema(
   {
@@ -9,7 +10,7 @@ const UserSchema = new Schema(
     entity: String
   },
   {
-    collection: "users"
+    collection: COLLECTIONS.USERS
   }
 );
 

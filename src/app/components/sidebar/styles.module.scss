@@ -1,0 +1,36 @@
+.navbar {
+  width: calc(4.5rem * var(--mantine-scale));
+  height: 100vh;
+  padding: var(--mantine-spacing-xs);
+  display: flex;
+  flex-direction: column;
+  background-color: $aiesec-blue;
+
+  .navbarMain {
+    flex: 1;
+    margin-top: rem(20px);
+  }
+
+  .link {
+    width: rem(50px);
+    height: rem(50px);
+    border-radius: var(--mantine-radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: $aiesec-white;
+
+    &:hover {
+      background-color: $aiesec-blue;
+    }
+
+    &[data-active] {
+      &,
+      &:hover {
+        box-shadow: var(--mantine-shadow-sm);
+        background-color: $aiesec-white;
+        color: $aiesec-blue;
+      }
+    }
+  }
+}
