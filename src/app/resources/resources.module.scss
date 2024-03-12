@@ -1,0 +1,38 @@
+.header {
+  position: sticky;
+  top: 0;
+  background-color: #5f5d9c;
+  transition: box-shadow 150ms ease;
+
+  &::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-bottom: rem(1px) solid
+      light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-3));
+  }
+}
+
+.scrolled {
+  box-shadow: var(--mantine-shadow-sm);
+}
+
+.button {
+  color: #fff; /* text-white */
+  font-weight: bold; /* font-bold */
+  padding: 0.5rem 1rem; /* py-2 px-4 */
+  border-radius: 0.25rem; /* rounded */
+  transition: background-color 0.3s ease; /* hover effect */
+  border: none; /* removing default button border */
+  cursor: pointer; /* cursor style */
+}
+
+.search {
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
