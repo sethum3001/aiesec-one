@@ -16,14 +16,8 @@ const resourceSchema = new Schema({
     required: true,
     unique: true
   },
-  functions: {
-    type: Array<String>,
-    required: true
-  },
-  keywords: {
-    type: Array<String>,
-    required: true
-  }
+  functions: Array<String>,
+  keywords: Array<String>
 });
 
 export default mongoose.models.Resource ||

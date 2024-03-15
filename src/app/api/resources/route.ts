@@ -10,6 +10,8 @@ import {
   errorResponse,
   successResponse
 } from "@/app/util/apiUtils";
+import { ResourceDTO } from "@/app/dto/resourceDTO";
+import { validate } from "class-validator";
 
 export const GET = async () => {
   try {
@@ -31,27 +33,59 @@ export const POST = async (req: Request) => {
   const { title, url, description, link, functions, keywords } =
     await req.json();
 
+  let resourceDTO = new ResourceDTO();
+
+  (resourceDTO.title = title),
+    (resourceDTO.url = url),
+    (resourceDTO.description = description),
+    (resourceDTO.link = link),
+    (resourceDTO.functions = functions),
+    (resourceDTO.keywords = keywords);
+
+  const validationResults = await validate(resourceDTO);
+
+  if (!validationResults[0]) {
+    try {
+      const db = (await clientPromise).db();
+
+      const newResource = new Resource({
+        title,
+        url,
+        description,
+        link,
+        functions,
+        keywords
+      });
+
+      const result = await db
+        .collection(COLLECTIONS.RESOURCES)
+        .insertOne(newResource);
+
+      return createdResponse(SUCCESS_MESSAGES.RESOURCE_CREATED, {
+        _id: result.insertedId
+      });
+    } catch (error) {
+      console.error(error);
+      return errorResponse(ERROR_MESSAGES.RESOURCE_CREATE_FAILED, error);
+    }
+  } else {
+    return errorResponse(
+      ERROR_MESSAGES.RESOURCE_VALIDATION_FAILED,
+      validationResults,
+      400
+    );
+  }
+};
+
+export const DELETE = async () => {
   try {
     const db = (await clientPromise).db();
 
-    const newResource = new Resource({
-      title,
-      url,
-      description,
-      link,
-      functions,
-      keywords
-    });
+    await db.collection(COLLECTIONS.RESOURCES).deleteMany();
 
-    const result = await db
-      .collection(COLLECTIONS.RESOURCES)
-      .insertOne(newResource);
-
-    return createdResponse(SUCCESS_MESSAGES.RESOURCE_CREATED, {
-      _id: result.insertedId
-    });
+    return successResponse("Deleted All");
   } catch (error) {
     console.error(error);
-    return errorResponse(ERROR_MESSAGES.RESOURCE_CREATE_FAILED, error);
+    return errorResponse("Deletion failed", error);
   }
 };

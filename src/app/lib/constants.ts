@@ -28,5 +28,6 @@ export const ERROR_MESSAGES = {
   RESOURCE_UPDATE_FAILED: "Failed to update resource",
   RESOURCE_DELETE_FAILED: "Failed to delete resource",
   RESOURCE_NOT_FOUND: "Resource not found",
-  RESOURCE_ID_INVALID: "Invalid resource ID"
+  RESOURCE_ID_INVALID: "Invalid resource ID",
+  RESOURCE_VALIDATION_FAILED: "Validation Error"
 };

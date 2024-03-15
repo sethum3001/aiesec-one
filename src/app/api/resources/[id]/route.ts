@@ -10,6 +10,8 @@ import {
 } from "@/app/lib/constants";
 import Resource from "@/models/Resource";
 import { errorResponse, successResponse } from "@/app/util/apiUtils";
+import { ResourceDTO } from "@/app/dto/resourceDTO";
+import { validate } from "class-validator";
 
 export const GET = async (
   req: NextRequest,
@@ -66,27 +68,46 @@ export const PUT = async (
       );
     }
 
-    const db = (await clientPromise).db();
+    let resourceDTO = new ResourceDTO();
 
-    // Update the document
-    const result = await db.collection(COLLECTIONS.RESOURCES).updateOne(
-      { _id: new ObjectId(id) },
-      {
-        $set: {
-          title,
-          url,
-          description,
-          link,
-          functions,
-          keywords
+    (resourceDTO.title = title),
+      (resourceDTO.url = url),
+      (resourceDTO.description = description),
+      (resourceDTO.link = link),
+      (resourceDTO.functions = functions),
+      (resourceDTO.keywords = keywords);
+
+    const validationResults = await validate(resourceDTO);
+
+    if (!validationResults[0]) {
+      const db = (await clientPromise).db();
+
+      // Update the document
+      const result = await db.collection(COLLECTIONS.RESOURCES).updateOne(
+        { _id: new ObjectId(id) },
+        {
+          $set: {
+            title,
+            url,
+            description,
+            link,
+            functions,
+            keywords
+          }
         }
-      }
-    );
+      );
 
-    if (result.modifiedCount > 0) {
-      return successResponse(SUCCESS_MESSAGES.RESOURCE_UPDATED, { _id: id });
+      if (result.modifiedCount > 0) {
+        return successResponse(SUCCESS_MESSAGES.RESOURCE_UPDATED, { _id: id });
+      } else {
+        return errorResponse(ERROR_MESSAGES.RESOURCE_NOT_FOUND);
+      }
     } else {
-      return errorResponse(ERROR_MESSAGES.RESOURCE_NOT_FOUND);
+      return errorResponse(
+        ERROR_MESSAGES.RESOURCE_VALIDATION_FAILED,
+        validationResults,
+        400
+      );
     }
   } catch (error) {
     console.error(error);
