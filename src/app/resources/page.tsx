@@ -1,324 +1,393 @@
 "use client";
-import cx from "clsx";
-import { useState } from "react";
-import { TextInput, Table, ScrollArea, rem, keys } from "@mantine/core";
-import { IconSearch } from "@tabler/icons-react";
+import { useMemo, useState } from "react";
+import {
+  MRT_EditActionButtons,
+  MantineReactTable,
+  // createRow,
+  type MRT_ColumnDef,
+  type MRT_Row,
+  type MRT_TableOptions,
+  useMantineReactTable,
+  MRT_GlobalFilterTextInput
+} from "mantine-react-table";
+import {
+  ActionIcon,
+  Button,
+  Flex,
+  Stack,
+  Text,
+  Title,
+  Tooltip,
+  rem,
+  Box
+} from "@mantine/core";
+import { ModalsProvider, modals } from "@mantine/modals";
+import { IconEdit, IconTrash } from "@tabler/icons-react";
+import {
+  QueryClient,
+  QueryClientProvider,
+  useMutation,
+  useQuery,
+  useQueryClient
+} from "@tanstack/react-query";
+import { type User, fakeData, usStates } from "./makeData";
 import classes from "./resources.module.scss";
 
-const data = [
-  {
-    title: "Athena Weissnat",
-    function: "Little - Rippin",
-    link: "Elouise.Prohaska@yahoo.com",
-    visits: 12,
-    entity: "CS"
-  },
-  {
-    title: "Deangelo Runolfsson",
-    function: "Greenfelder - Krajcik",
-    link: "Kadin_Trantow87@yahoo.com",
-    visits: 12,
-    entity: "CS"
-  },
-  {
-    title: "Danny Carter",
-    function: "Kohler and Sons",
-    link: "Marina3@hotmail.com",
-    visits: 12,
-    entity: "CS"
-  },
-  {
-    title: "Trace Tremblay PhD",
-    function: "Crona, Aufderhar and Senger",
-    link: "Antonina.Pouros@yahoo.com",
-    visits: 12,
-    entity: "CS"
-  },
-  {
-    title: "Derek Dibbert",
-    function: "Gottlieb LLC",
-    link: "Abagail29@hotmail.com",
-    visits: 12,
-    entity: "CS"
-  },
-  {
-    title: "Viola Bernhard",
-    function: "Funk, Rohan and Kreiger",
-    link: "Jamie23@hotmail.com",
-    visits: 12,
-    entity: "CS"
-  },
-  {
-    title: "Austin Jacobi",
-    function: "Botsford - Corwin",
-    link: "Genesis42@yahoo.com",
-    visits: 12,
-    entity: "CS"
-  },
-  {
-    title: "Hershel Mosciski",
-    function: "Okuneva, Farrell and Kilback",
-    link: "Idella.Stehr28@yahoo.com",
-    visits: 12,
-    entity: "CS"
-  },
-  {
-    title: "Mylene Ebert",
-    function: "Kirlin and Sons",
-    link: "Hildegard17@hotmail.com",
-    visits: 12,
-    entity: "CS"
-  },
-  {
-    title: "Lou Trantow",
-    function: "Parisian - Lemke",
-    link: "Hillard.Barrows1@hotmail.com",
-    visits: 12,
-    entity: "CS"
-  },
-  {
-    title: "Dariana Weimann",
-    function: "Schowalter - Donnelly",
-    link: "Colleen80@gmail.com",
-    visits: 12,
-    entity: "CS"
-  },
-  {
-    title: "Dr. Christy Herman",
-    function: "VonRueden - Labadie",
-    link: "Lilyan98@gmail.com",
-    visits: 12,
-    entity: "CS"
-  },
-  {
-    title: "Katelin Schuster",
-    function: "Jacobson - Smitham",
-    link: "Erich_Brekke76@gmail.com",
-    visits: 12,
-    entity: "CS"
-  },
-  {
-    title: "Melyna Macejkovic",
-    function: "Schuster LLC",
-    link: "Kylee4@yahoo.com",
-    visits: 12,
-    entity: "CS"
-  },
-  {
-    title: "Pinkie Rice",
-    function: "Wolf, Trantow and Zulauf",
-    link: "Fiona.Kutch@hotmail.com",
-    visits: 12,
-    entity: "CS"
-  },
-  {
-    title: "Brain Kreiger",
-    function: "Lueilwitz Group",
-    link: "Rico98@hotmail.com",
-    visits: 12,
-    entity: "CS"
-  },
-  {
-    title: "Myrtice McGlynn",
-    function: "Feest, Beahan and Johnston",
-    link: "Julius_Tremblay29@hotmail.com",
-    visits: 12,
-    entity: "CS"
-  },
-  {
-    title: "Chester Carter PhD",
-    function: "Gaylord - Labadie",
-    link: "Jensen_McKenzie@hotmail.com",
-    visits: 12,
-    entity: "CS"
-  },
-  {
-    title: "Mrs. Ericka Bahringer",
-    function: "Conn and Sons",
-    link: "Lisandro56@hotmail.com",
-    visits: 12,
-    entity: "CS"
-  },
-  {
-    title: "Korbin Buckridge Sr.",
-    function: "Mraz, Rolfson and Predovic",
-    link: "Leatha9@yahoo.com",
-    visits: 12,
-    entity: "CS"
-  },
-  {
-    title: "Dr. Daisy Becker",
-    function: "Carter - Mueller",
-    link: "Keaton_Sanford27@gmail.com",
-    visits: 12,
-    entity: "CS"
-  },
-  {
-    title: "Derrick Buckridge Sr.",
-    function: "O'Reilly LLC",
-    link: "Kay83@yahoo.com",
-    visits: 12,
-    entity: "CS"
-  },
-  {
-    title: "Ernie Hickle",
-    function: "Terry, O'Reilly and Farrell",
-    link: "Americo.Leffler89@gmail.com",
-    visits: 12,
-    entity: "CS"
-  },
-  {
-    title: "Jewell Littel",
-    function: "O'Connell Group",
-    link: "Hester.Hettinger9@hotmail.com",
-    visits: 12,
-    entity: "CS"
-  },
-  {
-    title: "Cyrus Howell",
-    function: "Windler, Yost and Fadel",
-    link: "Rick0@gmail.com",
-    visits: 12,
-    entity: "CS"
-  },
-  {
-    title: "Dr. Orie Jast",
-    function: "Hilll - Pacocha",
-    link: "Anna56@hotmail.com",
-    visits: 12,
-    entity: "CS"
-  },
-  {
-    title: "Luisa Murphy",
-    function: "Turner and Sons",
-    link: "Christine32@yahoo.com",
-    visits: 12,
-    entity: "CS"
-  },
-  {
-    title: "Lea Witting",
-    function: "Hodkiewicz Inc",
-    link: "Ford_Kovacek4@yahoo.com",
-    visits: 12,
-    entity: "CS"
-  },
-  {
-    title: "Kelli Runolfsson",
-    function: "Feest - O'Hara",
-    link: "Dimitri87@yahoo.com",
-    visits: 12,
-    entity: "CS"
-  },
-  {
-    title: "Brook Gaylord",
-    function: "Conn, Huel and Nader",
-    link: "Immanuel77@gmail.com",
-    visits: 12,
-    entity: "CS"
-  }
-];
+const Example = () => {
+  const [validationErrors, setValidationErrors] = useState<
+    Record<string, string | undefined>
+  >({});
 
-interface RowData {
-  title: string;
-  function: string;
-  link: string;
-  visits: number;
-  entity: string;
-}
+  const columns = useMemo<MRT_ColumnDef<User>[]>(
+    () => [
+      // {
+      //   accessorKey: "id",
+      //   header: "Id",
+      //   enableEditing: false,
+      //   size: 80,
+      // },
+      {
+        accessorKey: "title",
+        header: "Title",
+        mantineEditTextInputProps: {
+          type: "email",
+          required: true,
+          error: validationErrors?.firstName,
+          //remove any previous validation errors when user focuses on the input
+          onFocus: () =>
+            setValidationErrors({
+              ...validationErrors,
+              firstName: undefined
+            })
+          //optionally add validation checking for onBlur or onChange
+        }
+      },
+      {
+        accessorKey: "function",
+        header: "Function",
+        mantineEditTextInputProps: {
+          type: "email",
+          required: true,
+          error: validationErrors?.lastName,
+          //remove any previous validation errors when user focuses on the input
+          onFocus: () =>
+            setValidationErrors({
+              ...validationErrors,
+              lastName: undefined
+            })
+        }
+      },
+      {
+        accessorKey: "entity",
+        header: "Entity",
+        mantineEditTextInputProps: {
+          type: "email",
+          required: true,
+          error: validationErrors?.email,
+          //remove any previous validation errors when user focuses on the input
+          onFocus: () =>
+            setValidationErrors({
+              ...validationErrors,
+              email: undefined
+            })
+        }
+      },
+      {
+        accessorKey: "views",
+        header: "Views",
+        editVariant: "select",
+        mantineEditSelectProps: {
+          data: usStates,
+          error: validationErrors?.state
+        }
+      }
+    ],
+    [validationErrors]
+  );
 
-function filterData(data: RowData[], search: string, field: string) {
-  const query = search.toLowerCase().trim();
-  return data.filter((item) => item.title.toLowerCase().includes(query));
-}
+  //call CREATE hook
+  const { mutateAsync: createUser, isLoading: isCreatingUser } =
+    useCreateUser();
+  //call READ hook
+  const {
+    data: fetchedUsers = [],
+    isError: isLoadingUsersError,
+    isFetching: isFetchingUsers,
+    isLoading: isLoadingUsers
+  } = useGetUsers();
+  //call UPDATE hook
+  const { mutateAsync: updateUser, isLoading: isUpdatingUser } =
+    useUpdateUser();
+  //call DELETE hook
+  const { mutateAsync: deleteUser, isLoading: isDeletingUser } =
+    useDeleteUser();
 
-export default function TableScrollArea() {
-  const [search, setSearch] = useState("");
-  const [tbData, setTbData] = useState(data);
-  const [scrolled, setScrolled] = useState(false);
+  //CREATE action
+  const handleCreateUser: MRT_TableOptions<User>["onCreatingRowSave"] = async ({
+    values,
+    exitCreatingMode
+  }) => {
+    const newValidationErrors = validateUser(values);
+    if (Object.values(newValidationErrors).some((error) => error)) {
+      setValidationErrors(newValidationErrors);
+      return;
+    }
+    setValidationErrors({});
+    await createUser(values);
+    exitCreatingMode();
+  };
 
-  const handleSearchChange =
-    (field: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
-      const { value } = event.currentTarget;
-      setSearch(value);
-      setTbData(filterData(data, search, field));
-    };
+  //UPDATE action
+  const handleSaveUser: MRT_TableOptions<User>["onEditingRowSave"] = async ({
+    values,
+    table
+  }) => {
+    const newValidationErrors = validateUser(values);
+    if (Object.values(newValidationErrors).some((error) => error)) {
+      setValidationErrors(newValidationErrors);
+      return;
+    }
+    setValidationErrors({});
+    await updateUser(values);
+    table.setEditingRow(null); //exit editing mode
+  };
 
-  const rows = tbData.map((row) => (
-    <Table.Tr key={row.title}>
-      <Table.Td>{row.title}</Table.Td>
-      <Table.Td>{row.function}</Table.Td>
-      <Table.Td>{row.link}</Table.Td>
-      <Table.Td>{row.visits}</Table.Td>
-      <Table.Td>{row.entity}</Table.Td>
-      <Table.Td>
-        <button className={classes.button} style={{ backgroundColor: "blue" }}>
-          Open
-        </button>
-      </Table.Td>
-      <Table.Td>
-        <button className={classes.button} style={{ backgroundColor: "green" }}>
-          Edit
-        </button>
-      </Table.Td>
-      <Table.Td>
-        <button className={classes.button} style={{ backgroundColor: "red" }}>
-          Delete
-        </button>
-      </Table.Td>
-    </Table.Tr>
-  ));
+  //DELETE action
+  const openDeleteConfirmModal = (row: MRT_Row<User>) =>
+    modals.openConfirmModal({
+      title: "Are you sure you want to delete this user?",
+      children: (
+        <Text>
+          Are you sure you want to delete {row.original.title} ? This action
+          cannot be undone.
+        </Text>
+      ),
+      labels: { confirm: "Delete", cancel: "Cancel" },
+      confirmProps: { color: "red" },
+      onConfirm: () => deleteUser(row.original.id)
+    });
+
+  const table = useMantineReactTable({
+    columns,
+    data: fetchedUsers,
+    createDisplayMode: "modal", //default ("row", and "custom" are also available)
+    editDisplayMode: "modal", //default ("row", "cell", "table", and "custom" are also available)
+    enableEditing: true,
+    getRowId: (row) => row.id,
+    mantineToolbarAlertBannerProps: isLoadingUsersError
+      ? {
+          color: "red",
+          children: "Error loading data"
+        }
+      : undefined,
+    mantineTableContainerProps: {
+      // sx: {
+      //   minHeight: "500px",
+      // },
+    },
+    onCreatingRowCancel: () => setValidationErrors({}),
+    onCreatingRowSave: handleCreateUser,
+    onEditingRowCancel: () => setValidationErrors({}),
+    onEditingRowSave: handleSaveUser,
+    renderCreateRowModalContent: ({ table, row, internalEditComponents }) => (
+      <Stack>
+        <Title order={3}>Create New User</Title>
+        {internalEditComponents}
+        <Flex justify="flex-end" mt="xl">
+          <MRT_EditActionButtons variant="text" table={table} row={row} />
+        </Flex>
+      </Stack>
+    ),
+    renderEditRowModalContent: ({ table, row, internalEditComponents }) => (
+      <Stack>
+        <Title order={3}>Edit User</Title>
+        {internalEditComponents}
+        <Flex justify="flex-end" mt="xl">
+          <MRT_EditActionButtons variant="text" table={table} row={row} />
+        </Flex>
+      </Stack>
+    ),
+    renderRowActions: ({ row, table }) => (
+      <Flex gap="md">
+        <Tooltip label="Edit">
+          <ActionIcon onClick={() => table.setEditingRow(row)}>
+            <IconEdit />
+          </ActionIcon>
+        </Tooltip>
+        <Tooltip label="Delete">
+          <ActionIcon color="red" onClick={() => openDeleteConfirmModal(row)}>
+            <IconTrash />
+          </ActionIcon>
+        </Tooltip>
+      </Flex>
+    ),
+    renderTopToolbarCustomActions: ({ table }) => (
+      <>
+        {/* <Button
+          onClick={() => {
+            table.setCreatingRow(true); //simplest way to open the create row modal with no default values
+            //or you can pass in a row object to set default values with the `createRow` helper function
+            // table.setCreatingRow(
+            //   createRow(table, {
+            //     //optionally pass in default values for the new row, useful for nested data or other complex scenarios
+            //   }),
+            // );
+          }}
+        >
+          Create New User
+        </Button> */}
+      </>
+    ),
+    renderToolbarInternalActions: ({ table }) => <></>,
+    initialState: { showGlobalFilter: true },
+    state: {
+      isLoading: isLoadingUsers,
+      isSaving: isCreatingUser || isUpdatingUser || isDeletingUser,
+      showAlertBanner: isLoadingUsersError,
+      showProgressBars: isFetchingUsers
+    }
+  });
 
   return (
-    <div>
-      <div className={classes.search}>
-        <TextInput
-          placeholder="Search by Title"
-          mb="md"
-          leftSection={
-            <IconSearch
-              style={{ width: rem(16), height: rem(16) }}
-              stroke={1.5}
-            />
-          }
-          value={search}
-          onChange={handleSearchChange("title")}
-        />
-        {/* <TextInput
-          placeholder="Search by Entity"
-          mb="md"
-          leftSection={
-            <IconSearch
-              style={{ width: rem(16), height: rem(16) }}
-              stroke={1.5}
-            />
-          }
-          value={search}
-          onChange={handleSearchChange("entity")}
-        /> */}
-      </div>
-
-      <ScrollArea
-        h={700}
-        onScrollPositionChange={({ y }) => setScrolled(y !== 0)}
+    <div className={classes.body}>
+      <Title my={20} order={1} style={{ color: "#1C7ED6" }}>
+        Resources
+      </Title>
+      <Box
+        my={20}
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-between"
+        }}
       >
-        <Table miw={700}>
-          <Table.Thead
-            className={cx(classes.header, { [classes.scrolled]: scrolled })}
-          >
-            <Table.Tr>
-              <Table.Th>Title</Table.Th>
-              <Table.Th>Function</Table.Th>
-              <Table.Th>Link</Table.Th>
-              <Table.Th>Visits</Table.Th>
-              <Table.Th>Entity</Table.Th>
-              <Table.Th></Table.Th>
-              <Table.Th></Table.Th>
-              <Table.Th></Table.Th>
-            </Table.Tr>
-          </Table.Thead>
-          <Table.Tbody>{rows}</Table.Tbody>
-        </Table>
-      </ScrollArea>
+        <Button
+          onClick={() => {
+            table.setCreatingRow(true); //simplest way to open the create row modal with no default values
+            //or you can pass in a row object to set default values with the `createRow` helper function
+            // table.setCreatingRow(
+            //   createRow(table, {
+            //     //optionally pass in default values for the new row, useful for nested data or other complex scenarios
+            //   }),
+            // );
+          }}
+        >
+          Create New User
+        </Button>
+      </Box>
+      <div>
+        <MantineReactTable table={table} />
+      </div>
     </div>
   );
+};
+
+//CREATE hook (post new user to api)
+function useCreateUser() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (user: User) => {
+      //send api update request here
+      await new Promise((resolve) => setTimeout(resolve, 1000)); //fake api call
+      return Promise.resolve();
+    },
+    //client side optimistic update
+    onMutate: (newUserInfo: User) => {
+      queryClient.setQueryData(
+        ["users"],
+        (prevUsers: any) =>
+          [
+            ...prevUsers,
+            {
+              ...newUserInfo,
+              id: (Math.random() + 1).toString(36).substring(7)
+            }
+          ] as User[]
+      );
+    }
+    // onSettled: () => queryClient.invalidateQueries({ queryKey: ["users"] }), //refetch users after mutation, disabled for demo
+  });
+}
+
+//READ hook (get users from api)
+function useGetUsers() {
+  return useQuery<User[]>({
+    queryKey: ["users"],
+    queryFn: async () => {
+      //send api request here
+      await new Promise((resolve) => setTimeout(resolve, 1000)); //fake api call
+      return Promise.resolve(fakeData);
+    },
+    refetchOnWindowFocus: false
+  });
+}
+
+//UPDATE hook (put user in api)
+function useUpdateUser() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (user: User) => {
+      //send api update request here
+      await new Promise((resolve) => setTimeout(resolve, 1000)); //fake api call
+      return Promise.resolve();
+    },
+    //client side optimistic update
+    onMutate: (newUserInfo: User) => {
+      queryClient.setQueryData(["users"], (prevUsers: any) =>
+        prevUsers?.map((prevUser: User) =>
+          prevUser.id === newUserInfo.id ? newUserInfo : prevUser
+        )
+      );
+    }
+    // onSettled: () => queryClient.invalidateQueries({ queryKey: ["users"] }), //refetch users after mutation, disabled for demo
+  });
+}
+
+//DELETE hook (delete user in api)
+function useDeleteUser() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (userId: string) => {
+      //send api update request here
+      await new Promise((resolve) => setTimeout(resolve, 1000)); //fake api call
+      return Promise.resolve();
+    },
+    //client side optimistic update
+    onMutate: (userId: string) => {
+      queryClient.setQueryData(["users"], (prevUsers: any) =>
+        prevUsers?.filter((user: User) => user.id !== userId)
+      );
+    }
+    // onSettled: () => queryClient.invalidateQueries({ queryKey: ["users"] }), //refetch users after mutation, disabled for demo
+  });
+}
+
+const queryClient = new QueryClient();
+
+const ExampleWithProviders = () => (
+  //Put this with your other react-query providers near root of your app
+  <QueryClientProvider client={queryClient}>
+    <ModalsProvider>
+      <Example />
+    </ModalsProvider>
+  </QueryClientProvider>
+);
+
+export default ExampleWithProviders;
+
+const validateRequired = (value: string) => !!value.length;
+const validateEmail = (email: string) =>
+  !!email.length &&
+  email
+    .toLowerCase()
+    .match(
+      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    );
+
+function validateUser(user: User) {
+  return {
+    firstName: !validateRequired(user.title) ? "First Name is Required" : ""
+    // lastName: !validateRequired(user.lastName) ? "Last Name is Required" : "",
+    // email: !validateEmail(user.email) ? "Incorrect Email Format" : "",
+  };
 }
