@@ -1,4 +1,7 @@
 "use client";
+import "@mantine/core/styles.css";
+import "@mantine/dates/styles.css"; //if using mantine date picker features
+import "mantine-react-table/styles.css"; //make sure MRT styles were imported in your app root (once)
 import { useMemo, useState } from "react";
 import {
   MRT_EditActionButtons,
@@ -7,8 +10,7 @@ import {
   type MRT_ColumnDef,
   type MRT_Row,
   type MRT_TableOptions,
-  useMantineReactTable,
-  MRT_GlobalFilterTextInput
+  useMantineReactTable
 } from "mantine-react-table";
 import {
   ActionIcon,
@@ -18,7 +20,6 @@ import {
   Text,
   Title,
   Tooltip,
-  rem,
   Box
 } from "@mantine/core";
 import { ModalsProvider, modals } from "@mantine/modals";
@@ -40,15 +41,15 @@ const Example = () => {
 
   const columns = useMemo<MRT_ColumnDef<User>[]>(
     () => [
-      // {
-      //   accessorKey: "id",
-      //   header: "Id",
-      //   enableEditing: false,
-      //   size: 80,
-      // },
       {
-        accessorKey: "title",
-        header: "Title",
+        accessorKey: "id",
+        header: "Id",
+        enableEditing: false,
+        size: 80
+      },
+      {
+        accessorKey: "firstName",
+        header: "First Name",
         mantineEditTextInputProps: {
           type: "email",
           required: true,
@@ -63,8 +64,8 @@ const Example = () => {
         }
       },
       {
-        accessorKey: "function",
-        header: "Function",
+        accessorKey: "lastName",
+        header: "Last Name",
         mantineEditTextInputProps: {
           type: "email",
           required: true,
@@ -78,8 +79,8 @@ const Example = () => {
         }
       },
       {
-        accessorKey: "entity",
-        header: "Entity",
+        accessorKey: "email",
+        header: "Email",
         mantineEditTextInputProps: {
           type: "email",
           required: true,
@@ -93,8 +94,8 @@ const Example = () => {
         }
       },
       {
-        accessorKey: "views",
-        header: "Views",
+        accessorKey: "state",
+        header: "State",
         editVariant: "select",
         mantineEditSelectProps: {
           data: usStates,
@@ -106,7 +107,7 @@ const Example = () => {
   );
 
   //call CREATE hook
-  const { mutateAsync: createUser, isLoading: isCreatingUser } =
+  const { mutateAsync: createUser, isPending: isCreatingUser } =
     useCreateUser();
   //call READ hook
   const {
@@ -116,10 +117,10 @@ const Example = () => {
     isLoading: isLoadingUsers
   } = useGetUsers();
   //call UPDATE hook
-  const { mutateAsync: updateUser, isLoading: isUpdatingUser } =
+  const { mutateAsync: updateUser, isPending: isUpdatingUser } =
     useUpdateUser();
   //call DELETE hook
-  const { mutateAsync: deleteUser, isLoading: isDeletingUser } =
+  const { mutateAsync: deleteUser, isPending: isDeletingUser } =
     useDeleteUser();
 
   //CREATE action
@@ -158,8 +159,8 @@ const Example = () => {
       title: "Are you sure you want to delete this user?",
       children: (
         <Text>
-          Are you sure you want to delete {row.original.title} ? This action
-          cannot be undone.
+          Are you sure you want to delete {row.original.firstName}{" "}
+          {row.original.lastName}? This action cannot be undone.
         </Text>
       ),
       labels: { confirm: "Delete", cancel: "Cancel" },
@@ -170,8 +171,8 @@ const Example = () => {
   const table = useMantineReactTable({
     columns,
     data: fetchedUsers,
-    createDisplayMode: "modal", //default ("row", and "custom" are also available)
-    editDisplayMode: "modal", //default ("row", "cell", "table", and "custom" are also available)
+    createDisplayMode: "modal", //default ('row', and 'custom' are also available)
+    editDisplayMode: "modal", //default ('row', 'cell', 'table', and 'custom' are also available)
     enableEditing: true,
     getRowId: (row) => row.id,
     mantineToolbarAlertBannerProps: isLoadingUsersError
@@ -181,9 +182,9 @@ const Example = () => {
         }
       : undefined,
     mantineTableContainerProps: {
-      // sx: {
-      //   minHeight: "500px",
-      // },
+      style: {
+        minHeight: "500px"
+      }
     },
     onCreatingRowCancel: () => setValidationErrors({}),
     onCreatingRowSave: handleCreateUser,
@@ -222,24 +223,20 @@ const Example = () => {
       </Flex>
     ),
     renderTopToolbarCustomActions: ({ table }) => (
-      <>
-        {/* <Button
-          onClick={() => {
-            table.setCreatingRow(true); //simplest way to open the create row modal with no default values
-            //or you can pass in a row object to set default values with the `createRow` helper function
-            // table.setCreatingRow(
-            //   createRow(table, {
-            //     //optionally pass in default values for the new row, useful for nested data or other complex scenarios
-            //   }),
-            // );
-          }}
-        >
-          Create New User
-        </Button> */}
-      </>
+      <Button
+        onClick={() => {
+          table.setCreatingRow(true); //simplest way to open the create row modal with no default values
+          //or you can pass in a row object to set default values with the `createRow` helper function
+          // table.setCreatingRow(
+          //   createRow(table, {
+          //     //optionally pass in default values for the new row, useful for nested data or other complex scenarios
+          //   }),
+          // );
+        }}
+      >
+        Create New User
+      </Button>
     ),
-    renderToolbarInternalActions: ({ table }) => <></>,
-    initialState: { showGlobalFilter: true },
     state: {
       isLoading: isLoadingUsers,
       isSaving: isCreatingUser || isUpdatingUser || isDeletingUser,
@@ -253,7 +250,7 @@ const Example = () => {
       <Title my={20} order={1} style={{ color: "#1C7ED6" }}>
         Resources
       </Title>
-      <Box
+      {/* <Box
         my={20}
         style={{
           display: "flex",
@@ -274,7 +271,7 @@ const Example = () => {
         >
           Create New User
         </Button>
-      </Box>
+      </Box> */}
       <div>
         <MantineReactTable table={table} />
       </div>
@@ -305,7 +302,7 @@ function useCreateUser() {
           ] as User[]
       );
     }
-    // onSettled: () => queryClient.invalidateQueries({ queryKey: ["users"] }), //refetch users after mutation, disabled for demo
+    // onSettled: () => queryClient.invalidateQueries({ queryKey: ['users'] }), //refetch users after mutation, disabled for demo
   });
 }
 
@@ -339,7 +336,7 @@ function useUpdateUser() {
         )
       );
     }
-    // onSettled: () => queryClient.invalidateQueries({ queryKey: ["users"] }), //refetch users after mutation, disabled for demo
+    // onSettled: () => queryClient.invalidateQueries({ queryKey: ['users'] }), //refetch users after mutation, disabled for demo
   });
 }
 
@@ -358,7 +355,7 @@ function useDeleteUser() {
         prevUsers?.filter((user: User) => user.id !== userId)
       );
     }
-    // onSettled: () => queryClient.invalidateQueries({ queryKey: ["users"] }), //refetch users after mutation, disabled for demo
+    // onSettled: () => queryClient.invalidateQueries({ queryKey: ['users'] }), //refetch users after mutation, disabled for demo
   });
 }
 
@@ -386,8 +383,10 @@ const validateEmail = (email: string) =>
 
 function validateUser(user: User) {
   return {
-    firstName: !validateRequired(user.title) ? "First Name is Required" : ""
-    // lastName: !validateRequired(user.lastName) ? "Last Name is Required" : "",
-    // email: !validateEmail(user.email) ? "Incorrect Email Format" : "",
+    firstName: !validateRequired(user.firstName)
+      ? "First Name is Required"
+      : "",
+    lastName: !validateRequired(user.lastName) ? "Last Name is Required" : "",
+    email: !validateEmail(user.email) ? "Incorrect Email Format" : ""
   };
 }

@@ -1,70 +1,71 @@
 export type User = {
   id: string;
-  title: string;
-  function: string;
-  entity: string;
-  views: number;
+  firstName: string;
+  lastName: string;
+  email: string;
+  state: string;
 };
 
 export const fakeData: User[] = [
   {
     id: "9s41rp",
-    title: "Kelvin",
-    function: "Langosh",
-    entity: "Jerod14@hotmail.com",
-    views: 12
+    firstName: "Kelvin",
+    lastName: "Langosh",
+    email: "Jerod14@hotmail.com",
+    state: "Ohio"
   },
   {
     id: "08m6rx",
-    title: "Molly",
-    function: "Purdy",
-    entity: "Hugh.Dach79@hotmail.com",
-    views: 12
+    firstName: "Molly",
+    lastName: "Purdy",
+    email: "Hugh.Dach79@hotmail.com",
+    state: "Rhode Island"
   },
   {
     id: "5ymtrc",
-    title: "Henry",
-    function: "Lynch",
-    entity: "Camden.Macejkovic@yahoo.com",
-    views: 12
+    firstName: "Henry",
+    lastName: "Lynch",
+    email: "Camden.Macejkovic@yahoo.com",
+    state: "California"
   },
   {
     id: "ek5b97",
-    title: "Glenda",
-    function: "Douglas",
-    entity: "Eric0@yahoo.com",
-    views: 12
+    firstName: "Glenda",
+    lastName: "Douglas",
+    email: "Eric0@yahoo.com",
+    state: "Montana"
   },
   {
     id: "xxtydd",
-    title: "Leone",
-    function: "Williamson",
-    entity: "Ericka_Mueller52@yahoo.com",
-    views: 12
+    firstName: "Leone",
+    lastName: "Williamson",
+    email: "Ericka_Mueller52@yahoo.com",
+    state: "Colorado"
   },
   {
     id: "wzxj9m",
-    title: "Mckenna",
-    function: "Friesen",
-    entity: "Veda_Feeney@yahoo.com",
-    views: 12
+    firstName: "Mckenna",
+    lastName: "Friesen",
+    email: "Veda_Feeney@yahoo.com",
+    state: "New York"
   },
   {
     id: "21dwtz",
-    title: "Wyman",
-    function: "Jast",
-    entity: "Melvin.Pacocha@yahoo.com",
-    views: 12
+    firstName: "Wyman",
+    lastName: "Jast",
+    email: "Melvin.Pacocha@yahoo.com",
+    state: "Montana"
   },
   {
     id: "o8oe4k",
-    title: "Janick",
-    function: "Willms",
-    entity: "Delfina12@gmail.com",
-    views: 12
+    firstName: "Janick",
+    lastName: "Willms",
+    email: "Delfina12@gmail.com",
+    state: "Nebraska"
   }
 ];
 
+//50 us states array
 export const usStates = [
   "Alabama",
   "Alaska",
@@ -118,7 +119,3 @@ export const usStates = [
   "Wyoming",
   "Puerto Rico"
 ];
-
-export const funcitons = ["OGT", "IGT", "EVENT", "IGV"];
-
-export const entities = ["USJ", "CS", "CN", "CC"];

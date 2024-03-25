@@ -95,7 +95,7 @@
   resolved "https://registry.npmjs.org/@emotion/memoize/-/memoize-0.8.1.tgz"
   integrity sha512-W2P2c/VRW1/1tLox0mVUalvnWXxavmv/Oum2aPsRcoDJuob75FC3Y8FbpfLwUegRcxINtGUMPq0tFCvYNTBXNA==
 
-"@emotion/react@^11.11.4", "@emotion/react@>=11":
+"@emotion/react@^11.11.4":
   version "11.11.4"
   resolved "https://registry.npmjs.org/@emotion/react/-/react-11.11.4.tgz"
   integrity sha512-t8AjMlF0gHpvvxk5mAtCqR4vmxiGHCeJBaQO6gncUSdklELOgtwjerNY2yuJNfwnc6vi16U/+uMF+afIawJ9iw==
@@ -244,7 +244,7 @@
     wrap-ansi "^8.1.0"
     wrap-ansi-cjs "npm:wrap-ansi@^7.0.0"
 
-"@mantine/core@^6.0", "@mantine/core@^7.6.2", "@mantine/core@7.6.2":
+"@mantine/core@^7.5", "@mantine/core@^7.6.2", "@mantine/core@7.6.2":
   version "7.6.2"
   resolved "https://registry.npmjs.org/@mantine/core/-/core-7.6.2.tgz"
   integrity sha512-qmZhmQVc7ZZ8EKKhPkGuZbfBnLXR0xE45ikxfx+1E6/8hLY5Ypr4nWqh5Pk6p3b+K71yYnBqlbNXbtHLQH0h3g==
@@ -256,14 +256,14 @@
     react-textarea-autosize "8.5.3"
     type-fest "^4.12.0"
 
-"@mantine/dates@^6.0", "@mantine/dates@^7.6.2":
+"@mantine/dates@^7.5", "@mantine/dates@^7.6.2":
   version "7.6.2"
   resolved "https://registry.npmjs.org/@mantine/dates/-/dates-7.6.2.tgz"
   integrity sha512-0J7V06HSl0pYgCW4xqj02gilrGvCL9pTDENGCn+RruSfafJrWDB43C1/q5FFNOvj3pNGDMepCQbB2IM7nlucTw==
   dependencies:
     clsx "2.1.0"
 
-"@mantine/hooks@^6.0", "@mantine/hooks@^7.6.2", "@mantine/hooks@7.6.2":
+"@mantine/hooks@^7.5", "@mantine/hooks@^7.6.2", "@mantine/hooks@7.6.2":
   version "7.6.2"
   resolved "https://registry.npmjs.org/@mantine/hooks/-/hooks-7.6.2.tgz"
   integrity sha512-ZrOgrZHoIGCDKrr2/9njDgK0al+jjusYQFlmR0YyEFyRtgY6eNSI4zuYLcAPx1haHmUm5RsLBrqY6Iy/TLdGXA==
@@ -345,7 +345,7 @@
   dependencies:
     tslib "^2.4.0"
 
-"@tabler/icons-react@^2.47.0", "@tabler/icons-react@>=2.23":
+"@tabler/icons-react@^2.47.0", "@tabler/icons-react@>=2.23.0":
   version "2.47.0"
   resolved "https://registry.npmjs.org/@tabler/icons-react/-/icons-react-2.47.0.tgz"
   integrity sha512-iqly2FvCF/qUbgmvS8E40rVeYY7laltc5GUjRxQj59DuX0x/6CpKHTXt86YlI2whg4czvd/c8Ce8YR08uEku0g==
@@ -358,10 +358,10 @@
   resolved "https://registry.npmjs.org/@tabler/icons/-/icons-2.47.0.tgz"
   integrity sha512-4w5evLh+7FUUiA1GucvGj2ReX2TvOjEr4ejXdwL/bsjoSkof6r1gQmzqI+VHrE2CpJpB3al7bCTulOkFa/RcyA==
 
-"@tanstack/match-sorter-utils@8.8.4":
-  version "8.8.4"
-  resolved "https://registry.npmjs.org/@tanstack/match-sorter-utils/-/match-sorter-utils-8.8.4.tgz"
-  integrity sha512-rKH8LjZiszWEvmi01NR72QWZ8m4xmXre0OOwlRGnjU01Eqz/QnN+cqpty2PJ0efHblq09+KilvyR7lsbzmXVEw==
+"@tanstack/match-sorter-utils@8.11.8":
+  version "8.11.8"
+  resolved "https://registry.npmjs.org/@tanstack/match-sorter-utils/-/match-sorter-utils-8.11.8.tgz"
+  integrity sha512-3VPh0SYMGCa5dWQEqNab87UpCMk+ANWHDP4ALs5PeEW9EpfTAbrezzaOk/OiM52IESViefkoAOYuxdoa04p6aA==
   dependencies:
     remove-accents "0.4.2"
 
@@ -378,29 +378,29 @@
     "@tanstack/query-core" "4.35.3"
     use-sync-external-store "^1.2.0"
 
-"@tanstack/react-table@8.10.6":
-  version "8.10.6"
-  resolved "https://registry.npmjs.org/@tanstack/react-table/-/react-table-8.10.6.tgz"
-  integrity sha512-D0VEfkIYnIKdy6SHiBNEaMc4SxO+MV7ojaPhRu8jP933/gbMi367+Wul2LxkdovJ5cq6awm0L1+jgxdS/unzIg==
+"@tanstack/react-table@8.12.0":
+  version "8.12.0"
+  resolved "https://registry.npmjs.org/@tanstack/react-table/-/react-table-8.12.0.tgz"
+  integrity sha512-LlEQ1Gpz4bfpiET+qmle4BhKDgKN3Y/sssc+O/wLqX8HRtjV+nhusYbllZlutZfMR8oeef83whKTj/VhaV8EeA==
   dependencies:
-    "@tanstack/table-core" "8.10.6"
+    "@tanstack/table-core" "8.12.0"
 
-"@tanstack/react-virtual@3.0.0-beta.63":
-  version "3.0.0-beta.63"
-  resolved "https://registry.npmjs.org/@tanstack/react-virtual/-/react-virtual-3.0.0-beta.63.tgz"
-  integrity sha512-n4aaZs3g9U2oZjFp8dAeT1C2g4rr/3lbCo2qWbD9NquajKnGx7R+EfLBAHJ6pVMmfsTMZ0XCBwkIs7U74R/s0A==
+"@tanstack/react-virtual@3.1.2":
+  version "3.1.2"
+  resolved "https://registry.npmjs.org/@tanstack/react-virtual/-/react-virtual-3.1.2.tgz"
+  integrity sha512-qibmxtctgOZo2I+3Rw5GR9kXgaa15U5r3/idDY1ItUKW15UK7GhCfyIfE6qYuJ1fxQF6dJDsD8SbpPyuJgpxuA==
   dependencies:
-    "@tanstack/virtual-core" "3.0.0-beta.63"
+    "@tanstack/virtual-core" "3.1.2"
 
-"@tanstack/table-core@8.10.6":
-  version "8.10.6"
-  resolved "https://registry.npmjs.org/@tanstack/table-core/-/table-core-8.10.6.tgz"
-  integrity sha512-9t8brthhAmCBIjzk7fCDa/kPKoLQTtA31l9Ir76jYxciTlHU61r/6gYm69XF9cbg9n88gVL5y7rNpeJ2dc1AFA==
+"@tanstack/table-core@8.12.0":
+  version "8.12.0"
+  resolved "https://registry.npmjs.org/@tanstack/table-core/-/table-core-8.12.0.tgz"
+  integrity sha512-cq/ylWVrOwixmwNXQjgZaQw1Izf7+nPxjczum7paAnMtwPg1S2qRAJU+Jb8rEBUWm69voC/zcChmePlk2hc6ug==
 
-"@tanstack/virtual-core@3.0.0-beta.63":
-  version "3.0.0-beta.63"
-  resolved "https://registry.npmjs.org/@tanstack/virtual-core/-/virtual-core-3.0.0-beta.63.tgz"
-  integrity sha512-KhhfRYSoQpl0y+2axEw+PJZd/e/9p87PDpPompxcXnweNpt9ZHCT/HuNx7MKM9PVY/xzg9xJSWxwnSCrO+d6PQ==
+"@tanstack/virtual-core@3.1.2":
+  version "3.1.2"
+  resolved "https://registry.npmjs.org/@tanstack/virtual-core/-/virtual-core-3.1.2.tgz"
+  integrity sha512-DATZJs8iejkIUqXZe6ruDAnjFo78BKnIIgqQZrc7CmEFqfLEN/TPD91n4hRfo6hpRB6xC00bwKxv7vdjFNEmOg==
 
 "@types/json5@^0.0.29":
   version "0.0.29"
@@ -852,7 +852,7 @@ client-only@0.0.1:
   resolved "https://registry.npmjs.org/client-only/-/client-only-0.0.1.tgz"
   integrity sha512-IV3Ou0jSMzZrd3pZ48nLkT9DA7Ag1pnPzaiQhpW7c3RbcqqzvzzVu+L8gfqMp/8IM2MQtSiqaCxrrcfu8I8rMA==
 
-clsx@2.1.0:
+clsx@>=2, clsx@2.1.0:
   version "2.1.0"
   resolved "https://registry.npmjs.org/clsx/-/clsx-2.1.0.tgz"
   integrity sha512-m3iNNWpd9rl3jvvcBnu70ylMdrXt8Vlq4HYadnU5fwcOtvkSQWPmj7amUcDT2qYI7risszBjI5AUIUox9D16pg==
@@ -941,7 +941,7 @@ damerau-levenshtein@^1.0.8:
   resolved "https://registry.npmjs.org/damerau-levenshtein/-/damerau-levenshtein-1.0.8.tgz"
   integrity sha512-sdQSFB7+llfUcQHUQO3+B8ERRj0Oa4w9POWMI/puGtuf7gFywGmkaLCElnudfTiKZV+NvHqL0ifzdrI8Ro7ESA==
 
-dayjs@^1.11.10, dayjs@>=1.0.0:
+dayjs@^1.11.10, dayjs@>=1.0.0, dayjs@>=1.11:
   version "1.11.10"
   resolved "https://registry.npmjs.org/dayjs/-/dayjs-1.11.10.tgz"
   integrity sha512-vjAczensTgRcqDERK0SR2XMwsF/tSvnvlv6VcF2GIhg6Sx4yOIt/irsr1RDJsKiIyBzJDpCoXiWWq28MqH2cnQ==
@@ -2164,14 +2164,14 @@ lru-cache@^6.0.0:
   resolved "https://registry.npmjs.org/lru-cache/-/lru-cache-10.2.0.tgz"
   integrity sha512-2bIM8x+VAf6JT4bKAljS1qUWgMsqZRPGJS6FSahIMPVvctcNhyVp7AJu7quxOW9jwkryBReKZY5tY5JYv2n/7Q==
 
-mantine-react-table@^1.3.4:
-  version "1.3.4"
-  resolved "https://registry.npmjs.org/mantine-react-table/-/mantine-react-table-1.3.4.tgz"
-  integrity sha512-rD0CaeC4RCU7k/ZKvfj5ijFFMd4clGpeg/EwMcogYFioZjj8aNfD78osTNNYr90AnOAFGnd7ZnderLK89+W1ZQ==
+mantine-react-table@^2.0.0-beta.0:
+  version "2.0.0-beta.0"
+  resolved "https://registry.npmjs.org/mantine-react-table/-/mantine-react-table-2.0.0-beta.0.tgz"
+  integrity sha512-KZOr7nzoSt4aF0hyWKJJBK9/dxVWB3tdg2fFSNnqns9cbPFlLTGXDKguLSoNE8WkzjWE0ThpYJknIAoraL/7ug==
   dependencies:
-    "@tanstack/match-sorter-utils" "8.8.4"
-    "@tanstack/react-table" "8.10.6"
-    "@tanstack/react-virtual" "3.0.0-beta.63"
+    "@tanstack/match-sorter-utils" "8.11.8"
+    "@tanstack/react-table" "8.12.0"
+    "@tanstack/react-virtual" "3.1.2"
 
 memory-pager@^1.0.2:
   version "1.5.0"
