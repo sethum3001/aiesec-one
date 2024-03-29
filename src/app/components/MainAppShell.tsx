@@ -4,6 +4,7 @@ import Sidebar from "@/app/components/sidebar/sidebar";
 import { AppShell } from "@mantine/core";
 import { useSession } from "next-auth/react";
 import Loading from "@/app/loading";
+import "mantine-react-table/styles.css";
 
 export default function MainAppShell({
   children
