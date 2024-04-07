@@ -1,6 +1,7 @@
 export const COLLECTIONS = {
   USERS: "users",
-  RESOURCES: "resources"
+  RESOURCES: "resources",
+  OPPORTUNITIES: "opportunities"
 };
 
 export const HTTP_STATUS = {
@@ -17,7 +18,14 @@ export const SUCCESS_MESSAGES = {
   RESOURCE_FETCHED: "Resource fetched successfully",
   RESOURCE_CREATED: "Resource created successfully",
   RESOURCE_UPDATED: "Resource updated successfully",
-  RESOURCE_DELETED: "Resource deleted successfully"
+  RESOURCE_DELETED: "Resource deleted successfully",
+
+  // Opportunities
+  OPPORTUNITIES_FETCHED: "Opportunities fetched successfully",
+  OPPORTUNITY_FETCHED: "Opportunity fetched successfully",
+  OPPORTUNITY_CREATED: "Opportunity created successfully",
+  OPPORTUNITY_UPDATED: "Opportunity updated successfully",
+  OPPORTUNITY_DELETED: "Opportunity deleted successfully"
 };
 
 export const ERROR_MESSAGES = {
@@ -28,5 +36,14 @@ export const ERROR_MESSAGES = {
   RESOURCE_UPDATE_FAILED: "Failed to update resource",
   RESOURCE_DELETE_FAILED: "Failed to delete resource",
   RESOURCE_NOT_FOUND: "Resource not found",
-  RESOURCE_ID_INVALID: "Invalid resource ID"
+  RESOURCE_ID_INVALID: "Invalid resource ID",
+
+  // Opportunities
+  OPPORTUNITIES_FETCH_FAILED: "Failed to fetch opportunities",
+  OPPORTUNITY_FETCH_FAILED: "Failed to fetch opportunity",
+  OPPORTUNITY_CREATE_FAILED: "Failed to create opportunity",
+  OPPORTUNITY_UPDATE_FAILED: "Failed to update opportunity",
+  OPPORTUNITY_DELETE_FAILED: "Failed to delete opportunity",
+  OPPORTUNITY_NOT_FOUND: "Opportunity not found",
+  OPPORTUNITY_ID_INVALID: "Invalid resource ID"
 };
