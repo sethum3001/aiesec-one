@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 import { Center, Tooltip, UnstyledButton, Stack, rem } from "@mantine/core";
 import {
   IconHome2,
@@ -14,6 +14,7 @@ import Image from "next/image";
 import classes from "./styles.module.scss";
 import aiesecHuman from "@app/../../public/aiesec-human-blue.jpg";
 import { signOut } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 interface NavbarLinkProps {
   icon: typeof IconHome2;
@@ -37,23 +38,29 @@ function NavbarLink({ icon: Icon, label, active, onClick }: NavbarLinkProps) {
   );
 }
 
-const mockdata = [
-  { icon: IconHome2, label: "Home" },
-  { icon: IconGauge, label: "Dashboard" },
-  { icon: IconDeviceDesktopAnalytics, label: "Analytics" },
-  { icon: IconCalendarStats, label: "Opportunities" },
-  { icon: IconUser, label: "CRM" }
+const sidebarData = [
+  { icon: IconHome2, label: "Home", link: "/" },
+  { icon: IconGauge, label: "Dashboard", link: "/dashboard" },
+  { icon: IconDeviceDesktopAnalytics, label: "Resources", link: "/resources" },
+  { icon: IconCalendarStats, label: "Opportunities", link: "/opportunities" },
+  { icon: IconUser, label: "CRM", link: "/crm" }
 ];
 
 export default function Sidebar() {
-  const [active, setActive] = useState(2);
+  const [active, setActive] = useState<number | null>(null);
+  const router = useRouter();
 
-  const links = mockdata.map((link, index) => (
+  const links = sidebarData.map((link, index) => (
     <NavbarLink
       {...link}
       key={link.label}
       active={index === active}
-      onClick={() => setActive(index)}
+      onClick={() => {
+        if (link.link) {
+          setActive(index);
+          router.push(link.link);
+        }
+      }}
     />
   ));
 

@@ -7,6 +7,8 @@ import { Metadata } from "next";
 import { Suspense } from "react";
 import Loading from "@/app/loading";
 
+import "./globals.scss";
+
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {

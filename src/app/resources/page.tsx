@@ -1,12 +1,12 @@
 "use client";
+
 import "@mantine/core/styles.css";
-import "@mantine/dates/styles.css"; //if using mantine date picker features
-import "mantine-react-table/styles.css"; //make sure MRT styles were imported in your app root (once)
+import "@mantine/dates/styles.css";
+import "mantine-react-table/styles.css";
 import { useMemo, useState } from "react";
 import {
   MRT_EditActionButtons,
   MantineReactTable,
-  // createRow,
   type MRT_ColumnDef,
   type MRT_Row,
   type MRT_TableOptions,
@@ -22,160 +22,182 @@ import {
   Tooltip,
   Box
 } from "@mantine/core";
-import { ModalsProvider, modals } from "@mantine/modals";
+import { modals } from "@mantine/modals";
 import { IconEdit, IconTrash } from "@tabler/icons-react";
-import {
-  QueryClient,
-  QueryClientProvider,
-  useMutation,
-  useQuery,
-  useQueryClient
-} from "@tanstack/react-query";
-import { type User, fakeData, usStates } from "./makeData";
 import classes from "./resources.module.scss";
+import { ResourceResponse } from "@/app/types/ResourceResponse";
+import {
+  useCreateResource,
+  useDeleteResource,
+  useGetResources,
+  useUpdateResource
+} from "@/app/hooks/resources";
+import { validateRequired, validateUrl } from "@/app/util/dataUtils";
 
-const Example = () => {
+function validateResource(resource: ResourceResponse) {
+  return {
+    title: !validateRequired(resource.title) ? "Title is Required" : "",
+    url: !validateUrl(resource.url) ? "Invalid URL Format" : "",
+    // description: !validateRequired(resource.description) ? "Description is Required" : "",
+    link: !validateUrl(resource.link) ? "Invalid Link Format" : "",
+    // functions: !validateRequired(resource.functions) ? "Functions are Required" : "",
+    keywords: !validateRequired(resource.keywords)
+      ? "Keywords are Required"
+      : ""
+  };
+}
+
+const ResourcesPage = () => {
   const [validationErrors, setValidationErrors] = useState<
     Record<string, string | undefined>
   >({});
 
-  const columns = useMemo<MRT_ColumnDef<User>[]>(
+  const columns = useMemo<MRT_ColumnDef<ResourceResponse>[]>(
     () => [
       {
-        accessorKey: "id",
-        header: "Id",
-        enableEditing: false,
-        size: 80
-      },
-      {
-        accessorKey: "firstName",
-        header: "First Name",
+        accessorKey: "title",
+        header: "Title",
         mantineEditTextInputProps: {
-          type: "email",
+          type: "text",
           required: true,
-          error: validationErrors?.firstName,
-          //remove any previous validation errors when user focuses on the input
-          onFocus: () =>
-            setValidationErrors({
-              ...validationErrors,
-              firstName: undefined
-            })
-          //optionally add validation checking for onBlur or onChange
+          error: validationErrors?.title
         }
       },
       {
-        accessorKey: "lastName",
-        header: "Last Name",
+        accessorKey: "url",
+        header: "URL",
         mantineEditTextInputProps: {
-          type: "email",
+          type: "text",
           required: true,
-          error: validationErrors?.lastName,
-          //remove any previous validation errors when user focuses on the input
+          error: validationErrors?.url,
           onFocus: () =>
             setValidationErrors({
               ...validationErrors,
-              lastName: undefined
+              url: undefined
             })
         }
       },
       {
-        accessorKey: "email",
-        header: "Email",
+        accessorKey: "description",
+        header: "Description",
         mantineEditTextInputProps: {
-          type: "email",
-          required: true,
-          error: validationErrors?.email,
-          //remove any previous validation errors when user focuses on the input
+          type: "text",
+          error: validationErrors?.description,
           onFocus: () =>
             setValidationErrors({
               ...validationErrors,
-              email: undefined
+              description: undefined
             })
         }
       },
       {
-        accessorKey: "state",
-        header: "State",
-        editVariant: "select",
-        mantineEditSelectProps: {
-          data: usStates,
-          error: validationErrors?.state
+        accessorKey: "link",
+        header: "Link",
+        mantineEditTextInputProps: {
+          type: "text",
+          required: true,
+          error: validationErrors?.link,
+          onFocus: () =>
+            setValidationErrors({
+              ...validationErrors,
+              link: undefined
+            })
+        }
+      },
+      {
+        accessorKey: "functions",
+        header: "Functions",
+        mantineEditTextInputProps: {
+          type: "text",
+          required: true,
+          error: validationErrors?.functions,
+          onFocus: () =>
+            setValidationErrors({
+              ...validationErrors,
+              functions: undefined
+            })
+        }
+      },
+      {
+        accessorKey: "keywords",
+        header: "Keywords",
+        mantineEditTextInputProps: {
+          type: "text",
+          required: true,
+          error: validationErrors?.keywords,
+          onFocus: () =>
+            setValidationErrors({
+              ...validationErrors,
+              keywords: undefined
+            })
         }
       }
     ],
     [validationErrors]
   );
 
-  //call CREATE hook
-  const { mutateAsync: createUser, isPending: isCreatingUser } =
-    useCreateUser();
-  //call READ hook
+  // Custom hooks for CRUD operations
+  const { mutateAsync: createResource, isLoading: isCreatingResource } =
+    useCreateResource();
   const {
-    data: fetchedUsers = [],
-    isError: isLoadingUsersError,
-    isFetching: isFetchingUsers,
-    isLoading: isLoadingUsers
-  } = useGetUsers();
-  //call UPDATE hook
-  const { mutateAsync: updateUser, isPending: isUpdatingUser } =
-    useUpdateUser();
-  //call DELETE hook
-  const { mutateAsync: deleteUser, isPending: isDeletingUser } =
-    useDeleteUser();
+    data: fetchedResources = [],
+    isError: isLoadingResourcesError,
+    isFetching: isFetchingResources,
+    isLoading: isLoadingResources
+  } = useGetResources();
+  const { mutateAsync: updateResource, isLoading: isUpdatingResource } =
+    useUpdateResource();
+  const { mutateAsync: deleteResource, isLoading: isDeletingResource } =
+    useDeleteResource();
 
-  //CREATE action
-  const handleCreateUser: MRT_TableOptions<User>["onCreatingRowSave"] = async ({
-    values,
-    exitCreatingMode
-  }) => {
-    const newValidationErrors = validateUser(values);
-    if (Object.values(newValidationErrors).some((error) => error)) {
-      setValidationErrors(newValidationErrors);
-      return;
-    }
-    setValidationErrors({});
-    await createUser(values);
-    exitCreatingMode();
-  };
+  // Handlers for CRUD operations
+  const handleCreateResource: MRT_TableOptions<ResourceResponse>["onCreatingRowSave"] =
+    async ({ values, exitCreatingMode }) => {
+      const newValidationErrors = validateResource(values);
+      if (Object.values(newValidationErrors).some((error) => error)) {
+        setValidationErrors(newValidationErrors);
+        return;
+      }
+      setValidationErrors({});
+      await createResource(values);
+      exitCreatingMode();
+    };
 
-  //UPDATE action
-  const handleSaveUser: MRT_TableOptions<User>["onEditingRowSave"] = async ({
-    values,
-    table
-  }) => {
-    const newValidationErrors = validateUser(values);
-    if (Object.values(newValidationErrors).some((error) => error)) {
-      setValidationErrors(newValidationErrors);
-      return;
-    }
-    setValidationErrors({});
-    await updateUser(values);
-    table.setEditingRow(null); //exit editing mode
-  };
+  const handleEditResource: MRT_TableOptions<ResourceResponse>["onEditingRowSave"] =
+    async ({ row, values, table }) => {
+      const newValidationErrors = validateResource(values);
+      if (Object.values(newValidationErrors).some((error) => error)) {
+        setValidationErrors(newValidationErrors);
+        return;
+      }
+      setValidationErrors({});
+      console.log(values);
+      await updateResource({ ...values, _id: row.original._id });
+      table.setEditingRow(null); //exit editing mode
+    };
 
-  //DELETE action
-  const openDeleteConfirmModal = (row: MRT_Row<User>) =>
+  const openDeleteConfirmModal = (row: MRT_Row<ResourceResponse>) =>
     modals.openConfirmModal({
-      title: "Are you sure you want to delete this user?",
+      title: "Confirmation",
       children: (
         <Text>
-          Are you sure you want to delete {row.original.firstName}{" "}
-          {row.original.lastName}? This action cannot be undone.
+          Are you sure you want to delete this record? This action cannot be
+          undone.
         </Text>
       ),
       labels: { confirm: "Delete", cancel: "Cancel" },
       confirmProps: { color: "red" },
-      onConfirm: () => deleteUser(row.original.id)
+      onConfirm: () => deleteResource(row.original._id)
     });
 
   const table = useMantineReactTable({
     columns,
-    data: fetchedUsers,
+    data: fetchedResources,
     createDisplayMode: "modal", //default ('row', and 'custom' are also available)
     editDisplayMode: "modal", //default ('row', 'cell', 'table', and 'custom' are also available)
     enableEditing: true,
-    getRowId: (row) => row.id,
-    mantineToolbarAlertBannerProps: isLoadingUsersError
+    getRowId: (row) => row._id,
+    mantineToolbarAlertBannerProps: isLoadingResourcesError
       ? {
           color: "red",
           children: "Error loading data"
@@ -187,12 +209,13 @@ const Example = () => {
       }
     },
     onCreatingRowCancel: () => setValidationErrors({}),
-    onCreatingRowSave: handleCreateUser,
+    onCreatingRowSave: handleCreateResource,
     onEditingRowCancel: () => setValidationErrors({}),
-    onEditingRowSave: handleSaveUser,
+    onEditingRowSave: handleEditResource,
+    positionActionsColumn: "last",
     renderCreateRowModalContent: ({ table, row, internalEditComponents }) => (
       <Stack>
-        <Title order={3}>Create New User</Title>
+        <Title order={3}>Create Resource</Title>
         {internalEditComponents}
         <Flex justify="flex-end" mt="xl">
           <MRT_EditActionButtons variant="text" table={table} row={row} />
@@ -201,7 +224,7 @@ const Example = () => {
     ),
     renderEditRowModalContent: ({ table, row, internalEditComponents }) => (
       <Stack>
-        <Title order={3}>Edit User</Title>
+        <Title order={3}>Edit Resource</Title>
         {internalEditComponents}
         <Flex justify="flex-end" mt="xl">
           <MRT_EditActionButtons variant="text" table={table} row={row} />
@@ -211,46 +234,37 @@ const Example = () => {
     renderRowActions: ({ row, table }) => (
       <Flex gap="md">
         <Tooltip label="Edit">
-          <ActionIcon onClick={() => table.setEditingRow(row)}>
+          <ActionIcon
+            variant="subtle"
+            size="sm"
+            onClick={() => table.setEditingRow(row)}
+          >
             <IconEdit />
           </ActionIcon>
         </Tooltip>
         <Tooltip label="Delete">
-          <ActionIcon color="red" onClick={() => openDeleteConfirmModal(row)}>
+          <ActionIcon
+            variant="subtle"
+            size="sm"
+            color="red"
+            onClick={() => openDeleteConfirmModal(row)}
+          >
             <IconTrash />
           </ActionIcon>
         </Tooltip>
       </Flex>
     ),
-    renderTopToolbarCustomActions: ({ table }) => (
-      <Button
-        onClick={() => {
-          table.setCreatingRow(true); //simplest way to open the create row modal with no default values
-          //or you can pass in a row object to set default values with the `createRow` helper function
-          // table.setCreatingRow(
-          //   createRow(table, {
-          //     //optionally pass in default values for the new row, useful for nested data or other complex scenarios
-          //   }),
-          // );
-        }}
-      >
-        Create New User
-      </Button>
-    ),
     state: {
-      isLoading: isLoadingUsers,
-      isSaving: isCreatingUser || isUpdatingUser || isDeletingUser,
-      showAlertBanner: isLoadingUsersError,
-      showProgressBars: isFetchingUsers
+      isLoading: isLoadingResources,
+      isSaving: isCreatingResource || isUpdatingResource || isDeletingResource,
+      showAlertBanner: isLoadingResourcesError,
+      showProgressBars: isFetchingResources
     }
   });
 
   return (
     <div className={classes.body}>
-      <Title my={20} order={1} style={{ color: "#1C7ED6" }}>
-        Resources
-      </Title>
-      {/* <Box
+      <Box
         my={20}
         style={{
           display: "flex",
@@ -258,20 +272,17 @@ const Example = () => {
           justifyContent: "space-between"
         }}
       >
+        <Title mt={8} mb={24} order={1} style={{ color: "#1C7ED6" }}>
+          Resources
+        </Title>
         <Button
           onClick={() => {
-            table.setCreatingRow(true); //simplest way to open the create row modal with no default values
-            //or you can pass in a row object to set default values with the `createRow` helper function
-            // table.setCreatingRow(
-            //   createRow(table, {
-            //     //optionally pass in default values for the new row, useful for nested data or other complex scenarios
-            //   }),
-            // );
+            table.setCreatingRow(true);
           }}
         >
-          Create New User
+          Create Resource
         </Button>
-      </Box> */}
+      </Box>
       <div>
         <MantineReactTable table={table} />
       </div>
@@ -279,114 +290,4 @@ const Example = () => {
   );
 };
 
-//CREATE hook (post new user to api)
-function useCreateUser() {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: async (user: User) => {
-      //send api update request here
-      await new Promise((resolve) => setTimeout(resolve, 1000)); //fake api call
-      return Promise.resolve();
-    },
-    //client side optimistic update
-    onMutate: (newUserInfo: User) => {
-      queryClient.setQueryData(
-        ["users"],
-        (prevUsers: any) =>
-          [
-            ...prevUsers,
-            {
-              ...newUserInfo,
-              id: (Math.random() + 1).toString(36).substring(7)
-            }
-          ] as User[]
-      );
-    }
-    // onSettled: () => queryClient.invalidateQueries({ queryKey: ['users'] }), //refetch users after mutation, disabled for demo
-  });
-}
-
-//READ hook (get users from api)
-function useGetUsers() {
-  return useQuery<User[]>({
-    queryKey: ["users"],
-    queryFn: async () => {
-      //send api request here
-      await new Promise((resolve) => setTimeout(resolve, 1000)); //fake api call
-      return Promise.resolve(fakeData);
-    },
-    refetchOnWindowFocus: false
-  });
-}
-
-//UPDATE hook (put user in api)
-function useUpdateUser() {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: async (user: User) => {
-      //send api update request here
-      await new Promise((resolve) => setTimeout(resolve, 1000)); //fake api call
-      return Promise.resolve();
-    },
-    //client side optimistic update
-    onMutate: (newUserInfo: User) => {
-      queryClient.setQueryData(["users"], (prevUsers: any) =>
-        prevUsers?.map((prevUser: User) =>
-          prevUser.id === newUserInfo.id ? newUserInfo : prevUser
-        )
-      );
-    }
-    // onSettled: () => queryClient.invalidateQueries({ queryKey: ['users'] }), //refetch users after mutation, disabled for demo
-  });
-}
-
-//DELETE hook (delete user in api)
-function useDeleteUser() {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: async (userId: string) => {
-      //send api update request here
-      await new Promise((resolve) => setTimeout(resolve, 1000)); //fake api call
-      return Promise.resolve();
-    },
-    //client side optimistic update
-    onMutate: (userId: string) => {
-      queryClient.setQueryData(["users"], (prevUsers: any) =>
-        prevUsers?.filter((user: User) => user.id !== userId)
-      );
-    }
-    // onSettled: () => queryClient.invalidateQueries({ queryKey: ['users'] }), //refetch users after mutation, disabled for demo
-  });
-}
-
-const queryClient = new QueryClient();
-
-const ExampleWithProviders = () => (
-  //Put this with your other react-query providers near root of your app
-  <QueryClientProvider client={queryClient}>
-    <ModalsProvider>
-      <Example />
-    </ModalsProvider>
-  </QueryClientProvider>
-);
-
-export default ExampleWithProviders;
-
-const validateRequired = (value: string) => !!value.length;
-const validateEmail = (email: string) =>
-  !!email.length &&
-  email
-    .toLowerCase()
-    .match(
-      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-    );
-
-function validateUser(user: User) {
-  return {
-    firstName: !validateRequired(user.firstName)
-      ? "First Name is Required"
-      : "",
-    lastName: !validateRequired(user.lastName) ? "Last Name is Required" : "",
-    email: !validateEmail(user.email) ? "Incorrect Email Format" : ""
-  };
-}
+export default ResourcesPage;

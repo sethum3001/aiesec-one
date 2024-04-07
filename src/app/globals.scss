@@ -4,6 +4,7 @@
   --font-mono: ui-monospace, Menlo, Monaco, "Cascadia Mono", "Segoe UI Mono",
     "Roboto Mono", "Oxygen Mono", "Ubuntu Monospace", "Source Code Pro",
     "Fira Mono", "Droid Sans Mono", "Courier New", monospace;
+  --app-shell-navbar-offset: calc(4.5rem * var(--mantine-scale));
 }
 
 * {
@@ -26,5 +27,13 @@ a {
 @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;
+  }
+}
+
+main.mantine-AppShell-main {
+  padding-left: var(--app-shell-navbar-offset);
+
+  > div {
+    padding: var(--mantine-spacing-xl);
   }
 }

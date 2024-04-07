@@ -1,5 +1,5 @@
 .navbar {
-  width: calc(4.5rem * var(--mantine-scale));
+  width: var(--app-shell-navbar-offset);
   height: 100vh;
   padding: var(--mantine-spacing-xs);
   display: flex;
