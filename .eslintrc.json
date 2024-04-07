@@ -3,11 +3,11 @@
   "extends": [
     "next",
     "next/core-web-vitals",
-    "prettier",
-    "plugin:@next/next/recommended"
+    "plugin:@next/next/recommended",
+    "prettier"
   ],
   "rules": {
-    "indent": ["error", 2],
+    "indent": ["warn", 2],
     "quotes": ["error", "double"],
     "semi": ["error", "always"]
   },
