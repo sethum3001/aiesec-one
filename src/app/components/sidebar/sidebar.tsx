@@ -2,14 +2,6 @@
 
 import React, { useState } from "react";
 import { Center, Tooltip, UnstyledButton, Stack, rem } from "@mantine/core";
-import {
-  IconHome2,
-  IconGauge,
-  IconDeviceDesktopAnalytics,
-  IconCalendarStats,
-  IconUser,
-  IconLogout
-} from "@tabler/icons-react";
 import Image from "next/image";
 import classes from "./styles.module.scss";
 import aiesecHuman from "@app/../../public/aiesec-human-blue.jpg";
@@ -17,7 +9,7 @@ import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
 interface NavbarLinkProps {
-  icon: typeof IconHome2;
+  icon: string;
   label: string;
   active?: boolean;
 
@@ -32,18 +24,19 @@ function NavbarLink({ icon: Icon, label, active, onClick }: NavbarLinkProps) {
         className={classes.link}
         data-active={active || undefined}
       >
-        <Icon style={{ width: rem(25), height: rem(25) }} stroke={1.5} />
+        <Image src={Icon} alt={label} width={20} height={20} />
       </UnstyledButton>
     </Tooltip>
   );
 }
 
 const sidebarData = [
-  { icon: IconHome2, label: "Home", link: "/" },
-  { icon: IconGauge, label: "Dashboard", link: "/dashboard" },
-  { icon: IconDeviceDesktopAnalytics, label: "Resources", link: "/resources" },
-  { icon: IconCalendarStats, label: "Opportunities", link: "/opportunities" },
-  { icon: IconUser, label: "CRM", link: "/crm" }
+  { icon: "/Icon1.png", label: "Home", link: "/" },
+  { icon: "/Icon2.png", label: "Members", link: "/members" },
+  { icon: "/Icon3.png", label: "", link: "/" },
+  { icon: "/Icon4.png", label: "Opportunities", link: "/opportunities" },
+  { icon: "/Icon5.png", label: "Resources", link: "/resources" },
+  { icon: "/Icon6.png", label: "", link: "/" }
 ];
 
 export default function Sidebar() {
@@ -87,7 +80,7 @@ export default function Sidebar() {
 
       <Stack justify="center" gap={0}>
         <NavbarLink
-          icon={IconLogout}
+          icon="/Icon7.png"
           label="Logout"
           onClick={() => signOut()}
         />
