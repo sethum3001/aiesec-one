@@ -1,5 +1,4 @@
 import mongoose, { Schema } from "mongoose";
-import { COLLECTIONS } from "@/app/lib/constants";
 
 const opportunitySchema = new Schema({
   title: {
@@ -16,16 +15,20 @@ const opportunitySchema = new Schema({
     required: true,
     unique: true
   },
-  //   coverImg: {
-  //     type: Array<String>,
-  //     required: true
-  //   },
   appLink: {
     type: String,
     required: true,
     unique: true
+  },
+  covImg: {
+    type: String,
+    required: true
+  },
+  covImgUnique: {
+    type: String,
+    required: true
   }
 });
 
-export default mongoose.models.Opportunities ||
+export default mongoose.models.Opportunity ||
   mongoose.model("Opportunity", opportunitySchema);

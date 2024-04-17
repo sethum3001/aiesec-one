@@ -8,7 +8,6 @@ import {
   HTTP_STATUS,
   SUCCESS_MESSAGES
 } from "@/app/lib/constants";
-import Opportunity from "@/models/Opportunities";
 import { errorResponse, successResponse } from "@/app/util/apiUtils";
 
 export const GET = async (
@@ -55,7 +54,8 @@ export const PUT = async (
 ) => {
   try {
     const { id } = context.params;
-    const { title, url, description, link, appLink } = await req.json();
+    const { title, url, description, link, appLink, covImg, covImgUnique } =
+      await req.json();
 
     if (!isValidId(id)) {
       return errorResponse(
@@ -76,7 +76,9 @@ export const PUT = async (
           url,
           description,
           link,
-          appLink
+          appLink,
+          covImg,
+          covImgUnique
         }
       }
     );

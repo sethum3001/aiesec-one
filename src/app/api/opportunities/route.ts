@@ -1,5 +1,5 @@
 import clientPromise from "@/app/lib/mongodb";
-import Opportunity from "@/models/Opportunities";
+import Opportunity from "@/models/Opportunity";
 import {
   COLLECTIONS,
   ERROR_MESSAGES,
@@ -31,7 +31,8 @@ export const GET = async () => {
 };
 
 export const POST = async (req: Request) => {
-  const { title, url, description, link, appLink } = await req.json();
+  const { title, url, description, link, appLink, covImg, covImgUnique } =
+    await req.json();
 
   try {
     const db = (await clientPromise).db();
@@ -41,7 +42,9 @@ export const POST = async (req: Request) => {
       url,
       description,
       link,
-      appLink
+      appLink,
+      covImg,
+      covImgUnique
     });
 
     const result = await db

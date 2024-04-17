@@ -18,6 +18,8 @@
     }
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.554.0",
+    "@aws-sdk/s3-request-presigner": "^3.554.0",
     "@emotion/react": "^11.11.4",
     "@mantine/core": "^7.6.2",
     "@mantine/dates": "^7.6.2",
