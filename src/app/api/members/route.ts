@@ -1,11 +1,9 @@
-import { NextApiRequest, NextApiResponse } from "next";
-import { GraphQLClient } from "graphql-request";
 import dbConnect from "@/app/lib/dbConnect";
 import Member, { iMember, insertMembersIfNotExist } from "@/models/Member";
 import { requestGraphQL } from "@/app/util/graphql";
 import { json } from "body-parser";
 import { NextRequest, NextResponse } from "next/server";
-import { Resolver } from "dns";
+import { stat } from "fs";
 
 // Custom middleware function to parse JSON request bodies
 const jsonParser = json();
@@ -184,6 +182,75 @@ export async function GET(req: NextRequest, res: NextResponse) {
     //return Response.json(members);
   } catch (error) {
     console.error("Error fetching members:", error);
-    return Response.json({ hello: "Data na" }, { status: 500 });
+    return Response.json({ message: "Internal Server Error" }, { status: 500 });
+  }
+}
+
+export async function PUT(req: NextRequest, res: NextResponse) {
+  try {
+    // Connect to the database
+    await dbConnect();
+
+    // Extract userId and newRole from req.body
+    const { userId, newRole } = await req.json();
+    console.log(userId);
+    console.log(newRole);
+
+    // Check if userId and newRole are provided and valid
+    if (!userId || typeof newRole !== "string") {
+      return Response.json(
+        { message: "Invalid userId or newRole provided" },
+        { status: 400 }
+      );
+    }
+
+    // Update the user's role based on userId
+    const updatedUser = await Member.findOneAndUpdate(
+      { id: userId }, // Search condition: Update user by id
+      { role: newRole }, // Update operation: Set user's role to newRole
+      { new: true } // Options: Return the updated document
+    );
+
+    // Check if user was found and updated
+    if (!updatedUser) {
+      return Response.json({ message: "User not found" }, { status: 404 });
+    }
+
+    // Return the updated user as JSON response
+    return Response.json(updatedUser);
+  } catch (error) {
+    console.error("Error updating user role:", error);
+    return Response.json({ message: "Internal Server Error" }, { status: 500 });
+  }
+}
+
+export async function DELETE(req: NextRequest, res: NextResponse) {
+  try {
+    // Connect to the database
+    await dbConnect();
+
+    // Check if a specific user ID is provided in the query parameters
+    const searchParams = req.nextUrl.searchParams;
+    const userId = searchParams.get("userId") as string | undefined;
+
+    if (!userId) {
+      return Response.json({ message: "User Not Defined" }, { status: 400 });
+    }
+
+    // Find the user by ID and delete
+    const deletedUser = await Member.findOneAndDelete({ id: userId });
+
+    if (!deletedUser) {
+      return Response.json({ message: "User not found" }, { status: 404 });
+    }
+
+    // Return success message
+    return Response.json(
+      { message: "User deleted successfully" },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error("Error deleting user:", error);
+    return Response.json({ message: "Internal Server Error" }, { status: 500 });
   }
 }
