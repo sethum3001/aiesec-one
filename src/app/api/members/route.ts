@@ -4,6 +4,8 @@ import dbConnect from "@/app/lib/dbConnect";
 import Member, { iMember, insertMembersIfNotExist } from "@/models/Member";
 import { requestGraphQL } from "@/app/util/graphql";
 import { json } from "body-parser";
+import { NextRequest, NextResponse } from "next/server";
+import { Resolver } from "dns";
 
 // Custom middleware function to parse JSON request bodies
 const jsonParser = json();
@@ -18,16 +20,6 @@ export const config = {
 // Function to fetch data from the GraphQL API
 
 export async function fetchDataFromGraphQL(expaIds: string[]) {
-  //const endpoint = "https://gis-api.aiesec.org/graphql"; // Replace with your GraphQL API endpoint
-  //const apiKey = "bd754a73f2e987d855a30d617b40a5472b70de93efd3e218b692406f8844a4a9"; // Replace 'YOUR_API_KEY' with your actual API key
-
-  // const client = new GraphQLClient(endpoint, {
-  //   headers: {
-  //     Authorization: `${apiKey}`
-  //     // Add other headers if necessary
-  //   }
-  // });
-
   const results = [];
 
   try {
@@ -85,7 +77,7 @@ export async function fetchDataFromGraphQL(expaIds: string[]) {
   }
 }
 
-export async function POST(req: NextApiRequest, res: NextApiResponse) {
+export async function POST(req: NextRequest, res: NextResponse) {
   try {
     // Extract the 'expaIds' array from the request body
     const { expaIds } = await req.json();
@@ -161,11 +153,35 @@ export async function POST(req: NextApiRequest, res: NextApiResponse) {
   }
 }
 
-export async function GET() {
+export async function GET(req: NextRequest, res: NextResponse) {
   try {
     await dbConnect();
-    const members = await Member.find({});
-    return Response.json(members);
+
+    // Check if a specific user ID is provided in the query parameters
+    const searchParams = req.nextUrl.searchParams;
+    const userId = searchParams.get("userId") as string | undefined;
+
+    if (userId) {
+      // Fetch a specific user by ID if userId is provided
+      const user = await Member.findOne({ id: userId });
+      if (!user) {
+        return Response.json({ message: "User not found" }, { status: 200 });
+      }
+
+      return Response.json({ user: user });
+    } else {
+      // Fetch all users if no userId is provided
+      const users = await Member.find({});
+
+      if (!users || users.length === 0) {
+        return Response.json({ message: "No users found" });
+      }
+
+      return Response.json({ users });
+    }
+
+    //const members = await Member.find({});
+    //return Response.json(members);
   } catch (error) {
     console.error("Error fetching members:", error);
     return Response.json({ hello: "Data na" }, { status: 500 });

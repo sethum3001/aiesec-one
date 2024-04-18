@@ -107,4 +107,4 @@ async function insertMembersIfNotExist(members: iMember[]) {
 const Member =
   mongoose.models.Member || mongoose.model<iMember>("Member", memberSchema);
 
-export { Member, insertMembersIfNotExist };
+export { Member as default, insertMembersIfNotExist };
