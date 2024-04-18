@@ -18,11 +18,11 @@ const resourceSchema = new Schema({
   },
   functions: {
     type: Array<String>,
-    required: true
+    
   },
   keywords: {
     type: Array<String>,
-    required: true
+    
   }
 });
 
