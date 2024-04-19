@@ -24,35 +24,35 @@ import {
 } from "@mantine/core";
 import { modals } from "@mantine/modals";
 import { IconEdit, IconTrash } from "@tabler/icons-react";
-import classes from "./resources.module.scss";
-import { ResourceResponse } from "@/app/types/ResourceResponse";
+import classes from "./opportunities.module.scss";
+import { OpportunityResponse } from "@/app/types/OpportunityResponse";
 import {
-  useCreateResource,
-  useDeleteResource,
-  useGetResources,
-  useUpdateResource
-} from "@/app/hooks/resources";
+  useCreateOpportunity,
+  useDeleteOpportunity,
+  useGetOpportunities,
+  useUpdateOpportunity
+} from "@/app/hooks/opportunities";
 import { validateRequired, validateUrl } from "@/app/util/dataUtils";
 
-function validateResource(resource: ResourceResponse) {
+function validateOpportunity(opportunity: OpportunityResponse) {
   return {
-    title: !validateRequired(resource.title) ? "Title is Required" : "",
-    url: !validateUrl(resource.url) ? "Invalid URL Format" : "",
-    // description: !validateRequired(resource.description) ? "Description is Required" : "",
-    link: !validateUrl(resource.link) ? "Invalid Link Format" : "",
-    // functions: !validateRequired(resource.functions) ? "Functions are Required" : "",
-    keywords: !validateRequired(resource.keywords)
+    title: !validateRequired(opportunity.title) ? "Title is Required" : "",
+    url: !validateUrl(opportunity.url) ? "Invalid URL Format" : "",
+    // description: !validateRequired(opportunity.description) ? "Description is Required" : "",
+    link: !validateUrl(opportunity.link) ? "Invalid Link Format" : "",
+    // functions: !validateRequired(opportunity.functions) ? "Functions are Required" : "",
+    keywords: !validateRequired(opportunity.keywords)
       ? "Keywords are Required"
       : ""
   };
 }
 
-const ResourcesPage = () => {
+const OpportunitiesPage = () => {
   const [validationErrors, setValidationErrors] = useState<
     Record<string, string | undefined>
   >({});
 
-  const columns = useMemo<MRT_ColumnDef<ResourceResponse>[]>(
+  const columns = useMemo<MRT_ColumnDef<OpportunityResponse>[]>(
     () => [
       {
         accessorKey: "title",
@@ -138,48 +138,48 @@ const ResourcesPage = () => {
 
   // Custom hooks for CRUD operations
   // @ts-ignore
-  const { mutateAsync: createResource, isLoading: isCreatingResource } =
-    useCreateResource();
+  const { mutateAsync: createOpportunity, isLoading: isCreatingOpportunity } =
+    useCreateOpportunity();
   const {
-    data: fetchedResources = [],
-    isError: isLoadingResourcesError,
-    isFetching: isFetchingResources,
-    isLoading: isLoadingResources
-  } = useGetResources();
+    data: fetchedOpportunities = [],
+    isError: isLoadingOpportunitiesError,
+    isFetching: isFetchingOpportunities,
+    isLoading: isLoadingOpportunities
+  } = useGetOpportunities();
   // @ts-ignore
-  const { mutateAsync: updateResource, isLoading: isUpdatingResource } =
-    useUpdateResource();
+  const { mutateAsync: updateOpportunity, isLoading: isUpdatingOpportunity } =
+    useUpdateOpportunity();
   // @ts-ignore
-  const { mutateAsync: deleteResource, isLoading: isDeletingResource } =
-    useDeleteResource();
+  const { mutateAsync: deleteOpportunity, isLoading: isDeletingOpportunity } =
+    useDeleteOpportunity();
 
   // Handlers for CRUD operations
-  const handleCreateResource: MRT_TableOptions<ResourceResponse>["onCreatingRowSave"] =
+  const handleCreateOpportunity: MRT_TableOptions<OpportunityResponse>["onCreatingRowSave"] =
     async ({ values, exitCreatingMode }) => {
-      const newValidationErrors = validateResource(values);
+      const newValidationErrors = validateOpportunity(values);
       if (Object.values(newValidationErrors).some((error) => error)) {
         setValidationErrors(newValidationErrors);
         return;
       }
       setValidationErrors({});
-      await createResource(values);
+      await createOpportunity(values);
       exitCreatingMode();
     };
 
-  const handleEditResource: MRT_TableOptions<ResourceResponse>["onEditingRowSave"] =
+  const handleEditOpportunity: MRT_TableOptions<OpportunityResponse>["onEditingRowSave"] =
     async ({ row, values, table }) => {
-      const newValidationErrors = validateResource(values);
+      const newValidationErrors = validateOpportunity(values);
       if (Object.values(newValidationErrors).some((error) => error)) {
         setValidationErrors(newValidationErrors);
         return;
       }
       setValidationErrors({});
       console.log(values);
-      await updateResource({ ...values, _id: row.original._id });
+      await updateOpportunity({ ...values, _id: row.original._id });
       table.setEditingRow(null); //exit editing mode
     };
 
-  const openDeleteConfirmModal = (row: MRT_Row<ResourceResponse>) =>
+  const openDeleteConfirmModal = (row: MRT_Row<OpportunityResponse>) =>
     modals.openConfirmModal({
       title: "Confirmation",
       children: (
@@ -190,17 +190,17 @@ const ResourcesPage = () => {
       ),
       labels: { confirm: "Delete", cancel: "Cancel" },
       confirmProps: { color: "red" },
-      onConfirm: () => deleteResource(row.original._id)
+      onConfirm: () => deleteOpportunity(row.original._id)
     });
 
   const table = useMantineReactTable({
     columns,
-    data: fetchedResources,
+    data: fetchedOpportunities,
     createDisplayMode: "modal", //default ('row', and 'custom' are also available)
     editDisplayMode: "modal", //default ('row', 'cell', 'table', and 'custom' are also available)
     enableEditing: true,
     getRowId: (row) => row._id,
-    mantineToolbarAlertBannerProps: isLoadingResourcesError
+    mantineToolbarAlertBannerProps: isLoadingOpportunitiesError
       ? {
           color: "red",
           children: "Error loading data"
@@ -212,13 +212,13 @@ const ResourcesPage = () => {
       }
     },
     onCreatingRowCancel: () => setValidationErrors({}),
-    onCreatingRowSave: handleCreateResource,
+    onCreatingRowSave: handleCreateOpportunity,
     onEditingRowCancel: () => setValidationErrors({}),
-    onEditingRowSave: handleEditResource,
+    onEditingRowSave: handleEditOpportunity,
     positionActionsColumn: "last",
     renderCreateRowModalContent: ({ table, row, internalEditComponents }) => (
       <Stack>
-        <Title order={3}>Create Resource</Title>
+        <Title order={3}>Create Opportunity</Title>
         {internalEditComponents}
         <Flex justify="flex-end" mt="xl">
           <MRT_EditActionButtons variant="text" table={table} row={row} />
@@ -227,7 +227,7 @@ const ResourcesPage = () => {
     ),
     renderEditRowModalContent: ({ table, row, internalEditComponents }) => (
       <Stack>
-        <Title order={3}>Edit Resource</Title>
+        <Title order={3}>Edit Opportunity</Title>
         {internalEditComponents}
         <Flex justify="flex-end" mt="xl">
           <MRT_EditActionButtons variant="text" table={table} row={row} />
@@ -258,10 +258,11 @@ const ResourcesPage = () => {
       </Flex>
     ),
     state: {
-      isLoading: isLoadingResources,
-      isSaving: isCreatingResource || isUpdatingResource || isDeletingResource,
-      showAlertBanner: isLoadingResourcesError,
-      showProgressBars: isFetchingResources
+      isLoading: isLoadingOpportunities,
+      isSaving:
+        isCreatingOpportunity || isUpdatingOpportunity || isDeletingOpportunity,
+      showAlertBanner: isLoadingOpportunitiesError,
+      showProgressBars: isFetchingOpportunities
     }
   });
 
@@ -276,14 +277,14 @@ const ResourcesPage = () => {
         }}
       >
         <Title mt={8} mb={24} order={1} style={{ color: "#1C7ED6" }}>
-          Resources
+          Opportunities
         </Title>
         <Button
           onClick={() => {
             table.setCreatingRow(true);
           }}
         >
-          Create Resource
+          Create Opportunity
         </Button>
       </Box>
       <div>
@@ -293,4 +294,4 @@ const ResourcesPage = () => {
   );
 };
 
-export default ResourcesPage;
+export default OpportunitiesPage;
