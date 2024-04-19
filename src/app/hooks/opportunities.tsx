@@ -41,7 +41,7 @@ function useCreateOpportunity() {
         url: url,
         description: description,
         link: link,
-        shortLink: "http://localhost:3000/opportunities/" + url,
+        shortLink: "https://one.aiesec.lk/opportunities/" + url,
         covImg: img.name,
         covImgUnique: uniqueFilename
       };
@@ -121,7 +121,7 @@ function useUpdateOpportunity() {
         url: url,
         description: description,
         link: link,
-        shortLink: "http://localhost:3000/opportunities/" + url,
+        shortLink: "https://one.aiesec.lk/opportunities/" + url,
         covImg: img.name,
         covImgUnique: uniqueFilename
       };
