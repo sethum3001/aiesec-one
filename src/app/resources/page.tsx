@@ -37,7 +37,7 @@ import { validateRequired, validateUrl } from "@/app/util/dataUtils";
 function validateResource(resource: ResourceResponse) {
   return {
     title: !validateRequired(resource.title) ? "Title is Required" : "",
-    url: !validateUrl(resource.url) ? "Invalid URL Format" : "",
+    url: !validateRequired(resource.url) ? "Invalid URL Format" : "",
     // description: !validateRequired(resource.description) ? "Description is Required" : "",
     link: !validateUrl(resource.link) ? "Invalid Link Format" : "",
     // functions: !validateRequired(resource.functions) ? "Functions are Required" : "",

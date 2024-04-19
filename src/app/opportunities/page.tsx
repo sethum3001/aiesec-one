@@ -38,11 +38,11 @@ import React from "react";
 function validateOpportunity(opportunity: OpportunityResponse) {
   return {
     title: !validateRequired(opportunity.title) ? "Title is Required" : "",
-    url: !validateUrl(opportunity.url) ? "Invalid URL Format" : "",
+    url: !validateRequired(opportunity.url) ? "URL is required" : "",
     // description: !validateRequired(opportunity.description) ? "Description is Required" : "",
-    link: !validateUrl(opportunity.link) ? "Invalid Link Format" : "",
+    link: !validateUrl(opportunity.link) ? "Invalid Link Format" : ""
     // functions: !validateRequired(opportunity.functions) ? "Functions are Required" : "",
-    keywords: !validateUrl(opportunity.appLink) ? "Invalid Link Format" : ""
+    // keywords: !validateUrl(opportunity.shortLink) ? "Invalid Link Format" : ""
   };
 }
 
@@ -112,8 +112,8 @@ const OpportunitiesPage = () => {
         }
       },
       {
-        accessorKey: "appLink",
-        header: "App Link",
+        accessorKey: "shortLink",
+        header: "Short Link",
         mantineEditTextInputProps: {
           type: "text",
           required: true,
@@ -121,12 +121,12 @@ const OpportunitiesPage = () => {
           onFocus: () =>
             setValidationErrors({
               ...validationErrors,
-              appLink: undefined
+              shortLink: undefined
             })
         }
       },
       {
-        accessorKey: "image",
+        accessorKey: "Img",
         header: "Cover Image",
         mantineEditTextInputProps: {
           type: "file",

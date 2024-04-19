@@ -15,10 +15,9 @@ const opportunitySchema = new Schema({
     required: true,
     unique: true
   },
-  appLink: {
+  shortLink: {
     type: String,
-    required: true,
-    unique: true
+    required: true
   },
   covImg: {
     type: String,

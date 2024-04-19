@@ -54,7 +54,7 @@ export const PUT = async (
 ) => {
   try {
     const { id } = context.params;
-    const { title, url, description, link, appLink, covImg, covImgUnique } =
+    const { title, url, description, link, shortLink, covImg, covImgUnique } =
       await req.json();
 
     if (!isValidId(id)) {
@@ -76,7 +76,7 @@ export const PUT = async (
           url,
           description,
           link,
-          appLink,
+          shortLink,
           covImg,
           covImgUnique
         }

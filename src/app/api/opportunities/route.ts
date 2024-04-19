@@ -31,7 +31,7 @@ export const GET = async () => {
 };
 
 export const POST = async (req: Request) => {
-  const { title, url, description, link, appLink, covImg, covImgUnique } =
+  const { title, url, description, link, shortLink, covImg, covImgUnique } =
     await req.json();
 
   try {
@@ -42,7 +42,7 @@ export const POST = async (req: Request) => {
       url,
       description,
       link,
-      appLink,
+      shortLink,
       covImg,
       covImgUnique
     });

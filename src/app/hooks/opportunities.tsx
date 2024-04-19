@@ -6,7 +6,7 @@ function useCreateOpportunity() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (opportunity: OpportunityRequest) => {
-      const { img, title, url, description, link, appLink } = opportunity;
+      const { img, title, url, description, link, shortLink } = opportunity;
       console.log(img);
 
       const handleUpload = async (): Promise<
@@ -41,7 +41,7 @@ function useCreateOpportunity() {
         url: url,
         description: description,
         link: link,
-        appLink: appLink,
+        shortLink: "http://localhost:3000/opportunities/" + url,
         covImg: img.name,
         covImgUnique: uniqueFilename
       };
@@ -86,7 +86,7 @@ function useUpdateOpportunity() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (opportunity: OpportunityResponse) => {
-      const { img, title, url, description, link, appLink } = opportunity;
+      const { img, title, url, description, link, shortLink } = opportunity;
       console.log(img);
 
       const handleUpload = async (): Promise<
@@ -121,12 +121,13 @@ function useUpdateOpportunity() {
         url: url,
         description: description,
         link: link,
-        appLink: appLink,
+        shortLink: "http://localhost:3000/opportunities/" + url,
         covImg: img.name,
         covImgUnique: uniqueFilename
       };
 
       console.log(opportunityData, "opportunityData");
+      console.log(`${process.env.NEXTAUTH_URL}`);
 
       const response = await fetch(`/api/opportunities/${opportunity._id}`, {
         method: "PUT",

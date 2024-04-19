@@ -4,6 +4,6 @@ export type OpportunityResponse = {
   url: string;
   description: string;
   link: string;
-  appLink: string;
+  shortLink: string;
   img: File;
 };
