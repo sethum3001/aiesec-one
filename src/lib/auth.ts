@@ -1,7 +1,7 @@
 import { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
-import clientPromise from "@/app/lib/mongodb";
-import { COLLECTIONS } from "@/app/lib/constants";
+import clientPromise from "@/lib/mongodb";
+import { COLLECTIONS } from "@/lib/constants";
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -11,8 +11,8 @@ export const authOptions: NextAuthOptions = {
     })
   ],
   pages: {
-    signIn: "/signin",
-    error: "/signin"
+    signIn: "/login",
+    error: "/login"
   },
   secret: process.env.NEXTAUTH_SECRET as string,
   callbacks: {
@@ -42,6 +42,7 @@ export const authOptions: NextAuthOptions = {
           .findOne({ email: session?.user?.email });
 
         if (userFromDB) {
+          session.user.name = userFromDB.name;
           session.user.role = userFromDB.role;
           session.user.entity = userFromDB.entity;
         }

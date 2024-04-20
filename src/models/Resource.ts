@@ -1,28 +1,25 @@
-import mongoose, { model, Schema } from "mongoose";
-import { COLLECTIONS } from "@/app/lib/constants";
+import mongoose, { Schema } from "mongoose";
 
 const resourceSchema = new Schema({
   title: {
     type: String,
     required: true
   },
-  url: {
+  description: String,
+  originalUrl: {
     type: String,
     unique: true
   },
-  description: String,
-  link: {
+  shortLink: {
     type: String,
     required: true,
     unique: true
   },
   functions: {
-    type: Array<String>,
-    
+    type: Array<String>
   },
   keywords: {
-    type: Array<String>,
-    
+    type: Array<String>
   }
 });
 

@@ -3,59 +3,67 @@
 import "@mantine/core/styles.css";
 import "@mantine/dates/styles.css";
 import "mantine-react-table/styles.css";
-import { ChangeEvent, FormEvent, useMemo, useState } from "react";
+import React, { ChangeEvent, useMemo, useState } from "react";
 import {
-  MRT_EditActionButtons,
   MantineReactTable,
   type MRT_ColumnDef,
+  MRT_EditActionButtons,
   type MRT_Row,
   type MRT_TableOptions,
   useMantineReactTable
 } from "mantine-react-table";
 import {
   ActionIcon,
+  Box,
   Button,
   Flex,
   Stack,
   Text,
   Title,
-  Tooltip,
-  Box
+  Tooltip
 } from "@mantine/core";
 import { modals } from "@mantine/modals";
-import { IconEdit, IconTrash } from "@tabler/icons-react";
+import { IconEdit, IconLink, IconTrash } from "@tabler/icons-react";
 import classes from "./opportunities.module.scss";
-import { OpportunityResponse } from "@/app/types/OpportunityResponse";
+import { OpportunityResponse } from "@/types/OpportunityResponse";
 import {
   useCreateOpportunity,
   useDeleteOpportunity,
   useGetOpportunities,
   useUpdateOpportunity
-} from "@/app/hooks/opportunities";
-import { validateRequired, validateUrl } from "@/app/util/dataUtils";
-import React from "react";
+} from "@/hooks/opportunities";
+import { validateRequired, validateUrl } from "@/util/dataUtils";
 
 function validateOpportunity(opportunity: OpportunityResponse) {
   return {
     title: !validateRequired(opportunity.title) ? "Title is Required" : "",
-    url: !validateRequired(opportunity.url) ? "URL is required" : "",
     // description: !validateRequired(opportunity.description) ? "Description is Required" : "",
-    link: !validateUrl(opportunity.link) ? "Invalid Link Format" : ""
-    // functions: !validateRequired(opportunity.functions) ? "Functions are Required" : "",
-    // keywords: !validateUrl(opportunity.shortLink) ? "Invalid Link Format" : ""
+    originalUrl: !validateRequired(opportunity.originalUrl)
+      ? "Original URL is required"
+      : !validateUrl(opportunity.originalUrl)
+        ? "Invalid URL, please enter full URL"
+        : "",
+    shortLink: !validateRequired(opportunity.shortLink)
+      ? "Short link is required"
+      : ""
   };
 }
 
 const OpportunitiesPage = () => {
-  const [file, setFile] = React.useState<File>();
+  const [fileInModal, setFileInModal] = React.useState<File>();
   const [validationErrors, setValidationErrors] = useState<
     Record<string, string | undefined>
   >({});
+  const [shortLinkInModal, setShortLinkInModal] = useState<string>("");
+
+  const resetInputs = () => {
+    setValidationErrors({});
+    setShortLinkInModal("");
+  };
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
-      const currentFile = event.target.files[0];
-      setFile(currentFile);
+      setFileInModal(event.target.files[0]);
     }
   };
 
@@ -71,22 +79,10 @@ const OpportunitiesPage = () => {
         }
       },
       {
-        accessorKey: "url",
-        header: "URL",
-        mantineEditTextInputProps: {
-          type: "text",
-          required: true,
-          error: validationErrors?.url,
-          onFocus: () =>
-            setValidationErrors({
-              ...validationErrors,
-              url: undefined
-            })
-        }
-      },
-      {
         accessorKey: "description",
         header: "Description",
+        enableSorting: false,
+        enableColumnActions: false,
         mantineEditTextInputProps: {
           type: "text",
           error: validationErrors?.description,
@@ -98,10 +94,13 @@ const OpportunitiesPage = () => {
         }
       },
       {
-        accessorKey: "link",
-        header: "Link",
+        accessorKey: "originalUrl",
+        header: "Original URL",
+        enableClickToCopy: true,
+        enableSorting: false,
+        enableColumnActions: false,
         mantineEditTextInputProps: {
-          type: "text",
+          type: "url",
           required: true,
           error: validationErrors?.link,
           onFocus: () =>
@@ -114,30 +113,52 @@ const OpportunitiesPage = () => {
       {
         accessorKey: "shortLink",
         header: "Short Link",
-        mantineEditTextInputProps: {
-          type: "text",
-          required: true,
-          error: validationErrors?.link,
-          onFocus: () =>
-            setValidationErrors({
-              ...validationErrors,
-              shortLink: undefined
-            })
+        enableClickToCopy: true,
+        mantineEditTextInputProps: ({ cell, column, row, table }) => {
+          return {
+            type: "text",
+            inputWrapperOrder: ["label", "input", "error", "description"],
+            description: (
+              <span
+                style={{
+                  paddingTop: 10,
+                  fontSize: "1.2em",
+                  fontWeight: 600,
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 8
+                }}
+              >
+                <IconLink size={16} /> https://one.aiesec.lk/opp/
+                {shortLinkInModal}
+              </span>
+            ),
+            required: true,
+            error: validationErrors?.url,
+            onChange: (event: ChangeEvent<HTMLInputElement>) => {
+              setShortLinkInModal(event.target.value);
+            },
+            onFocus: () =>
+              setValidationErrors({
+                ...validationErrors,
+                url: undefined
+              })
+          };
         }
       },
       {
-        accessorKey: "Img",
+        accessorKey: "coverImage",
         header: "Cover Image",
         mantineEditTextInputProps: {
           type: "file",
           onChange: handleFileChange,
-          required: true,
+          required: false,
           accept: "image/png,image/jpeg,image/jpg"
           // error: validationErrors?.title
         }
       }
     ],
-    [validationErrors]
+    [validationErrors, shortLinkInModal]
   );
 
   // Custom hooks for CRUD operations
@@ -165,8 +186,9 @@ const OpportunitiesPage = () => {
         setValidationErrors(newValidationErrors);
         return;
       }
-      setValidationErrors({});
-      values.img = file;
+      resetInputs();
+
+      values.coverImage = fileInModal;
       await createOpportunity(values);
       exitCreatingMode();
     };
@@ -178,8 +200,9 @@ const OpportunitiesPage = () => {
         setValidationErrors(newValidationErrors);
         return;
       }
-      setValidationErrors({});
-      values.img = file;
+      resetInputs();
+
+      values.img = fileInModal;
       await updateOpportunity({ ...values, _id: row.original._id });
       table.setEditingRow(null); //exit editing mode
     };
@@ -201,6 +224,11 @@ const OpportunitiesPage = () => {
   const table = useMantineReactTable({
     columns,
     data: fetchedOpportunities,
+    initialState: {
+      columnVisibility: {
+        coverImage: false
+      }
+    },
     createDisplayMode: "modal", //default ('row', and 'custom' are also available)
     editDisplayMode: "modal", //default ('row', 'cell', 'table', and 'custom' are also available)
     enableEditing: true,
@@ -216,9 +244,9 @@ const OpportunitiesPage = () => {
         minHeight: "500px"
       }
     },
-    onCreatingRowCancel: () => setValidationErrors({}),
+    onCreatingRowCancel: resetInputs,
     onCreatingRowSave: handleCreateOpportunity,
-    onEditingRowCancel: () => setValidationErrors({}),
+    onEditingRowCancel: () => resetInputs,
     onEditingRowSave: handleEditOpportunity,
     positionActionsColumn: "last",
     renderCreateRowModalContent: ({ table, row, internalEditComponents }) => (
@@ -266,8 +294,7 @@ const OpportunitiesPage = () => {
       isLoading: isLoadingOpportunities,
       isSaving:
         isCreatingOpportunity || isUpdatingOpportunity || isDeletingOpportunity,
-      showAlertBanner: isLoadingOpportunitiesError,
-      showProgressBars: isFetchingOpportunities
+      showAlertBanner: isLoadingOpportunitiesError
     }
   });
 

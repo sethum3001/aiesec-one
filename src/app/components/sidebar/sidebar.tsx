@@ -1,15 +1,30 @@
 "use client";
 
 import React, { useState } from "react";
-import { Center, Tooltip, UnstyledButton, Stack, rem } from "@mantine/core";
+import {
+  Avatar,
+  Center,
+  rem,
+  Stack,
+  Tooltip,
+  UnstyledButton
+} from "@mantine/core";
 import Image from "next/image";
 import classes from "./styles.module.scss";
 import aiesecHuman from "@app/../../public/aiesec-human-blue.jpg";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import {
+  Icon,
+  IconHome,
+  IconLinkPlus,
+  IconLogout,
+  IconSparkles,
+  IconUsersGroup
+} from "@tabler/icons-react";
 
 interface NavbarLinkProps {
-  icon: string;
+  icon: Icon;
   label: string;
   active?: boolean;
 
@@ -18,28 +33,27 @@ interface NavbarLinkProps {
 
 function NavbarLink({ icon: Icon, label, active, onClick }: NavbarLinkProps) {
   return (
-    <Tooltip label={label} position="right" transitionProps={{ duration: 0 }}>
+    <Tooltip label={label} position="right" transitionProps={{ duration: 150 }}>
       <UnstyledButton
         onClick={onClick}
         className={classes.link}
         data-active={active || undefined}
       >
-        <Image src={Icon} alt={label} width={20} height={20} />
+        <Icon width={24} height={24} />
       </UnstyledButton>
     </Tooltip>
   );
 }
 
 const sidebarData = [
-  { icon: "/Icon1.png", label: "Home", link: "/" },
-  { icon: "/Icon2.png", label: "Members", link: "/members" },
-  { icon: "/Icon3.png", label: "", link: "/" },
-  { icon: "/Icon4.png", label: "Opportunities", link: "/opportunities" },
-  { icon: "/Icon5.png", label: "Resources", link: "/resources" },
-  { icon: "/Icon6.png", label: "", link: "/" }
+  { icon: IconHome, label: "Home", link: "/" },
+  { icon: IconSparkles, label: "Opportunities", link: "/opportunities" },
+  { icon: IconLinkPlus, label: "Resources", link: "/resources" },
+  { icon: IconUsersGroup, label: "Members", link: "/members" }
 ];
 
 export default function Sidebar() {
+  const { data } = useSession();
   const [active, setActive] = useState<number | null>(null);
   const router = useRouter();
 
@@ -73,16 +87,31 @@ export default function Sidebar() {
       </Center>
 
       <div className={classes.navbarMain}>
-        <Stack justify="center" gap={5}>
+        <Stack justify="center" gap={6}>
           {links}
         </Stack>
       </div>
 
-      <Stack justify="center" gap={0}>
+      <Stack align="center" gap={10}>
+        {data?.user && (
+          <Tooltip
+            label={
+              <div>
+                <h4>{data.user.name}</h4>
+                <p>{data.user.email}</p>
+              </div>
+            }
+            position="right"
+          >
+            <Avatar size={36} src={data.user.image} alt="User" />
+          </Tooltip>
+        )}
         <NavbarLink
-          icon="/Icon7.png"
+          icon={IconLogout}
           label="Logout"
-          onClick={() => signOut()}
+          onClick={() =>
+            signOut({ callbackUrl: `${window.location.origin}/login` })
+          }
         />
       </Stack>
     </nav>

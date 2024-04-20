@@ -1,19 +1,19 @@
-import clientPromise from "@/app/lib/mongodb";
+import clientPromise from "@/lib/mongodb";
 import { ObjectId } from "mongodb";
 import { NextRequest } from "next/server";
-import { isValidId } from "@/app/util/dataUtils";
+import { isValidId } from "@/util/dataUtils";
 import {
   COLLECTIONS,
   ERROR_MESSAGES,
   HTTP_STATUS,
   SUCCESS_MESSAGES
-} from "@/app/lib/constants";
-import { errorResponse, successResponse } from "@/app/util/apiUtils";
+} from "@/lib/constants";
+import { errorResponse, successResponse } from "@/util/apiUtils";
 
-export const GET = async (
+export async function GET(
   req: NextRequest,
   context: { params: { id: string } }
-) => {
+) {
   try {
     // Extract the dynamic parameter (id) from the path parameter
     const { id } = context.params;
@@ -46,12 +46,12 @@ export const GET = async (
     console.error(error);
     return errorResponse(ERROR_MESSAGES.OPPORTUNITY_FETCH_FAILED, error);
   }
-};
+}
 
-export const PUT = async (
+export async function PUT(
   req: NextRequest,
   context: { params: { id: string } }
-) => {
+) {
   try {
     const { id } = context.params;
     const { title, url, description, link, shortLink, covImg, covImgUnique } =
@@ -92,12 +92,12 @@ export const PUT = async (
     console.error(error);
     return errorResponse(ERROR_MESSAGES.OPPORTUNITY_UPDATE_FAILED, error);
   }
-};
+}
 
-export const DELETE = async (
+export async function DELETE(
   req: NextRequest,
   context: { params: { id: string } }
-) => {
+) {
   try {
     const { id } = context.params;
 
@@ -125,4 +125,4 @@ export const DELETE = async (
     console.error(error);
     return errorResponse(ERROR_MESSAGES.OPPORTUNITY_DELETE_FAILED, error);
   }
-};
+}

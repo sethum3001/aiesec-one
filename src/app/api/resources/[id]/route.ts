@@ -1,20 +1,20 @@
-import clientPromise from "@/app/lib/mongodb";
+import clientPromise from "@/lib/mongodb";
 import { ObjectId } from "mongodb";
 import { NextRequest } from "next/server";
-import { isValidId } from "@/app/util/dataUtils";
+import { isValidId } from "@/util/dataUtils";
 import {
   COLLECTIONS,
   ERROR_MESSAGES,
   HTTP_STATUS,
   SUCCESS_MESSAGES
-} from "@/app/lib/constants";
-import Resource from "@/models/Resource";
-import { errorResponse, successResponse } from "@/app/util/apiUtils";
+} from "@/lib/constants";
+import { errorResponse, successResponse } from "@/util/apiUtils";
+import { ResourceRequest } from "@/types/ResourceRequest";
 
-export const GET = async (
+export async function GET(
   req: NextRequest,
   context: { params: { id: string } }
-) => {
+) {
   try {
     // Extract the dynamic parameter (id) from the path parameter
     const { id } = context.params;
@@ -47,16 +47,15 @@ export const GET = async (
     console.error(error);
     return errorResponse(ERROR_MESSAGES.RESOURCES_FETCH_FAILED, error);
   }
-};
+}
 
-export const PUT = async (
+export async function PUT(
   req: NextRequest,
   context: { params: { id: string } }
-) => {
+) {
   try {
     const { id } = context.params;
-    const { title, url, description, link, functions, keywords } =
-      await req.json();
+    const resourceRequest: ResourceRequest = await req.json();
 
     if (!isValidId(id)) {
       return errorResponse(
@@ -73,12 +72,12 @@ export const PUT = async (
       { _id: new ObjectId(id) },
       {
         $set: {
-          title,
-          url,
-          description,
-          link,
-          functions,
-          keywords
+          title: resourceRequest.title,
+          description: resourceRequest.description,
+          originalUrl: resourceRequest.originalUrl,
+          shortLink: resourceRequest.shortLink,
+          functions: resourceRequest.functions.split(","),
+          keywords: resourceRequest.keywords.split(",")
         }
       }
     );
@@ -92,12 +91,12 @@ export const PUT = async (
     console.error(error);
     return errorResponse(ERROR_MESSAGES.RESOURCE_UPDATE_FAILED, error);
   }
-};
+}
 
-export const DELETE = async (
+export async function DELETE(
   req: NextRequest,
   context: { params: { id: string } }
-) => {
+) {
   try {
     const { id } = context.params;
 
@@ -125,4 +124,4 @@ export const DELETE = async (
     console.error(error);
     return errorResponse(ERROR_MESSAGES.RESOURCE_DELETE_FAILED, error);
   }
-};
+}

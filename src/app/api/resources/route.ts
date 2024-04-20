@@ -1,17 +1,14 @@
-import clientPromise from "@/app/lib/mongodb";
+import clientPromise from "@/lib/mongodb";
 import Resource from "@/models/Resource";
-import {
-  COLLECTIONS,
-  ERROR_MESSAGES,
-  SUCCESS_MESSAGES
-} from "@/app/lib/constants";
+import { COLLECTIONS, ERROR_MESSAGES, SUCCESS_MESSAGES } from "@/lib/constants";
 import {
   createdResponse,
   errorResponse,
   successResponse
-} from "@/app/util/apiUtils";
+} from "@/util/apiUtils";
+import { ResourceRequest } from "@/types/ResourceRequest";
 
-export const GET = async () => {
+export async function GET() {
   try {
     const db = (await clientPromise).db();
 
@@ -25,22 +22,22 @@ export const GET = async () => {
     console.error(error);
     return errorResponse(ERROR_MESSAGES.RESOURCES_FETCH_FAILED, error);
   }
-};
+}
 
-export const POST = async (req: Request) => {
-  const { title, url, description, link, functions, keywords } =
-    await req.json();
+export async function POST(req: Request) {
+  const resourceRequest: ResourceRequest = await req.json();
+  console.log("Resource request: ", resourceRequest);
 
   try {
     const db = (await clientPromise).db();
 
     const newResource = new Resource({
-      title,
-      url,
-      description,
-      link,
-      functions,
-      keywords
+      title: resourceRequest.title,
+      description: resourceRequest.description,
+      originalUrl: resourceRequest.originalUrl,
+      shortLink: resourceRequest.shortLink,
+      functions: resourceRequest.functions.split(","),
+      keywords: resourceRequest.keywords.split(",")
     });
 
     const result = await db
@@ -54,4 +51,4 @@ export const POST = async (req: Request) => {
     console.error(error);
     return errorResponse(ERROR_MESSAGES.RESOURCE_CREATE_FAILED, error);
   }
-};
+}

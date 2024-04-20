@@ -5,27 +5,18 @@ const opportunitySchema = new Schema({
     type: String,
     required: true
   },
-  url: {
-    type: String,
-    unique: true
-  },
   description: String,
-  link: {
+  originalUrl: {
     type: String,
-    required: true,
     unique: true
   },
   shortLink: {
     type: String,
-    required: true
+    required: true,
+    unique: true
   },
-  covImg: {
-    type: String,
-    required: true
-  },
-  covImgUnique: {
-    type: String,
-    required: true
+  coverImageUrl: {
+    type: String
   }
 });
 

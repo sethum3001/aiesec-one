@@ -4,6 +4,16 @@ export const COLLECTIONS = {
   OPPORTUNITIES: "opportunities"
 };
 
+export const API_ENDPOINTS = {
+  RESOURCES: "/api/resources",
+  OPPORTUNITIES: "/api/opportunities"
+};
+
+export const QUERY_KEYS = {
+  RESOURCES: "resources",
+  OPPORTUNITIES: "opportunities"
+};
+
 export const HTTP_STATUS = {
   SUCCESS: 200,
   CREATED: 201,
@@ -25,7 +35,8 @@ export const SUCCESS_MESSAGES = {
   OPPORTUNITY_FETCHED: "Opportunity fetched successfully",
   OPPORTUNITIES_FETCHED: "Opportunities fetched successfully",
   OPPORTUNITY_UPDATED: "Opportunity updated successfully",
-  OPPORTUNITY_DELETED: "Opportunity deleted successfully"
+  OPPORTUNITY_DELETED: "Opportunity deleted successfully",
+  IMAGE_UPLOADED: "Image uploaded successfully"
 };
 
 export const ERROR_MESSAGES = {
@@ -45,5 +56,35 @@ export const ERROR_MESSAGES = {
   OPPORTUNITY_NOT_FOUND: "Opportunity not found",
   OPPORTUNITY_CREATE_FAILED: "Failed to create opportunity",
   OPPORTUNITY_UPDATE_FAILED: "Failed to update opportunity",
-  OPPORTUNITY_DELETE_FAILED: "Failed to delete opportunity"
+  OPPORTUNITY_DELETE_FAILED: "Failed to delete opportunity",
+  IMAGE_UPLOAD_FAILED: "Failed to upload image",
+  IMAGE_NOT_FOUND: "Image not found",
+  IMAGE_RETRIEVE_FAILED: "Failed to retrieve image"
 };
+
+export const APP_DOMAIN = "https://one.aiesec.lk/";
+
+export const SHORT_URL_PREFIXES = {
+  RESOURCES: APP_DOMAIN + "r/",
+  OPPORTUNITIES: APP_DOMAIN + "opp/"
+};
+
+export const ENTITY_FUNCTIONS = [
+  { label: "iGV", value: "iGV" },
+  { label: "oGV", value: "oGV" },
+  { label: "iGTa", value: "iGTa" },
+  { label: "iGTe", value: "iGTe" },
+  { label: "oGTa", value: "oGTa" },
+  { label: "oGTe", value: "oGTe" },
+  { label: "BD", value: "BD" },
+  { label: "PM", value: "PM" },
+  { label: "Brand", value: "Brand" },
+  { label: "EwA", value: "EwA" },
+  { label: "OD", value: "OD" },
+  { label: "Finance", value: "Finance" },
+  { label: "Legal", value: "Legal" },
+  { label: "DXP", value: "DXP" },
+  { label: "IM", value: "IM" },
+  { label: "ED", value: "ED" },
+  { label: "Misc", value: "Misc" }
+];

@@ -1,22 +1,22 @@
 "use client";
 
 import {
+  Alert,
   Card,
   Container,
   Divider,
   Group,
   Loader,
   Text,
-  Title,
-  Alert
+  Title
 } from "@mantine/core";
-import { GoogleButton } from "../components/GoogleButton";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import styles from "./styles.module.scss";
 import Image from "next/image";
 import aiesecHuman from "@app/../../public/aiesec-human-white.png";
 import React, { useState } from "react";
+import { GoogleButton } from "@/app/components/GoogleButton";
 
 export default function Login() {
   const searchParams = useSearchParams();

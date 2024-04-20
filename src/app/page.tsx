@@ -24,7 +24,12 @@ export default function Home() {
         <Text mb={4}>Your entity is: {session?.user?.entity}</Text>
         <Text mb={4}>Your role is: {session?.user?.role}</Text>
       </Container>
-      <Button mt="sm" onClick={() => signOut()}>
+      <Button
+        mt="sm"
+        onClick={() =>
+          signOut({ callbackUrl: `${window.location.origin}/login` })
+        }
+      >
         Sign out
       </Button>
     </main>

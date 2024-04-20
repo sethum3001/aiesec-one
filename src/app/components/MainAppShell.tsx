@@ -9,12 +9,12 @@ import "mantine-react-table/styles.css";
 export default function MainAppShell({
   children
 }: Readonly<{ children: React.ReactNode }>) {
-  const { data, status } = useSession();
+  const { status } = useSession();
 
   if (status === "loading") return <Loading />;
 
   // Private pages with sidebar (for authenticated users)
-  if (status === "unauthenticated")
+  if (status === "authenticated")
     return (
       <AppShell>
         <AppShell.Navbar>

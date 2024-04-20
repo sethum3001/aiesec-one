@@ -1,14 +1,15 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { ResourceRequest } from "@/app/types/ResourceRequest";
-import { ResourceResponse } from "@/app/types/ResourceResponse";
+import { ResourceRequest } from "@/types/ResourceRequest";
+import { ResourceResponse } from "@/types/ResourceResponse";
+import { API_ENDPOINTS, QUERY_KEYS, SHORT_URL_PREFIXES } from "@/lib/constants";
 
 function useCreateResource() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (resource: ResourceRequest) => {
-      const { url } = resource;
-      resource.url = "http://one.aiesec.lk/resources/" + url;
-      const response = await fetch("/api/resources", {
+      console.log(resource);
+      resource.shortLink = SHORT_URL_PREFIXES.RESOURCES + resource.shortLink;
+      const response = await fetch(API_ENDPOINTS.RESOURCES, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -20,15 +21,16 @@ function useCreateResource() {
       }
       return response.json();
     },
-    onSettled: () => queryClient.invalidateQueries({ queryKey: ["resources"] })
+    onSettled: () =>
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.RESOURCES] })
   });
 }
 
 function useGetResources() {
   return useQuery<ResourceResponse[]>({
-    queryKey: ["resources"],
+    queryKey: [QUERY_KEYS.RESOURCES],
     queryFn: async () => {
-      const response = await fetch("/api/resources");
+      const response = await fetch(API_ENDPOINTS.RESOURCES);
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
@@ -41,23 +43,25 @@ function useGetResources() {
 function useUpdateResource() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async (resource: ResourceResponse) => {
-      const { url } = resource;
-      resource.url = "https://one.aiesec.lk/resources/" + url;
-      const response = await fetch(`/api/resources/${resource._id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(resource)
-      });
+    mutationFn: async (resource: ResourceRequest) => {
+      resource.shortLink = SHORT_URL_PREFIXES.RESOURCES + resource.shortLink;
+      const response = await fetch(
+        `${API_ENDPOINTS.RESOURCES}/${resource._id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(resource)
+        }
+      );
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
       return response.json();
     },
-    onMutate: (newResourceInfo: ResourceResponse) => {
-      queryClient.setQueryData(["resources"], (prevResources: any) =>
+    onMutate: (newResourceInfo: ResourceRequest) => {
+      queryClient.setQueryData([QUERY_KEYS.RESOURCES], (prevResources: any) =>
         prevResources?.map((prevResource: ResourceResponse) =>
           prevResource._id === newResourceInfo._id
             ? newResourceInfo
@@ -65,7 +69,8 @@ function useUpdateResource() {
         )
       );
     },
-    onSettled: () => queryClient.invalidateQueries({ queryKey: ["resources"] })
+    onSettled: () =>
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.RESOURCES] })
   });
 }
 
@@ -73,7 +78,7 @@ function useDeleteResource() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (id: string) => {
-      const response = await fetch(`/api/resources/${id}`, {
+      const response = await fetch(`${API_ENDPOINTS.RESOURCES}/${id}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json"
@@ -85,13 +90,14 @@ function useDeleteResource() {
       return response.json();
     },
     onMutate: (id: string) => {
-      queryClient.setQueryData(["resources"], (prevResources: any) =>
+      queryClient.setQueryData([QUERY_KEYS.RESOURCES], (prevResources: any) =>
         prevResources?.filter(
           (resourceResponse: ResourceResponse) => resourceResponse._id !== id
         )
       );
     },
-    onSettled: () => queryClient.invalidateQueries({ queryKey: ["resources"] })
+    onSettled: () =>
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.RESOURCES] })
   });
 }
 

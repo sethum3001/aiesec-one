@@ -3,43 +3,49 @@
 import "@mantine/core/styles.css";
 import "@mantine/dates/styles.css";
 import "mantine-react-table/styles.css";
-import { useMemo, useState } from "react";
+import React, { ChangeEvent, useMemo, useState } from "react";
 import {
-  MRT_EditActionButtons,
   MantineReactTable,
   type MRT_ColumnDef,
+  MRT_EditActionButtons,
   type MRT_Row,
   type MRT_TableOptions,
   useMantineReactTable
 } from "mantine-react-table";
 import {
   ActionIcon,
+  Box,
   Button,
   Flex,
   Stack,
   Text,
   Title,
-  Tooltip,
-  Box
+  Tooltip
 } from "@mantine/core";
 import { modals } from "@mantine/modals";
-import { IconEdit, IconTrash } from "@tabler/icons-react";
+import { IconEdit, IconLink, IconTrash } from "@tabler/icons-react";
 import classes from "./resources.module.scss";
-import { ResourceResponse } from "@/app/types/ResourceResponse";
+import { ResourceResponse } from "@/types/ResourceResponse";
 import {
   useCreateResource,
   useDeleteResource,
   useGetResources,
   useUpdateResource
-} from "@/app/hooks/resources";
-import { validateRequired, validateUrl } from "@/app/util/dataUtils";
+} from "@/hooks/resources";
+import { validateRequired, validateUrl } from "@/util/dataUtils";
 
 function validateResource(resource: ResourceResponse) {
   return {
     title: !validateRequired(resource.title) ? "Title is Required" : "",
-    url: !validateRequired(resource.url) ? "Invalid URL Format" : "",
     // description: !validateRequired(resource.description) ? "Description is Required" : "",
-    link: !validateUrl(resource.link) ? "Invalid Link Format" : "",
+    originalUrl: !validateRequired(resource.originalUrl)
+      ? "Original URL is required"
+      : !validateUrl(resource.originalUrl)
+        ? "Invalid URL, please enter full URL"
+        : "",
+    shortLink: !validateRequired(resource.shortLink)
+      ? "Short link is required"
+      : "",
     // functions: !validateRequired(resource.functions) ? "Functions are Required" : "",
     keywords: !validateRequired(resource.keywords)
       ? "Keywords are Required"
@@ -52,6 +58,13 @@ const ResourcesPage = () => {
     Record<string, string | undefined>
   >({});
 
+  const [shortLinkInModal, setShortLinkInModal] = useState<string>("");
+
+  const resetInputs = () => {
+    setValidationErrors({});
+    setShortLinkInModal("");
+  };
+
   const columns = useMemo<MRT_ColumnDef<ResourceResponse>[]>(
     () => [
       {
@@ -61,20 +74,6 @@ const ResourcesPage = () => {
           type: "text",
           required: true,
           error: validationErrors?.title
-        }
-      },
-      {
-        accessorKey: "url",
-        header: "URL",
-        mantineEditTextInputProps: {
-          type: "text",
-          required: true,
-          error: validationErrors?.url,
-          onFocus: () =>
-            setValidationErrors({
-              ...validationErrors,
-              url: undefined
-            })
         }
       },
       {
@@ -91,10 +90,13 @@ const ResourcesPage = () => {
         }
       },
       {
-        accessorKey: "link",
-        header: "Link",
+        accessorKey: "originalUrl",
+        header: "Original URL",
+        enableClickToCopy: true,
+        enableSorting: false,
+        enableColumnActions: false,
         mantineEditTextInputProps: {
-          type: "text",
+          type: "url",
           required: true,
           error: validationErrors?.link,
           onFocus: () =>
@@ -105,8 +107,45 @@ const ResourcesPage = () => {
         }
       },
       {
+        accessorKey: "shortLink",
+        header: "Short Link",
+        enableClickToCopy: true,
+        mantineEditTextInputProps: ({ cell, column, row, table }) => {
+          return {
+            type: "text",
+            inputWrapperOrder: ["label", "input", "error", "description"],
+            description: (
+              <span
+                style={{
+                  paddingTop: 10,
+                  fontSize: "1.2em",
+                  fontWeight: 600,
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 8
+                }}
+              >
+                <IconLink size={16} /> https://one.aiesec.lk/r/
+                {shortLinkInModal}
+              </span>
+            ),
+            required: true,
+            error: validationErrors?.url,
+            onChange: (event: ChangeEvent<HTMLInputElement>) => {
+              setShortLinkInModal(event.target.value);
+            },
+            onFocus: () =>
+              setValidationErrors({
+                ...validationErrors,
+                url: undefined
+              })
+          };
+        }
+      },
+      {
         accessorKey: "functions",
         header: "Functions",
+        description: "Comma separated list of functions",
         mantineEditTextInputProps: {
           type: "text",
           required: true,
@@ -121,6 +160,7 @@ const ResourcesPage = () => {
       {
         accessorKey: "keywords",
         header: "Keywords",
+        description: "Comma separated list of keywords",
         mantineEditTextInputProps: {
           type: "text",
           required: true,
@@ -133,7 +173,7 @@ const ResourcesPage = () => {
         }
       }
     ],
-    [validationErrors]
+    [validationErrors, shortLinkInModal]
   );
 
   // Custom hooks for CRUD operations
@@ -161,7 +201,7 @@ const ResourcesPage = () => {
         setValidationErrors(newValidationErrors);
         return;
       }
-      setValidationErrors({});
+      resetInputs();
       await createResource(values);
       exitCreatingMode();
     };
@@ -173,7 +213,7 @@ const ResourcesPage = () => {
         setValidationErrors(newValidationErrors);
         return;
       }
-      setValidationErrors({});
+      resetInputs();
       console.log(values);
       await updateResource({ ...values, _id: row.original._id });
       table.setEditingRow(null); //exit editing mode
@@ -211,9 +251,9 @@ const ResourcesPage = () => {
         minHeight: "500px"
       }
     },
-    onCreatingRowCancel: () => setValidationErrors({}),
+    onCreatingRowCancel: () => resetInputs(),
     onCreatingRowSave: handleCreateResource,
-    onEditingRowCancel: () => setValidationErrors({}),
+    onEditingRowCancel: () => resetInputs(),
     onEditingRowSave: handleEditResource,
     positionActionsColumn: "last",
     renderCreateRowModalContent: ({ table, row, internalEditComponents }) => (
@@ -260,8 +300,7 @@ const ResourcesPage = () => {
     state: {
       isLoading: isLoadingResources,
       isSaving: isCreatingResource || isUpdatingResource || isDeletingResource,
-      showAlertBanner: isLoadingResourcesError,
-      showProgressBars: isFetchingResources
+      showAlertBanner: isLoadingResourcesError
     }
   });
 

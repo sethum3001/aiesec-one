@@ -1,5 +1,5 @@
 import mongoose, { Schema } from "mongoose";
-import { COLLECTIONS } from "@/app/lib/constants";
+import { COLLECTIONS } from "@/lib/constants";
 
 const UserSchema = new Schema(
   {
