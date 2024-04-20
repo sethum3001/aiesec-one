@@ -8,19 +8,27 @@ import Image from "next/image";
 import aiesecHuman from "@app/../../public/aiesec-human-white.png";
 import React, { useState } from "react";
 
-export default function Login() {
+export default function Launch() {
   const searchParams = useSearchParams();
   const { data: session } = useSession();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
+  const launch = () => {
+    router.push("/login");
+  };
+
   // Check for error message in query params
   const errorMessage = searchParams.get("error");
 
   return (
-    <Container fluid className={styles.login}>
+    <Container
+      fluid
+      className={styles.launch}
+      style={{ backgroundImage: "url('/natcon.jpg')", backgroundSize: "cover" }}
+    >
       <Card
-        shadow="sm"
+        shadow="xl"
         padding="lg"
         radius="lg"
         withBorder
@@ -33,12 +41,12 @@ export default function Login() {
           <strong>AIESEC One</strong>
         </Title>
 
-        <Text mb={8}>
+        <Text mt={8} mb={16}>
           The first step of the digital revolution
           <br />
           of AIESEC in Sri Lanka
         </Text>
-        <Button size="lg" mt="sm" onClick={() => router.push("/login")}>
+        <Button size="lg" mt="sm" onClick={launch}>
           Launch
         </Button>
       </Card>

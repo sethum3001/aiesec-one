@@ -1,0 +1,51 @@
+.launch {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+
+    .card {
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(10px);
+        margin: auto;
+        width: 90vw;
+        text-align: center;
+        padding: 28px;
+
+        @include larger-than($mantine-breakpoint-sm) {
+            width: 320px;
+        }
+
+        @include larger-than($mantine-breakpoint-md) {
+            width: 360px;
+        }
+
+        @include larger-than($mantine-breakpoint-lg) {
+            width: 540px;
+        }
+
+        img {
+            border-radius: 16px;
+            margin: auto;
+            margin-top: 8px;
+            margin-bottom: 24px;
+        }
+    }
+
+    .error {
+        span {
+            margin: auto;
+        }
+    }
+}
+
+.fullpage {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+
+    > * {
+        margin: auto;
+    }
+}
