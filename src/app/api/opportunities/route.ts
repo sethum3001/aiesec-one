@@ -13,7 +13,7 @@ import {
 } from "@/util/apiUtils";
 import { r2Client } from "@/lib/r2Client";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
-import { uuidV4 } from "mongodb/src/utils";
+import { uuid } from "uuidv4";
 
 export async function GET() {
   try {
@@ -54,7 +54,7 @@ export async function POST(req: Request) {
       }
     }
 
-    const uniqueId = uuidV4().toString();
+    const uniqueId = uuid();
     const db = (await clientPromise).db();
 
     const newOpportunity = new Opportunity({

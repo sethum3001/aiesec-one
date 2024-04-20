@@ -14,7 +14,7 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "AIESEC One",
   description:
-    "All in one platform to manage opportunities, resources, and members of AIESEC in Sri Lanka."
+    "The all in one platform to manage opportunities, resources, and members of AIESEC in Sri Lanka."
 };
 
 export default function RootLayout({

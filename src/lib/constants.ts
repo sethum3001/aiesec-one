@@ -6,7 +6,8 @@ export const COLLECTIONS = {
 
 export const API_ENDPOINTS = {
   RESOURCES: "/api/resources",
-  OPPORTUNITIES: "/api/opportunities"
+  OPPORTUNITIES: "/api/opportunities",
+  URL: "/api/url"
 };
 
 export const QUERY_KEYS = {
@@ -36,7 +37,9 @@ export const SUCCESS_MESSAGES = {
   OPPORTUNITIES_FETCHED: "Opportunities fetched successfully",
   OPPORTUNITY_UPDATED: "Opportunity updated successfully",
   OPPORTUNITY_DELETED: "Opportunity deleted successfully",
-  IMAGE_UPLOADED: "Image uploaded successfully"
+  IMAGE_UPLOADED: "Image uploaded successfully",
+  OPPORTUNITY_URL_FETCHED: "Opportunity URL fetched successfully",
+  RESOURCE_URL_FETCHED: "Resource URL fetched successfully"
 };
 
 export const ERROR_MESSAGES = {
@@ -59,14 +62,20 @@ export const ERROR_MESSAGES = {
   OPPORTUNITY_DELETE_FAILED: "Failed to delete opportunity",
   IMAGE_UPLOAD_FAILED: "Failed to upload image",
   IMAGE_NOT_FOUND: "Image not found",
-  IMAGE_RETRIEVE_FAILED: "Failed to retrieve image"
+  IMAGE_RETRIEVE_FAILED: "Failed to retrieve image",
+  URL_FETCH_FAILED: "Failed to fetch original URL from short link"
 };
 
-export const APP_DOMAIN = "https://one.aiesec.lk/";
+export const APP_DOMAIN = "https://one.aiesec.lk";
 
-export const SHORT_URL_PREFIXES = {
-  RESOURCES: APP_DOMAIN + "r/",
-  OPPORTUNITIES: APP_DOMAIN + "opp/"
+export const SHORT_LINK_TAGS = {
+  RESOURCES: "r",
+  OPPORTUNITIES: "opp"
+};
+
+export const SHORT_LINK_PREFIXES = {
+  RESOURCES: APP_DOMAIN + "/" + SHORT_LINK_TAGS.RESOURCES + "/",
+  OPPORTUNITIES: APP_DOMAIN + "/" + SHORT_LINK_TAGS.OPPORTUNITIES + "/"
 };
 
 export const ENTITY_FUNCTIONS = [

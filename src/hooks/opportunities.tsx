@@ -1,7 +1,11 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { OpportunityRequest } from "@/types/OpportunityRequest";
 import { OpportunityResponse } from "@/types/OpportunityResponse";
-import { API_ENDPOINTS, QUERY_KEYS, SHORT_URL_PREFIXES } from "@/lib/constants";
+import {
+  API_ENDPOINTS,
+  QUERY_KEYS,
+  SHORT_LINK_PREFIXES
+} from "@/lib/constants";
 import { ResourceResponse } from "@/types/ResourceResponse";
 
 function useCreateOpportunity() {
@@ -13,7 +17,7 @@ function useCreateOpportunity() {
         title: opportunity.title,
         description: opportunity.description,
         originalUrl: opportunity.originalUrl,
-        shortLink: SHORT_URL_PREFIXES.OPPORTUNITIES + opportunity.shortLink
+        shortLink: SHORT_LINK_PREFIXES.OPPORTUNITIES + opportunity.shortLink
       };
       formData.append("data", JSON.stringify(resourceData));
       if (opportunity.coverImage) {
@@ -60,7 +64,7 @@ function useUpdateOpportunity() {
         title: opportunity.title,
         description: opportunity.description,
         originalUrl: opportunity.originalUrl,
-        shortLink: SHORT_URL_PREFIXES.OPPORTUNITIES + opportunity.shortLink
+        shortLink: SHORT_LINK_PREFIXES.OPPORTUNITIES + opportunity.shortLink
       };
       formData.append("data", JSON.stringify(resourceData));
       if (opportunity.coverImage) {

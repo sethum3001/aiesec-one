@@ -1,14 +1,18 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ResourceRequest } from "@/types/ResourceRequest";
 import { ResourceResponse } from "@/types/ResourceResponse";
-import { API_ENDPOINTS, QUERY_KEYS, SHORT_URL_PREFIXES } from "@/lib/constants";
+import {
+  API_ENDPOINTS,
+  QUERY_KEYS,
+  SHORT_LINK_PREFIXES
+} from "@/lib/constants";
 
 function useCreateResource() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (resource: ResourceRequest) => {
       console.log(resource);
-      resource.shortLink = SHORT_URL_PREFIXES.RESOURCES + resource.shortLink;
+      resource.shortLink = SHORT_LINK_PREFIXES.RESOURCES + resource.shortLink;
       const response = await fetch(API_ENDPOINTS.RESOURCES, {
         method: "POST",
         headers: {
@@ -44,7 +48,7 @@ function useUpdateResource() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (resource: ResourceRequest) => {
-      resource.shortLink = SHORT_URL_PREFIXES.RESOURCES + resource.shortLink;
+      resource.shortLink = SHORT_LINK_PREFIXES.RESOURCES + resource.shortLink;
       const response = await fetch(
         `${API_ENDPOINTS.RESOURCES}/${resource._id}`,
         {

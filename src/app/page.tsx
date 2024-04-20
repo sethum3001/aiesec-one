@@ -1,13 +1,15 @@
 "use client";
 
 import styles from "./page.module.scss";
-import { signOut, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { Button, Container, Text, Title } from "@mantine/core";
 import Image from "next/image";
 import aiesecHuman from "@app/../../public/aiesec-human-blue.jpg";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
   const { data: session } = useSession();
+  const router = useRouter();
 
   return (
     <main className={styles.main}>
@@ -17,20 +19,23 @@ export default function Home() {
           AIESEC One
         </Title>
         <hr />
-        <Title order={2} mb="xs" mt="lg">
-          Welcome {session?.user?.name}
+        <Title order={2} mb="xs" mt="lg" style={{ fontWeight: 400 }}>
+          Hey {session?.user?.name}!
         </Title>
-        <Text mb={4}>Your email is: {session?.user?.email}</Text>
-        <Text mb={4}>Your entity is: {session?.user?.entity}</Text>
-        <Text mb={4}>Your role is: {session?.user?.role}</Text>
+
+        <Title order={4} mt={2} mb={8}>
+          Welcome to <strong>AIESEC One</strong>
+        </Title>
+        <Text mb={4} mt={4} style={{ color: "grey" }}>
+          The all in one platform to manage
+          <br />
+          opportunities, resources, and members
+          <br />
+          of AIESEC in Sri Lanka.
+        </Text>
       </Container>
-      <Button
-        mt="sm"
-        onClick={() =>
-          signOut({ callbackUrl: `${window.location.origin}/login` })
-        }
-      >
-        Sign out
+      <Button mt="sm" onClick={() => router.push("/opportunities")}>
+        Explore
       </Button>
     </main>
   );
