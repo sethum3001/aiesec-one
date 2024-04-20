@@ -39,5 +39,5 @@ export default function MainAppShell({
     );
 
   // Public pages (for unauthenticated users)
-  // return children;
+  return children;
 }
