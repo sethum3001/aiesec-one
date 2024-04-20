@@ -21,9 +21,9 @@ export const SUCCESS_MESSAGES = {
   RESOURCE_DELETED: "Resource deleted successfully",
 
   // Opportunities
-  OPPORTUNITIES_FETCHED: "Opportunities fetched successfully",
-  OPPORTUNITY_FETCHED: "Opportunity fetched successfully",
   OPPORTUNITY_CREATED: "Opportunity created successfully",
+  OPPORTUNITY_FETCHED: "Opportunity fetched successfully",
+  OPPORTUNITIES_FETCHED: "Opportunities fetched successfully",
   OPPORTUNITY_UPDATED: "Opportunity updated successfully",
   OPPORTUNITY_DELETED: "Opportunity deleted successfully"
 };
@@ -39,11 +39,11 @@ export const ERROR_MESSAGES = {
   RESOURCE_ID_INVALID: "Invalid resource ID",
 
   // Opportunities
+  OPPORTUNITY_ID_INVALID: "Invalid opportunity ID",
   OPPORTUNITIES_FETCH_FAILED: "Failed to fetch opportunities",
   OPPORTUNITY_FETCH_FAILED: "Failed to fetch opportunity",
+  OPPORTUNITY_NOT_FOUND: "Opportunity not found",
   OPPORTUNITY_CREATE_FAILED: "Failed to create opportunity",
   OPPORTUNITY_UPDATE_FAILED: "Failed to update opportunity",
-  OPPORTUNITY_DELETE_FAILED: "Failed to delete opportunity",
-  OPPORTUNITY_NOT_FOUND: "Opportunity not found",
-  OPPORTUNITY_ID_INVALID: "Invalid resource ID"
+  OPPORTUNITY_DELETE_FAILED: "Failed to delete opportunity"
 };

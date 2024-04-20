@@ -31,7 +31,7 @@ export const GET = async () => {
 };
 
 export const POST = async (req: Request) => {
-  const { title, url, description, link, functions, keywords } =
+  const { title, url, description, link, shortLink, covImg, covImgUnique } =
     await req.json();
 
   try {
@@ -42,8 +42,9 @@ export const POST = async (req: Request) => {
       url,
       description,
       link,
-      functions,
-      keywords
+      shortLink,
+      covImg,
+      covImgUnique
     });
 
     const result = await db

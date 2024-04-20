@@ -1,5 +1,4 @@
-import mongoose, { model, Schema } from "mongoose";
-import { COLLECTIONS } from "@/app/lib/constants";
+import mongoose, { Schema } from "mongoose";
 
 const opportunitySchema = new Schema({
   title: {
@@ -16,12 +15,16 @@ const opportunitySchema = new Schema({
     required: true,
     unique: true
   },
-  functions: {
-    type: Array<String>,
+  shortLink: {
+    type: String,
     required: true
   },
-  keywords: {
-    type: Array<String>,
+  covImg: {
+    type: String,
+    required: true
+  },
+  covImgUnique: {
+    type: String,
     required: true
   }
 });

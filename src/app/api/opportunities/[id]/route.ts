@@ -8,9 +8,7 @@ import {
   HTTP_STATUS,
   SUCCESS_MESSAGES
 } from "@/app/lib/constants";
-import Opportunity from "@/models/Opportunity";
 import { errorResponse, successResponse } from "@/app/util/apiUtils";
-import opportunity from "@/models/Opportunity";
 
 export const GET = async (
   req: NextRequest,
@@ -22,7 +20,7 @@ export const GET = async (
 
     if (!isValidId(id)) {
       return errorResponse(
-        ERROR_MESSAGES.RESOURCE_ID_INVALID,
+        ERROR_MESSAGES.OPPORTUNITY_ID_INVALID,
         null,
         HTTP_STATUS.BAD_REQUEST
       );
@@ -31,11 +29,11 @@ export const GET = async (
     const db = (await clientPromise).db();
 
     // Convert the dynamic parameter to an ObjectId and query the database
-    const resource = await db
+    const opportunity = await db
       .collection(COLLECTIONS.OPPORTUNITIES)
       .findOne({ _id: new ObjectId(id) });
 
-    if (resource) {
+    if (opportunity) {
       return successResponse(SUCCESS_MESSAGES.OPPORTUNITY_FETCHED, opportunity);
     } else {
       return errorResponse(
@@ -56,7 +54,7 @@ export const PUT = async (
 ) => {
   try {
     const { id } = context.params;
-    const { title, url, description, link, functions, keywords } =
+    const { title, url, description, link, shortLink, covImg, covImgUnique } =
       await req.json();
 
     if (!isValidId(id)) {
@@ -78,8 +76,9 @@ export const PUT = async (
           url,
           description,
           link,
-          functions,
-          keywords
+          shortLink,
+          covImg,
+          covImgUnique
         }
       }
     );
@@ -118,7 +117,7 @@ export const DELETE = async (
       .deleteOne({ _id: new ObjectId(id) });
 
     if (result.deletedCount > 0) {
-      return successResponse(SUCCESS_MESSAGES.OPPORTUNITY_DELETED);
+      return successResponse(SUCCESS_MESSAGES.OPPORTUNITY_DELETED, { _id: id });
     } else {
       return errorResponse(ERROR_MESSAGES.OPPORTUNITY_NOT_FOUND);
     }

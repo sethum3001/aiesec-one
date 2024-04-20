@@ -6,12 +6,55 @@ function useCreateOpportunity() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (opportunity: OpportunityRequest) => {
+      const { img, title, url, description, link, shortLink } = opportunity;
+      console.log(img);
+
+      const handleUpload = async (): Promise<
+        { filename: string; uniqueFilename: string } | undefined
+      > => {
+        if (!img) return;
+
+        const [filename, extension] = img.name.split(".");
+
+        try {
+          const response = await fetch("/api/upload", {
+            method: "POST",
+            body: JSON.stringify({ extension })
+          });
+          const { url, uniqueFilename } = await response.json();
+
+          await fetch(url, {
+            method: "PUT",
+            body: img
+          });
+
+          return uniqueFilename;
+        } catch (error) {
+          console.error("Error uploading file:", error);
+        }
+      };
+
+      const uniqueFilename = await handleUpload();
+
+      const opportunityData = {
+        title: title,
+        url: url,
+        description: description,
+        link: link,
+        shortLink: "https://one.aiesec.lk/opportunities/" + url,
+        covImg: img.name,
+        covImgUnique: uniqueFilename
+      };
+
+      console.log(opportunityData, "opportunityData");
+
+      //creating new opportunity
       const response = await fetch("/api/opportunities", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "image/jpeg,image/jpg,image/png"
         },
-        body: JSON.stringify(opportunity)
+        body: JSON.stringify(opportunityData)
       });
       if (!response.ok) {
         throw new Error("Network response was not ok");
@@ -27,7 +70,9 @@ function useGetOpportunities() {
   return useQuery<OpportunityResponse[]>({
     queryKey: ["opportunities"],
     queryFn: async () => {
-      const response = await fetch("/api/opportunities");
+      const response = await fetch("/api/opportunities", {
+        method: "GET"
+      });
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
@@ -41,12 +86,55 @@ function useUpdateOpportunity() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (opportunity: OpportunityResponse) => {
+      const { img, title, url, description, link, shortLink } = opportunity;
+      console.log(img);
+
+      const handleUpload = async (): Promise<
+        { filename: string; uniqueFilename: string } | undefined
+      > => {
+        if (!img) return;
+
+        const [filename, extension] = img.name.split(".");
+
+        try {
+          const response = await fetch("/api/upload", {
+            method: "POST",
+            body: JSON.stringify({ extension })
+          });
+          const { url, uniqueFilename } = await response.json();
+
+          await fetch(url, {
+            method: "PUT",
+            body: img
+          });
+
+          return uniqueFilename;
+        } catch (error) {
+          console.error("Error uploading file:", error);
+        }
+      };
+
+      const uniqueFilename = await handleUpload();
+
+      const opportunityData = {
+        title: title,
+        url: url,
+        description: description,
+        link: link,
+        shortLink: "https://one.aiesec.lk/opportunities/" + url,
+        covImg: img.name,
+        covImgUnique: uniqueFilename
+      };
+
+      console.log(opportunityData, "opportunityData");
+      console.log(`${process.env.NEXTAUTH_URL}`);
+
       const response = await fetch(`/api/opportunities/${opportunity._id}`, {
         method: "PUT",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "image/jpeg,image/jpg,image/png"
         },
-        body: JSON.stringify(opportunity)
+        body: JSON.stringify(opportunityData)
       });
       if (!response.ok) {
         throw new Error("Network response was not ok");

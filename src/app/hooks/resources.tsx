@@ -6,6 +6,8 @@ function useCreateResource() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (resource: ResourceRequest) => {
+      const { url } = resource;
+      resource.url = "http://one.aiesec.lk/resources/" + url;
       const response = await fetch("/api/resources", {
         method: "POST",
         headers: {
@@ -40,6 +42,8 @@ function useUpdateResource() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (resource: ResourceResponse) => {
+      const { url } = resource;
+      resource.url = "https://one.aiesec.lk/resources/" + url;
       const response = await fetch(`/api/resources/${resource._id}`, {
         method: "PUT",
         headers: {
