@@ -34,7 +34,7 @@ export default function Home() {
           of AIESEC in Sri Lanka.
         </Text>
       </Container>
-      <Button mt="sm" onClick={() => router.push("/opportunities")}>
+      <Button mt="sm" onClick={() => router.push("/login")}>
         Explore
       </Button>
     </main>
