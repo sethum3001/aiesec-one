@@ -45,6 +45,9 @@ function validateOpportunity(opportunity: OpportunityResponse) {
         : "",
     shortLink: !validateRequired(opportunity.shortLink)
       ? "Short link is required"
+      : "",
+    deadline: !validateRequired(opportunity.deadline)
+      ? "Deadline is Required"
       : ""
   };
 }
@@ -155,6 +158,14 @@ const OpportunitiesPage = () => {
           required: false,
           accept: "image/png,image/jpeg,image/jpg"
           // error: validationErrors?.title
+        }
+      },
+      {
+        accessorKey: "deadline",
+        header: "Deadline",
+        mantineEditTextInputProps: {
+          type: "date",
+          required: true
         }
       }
     ],

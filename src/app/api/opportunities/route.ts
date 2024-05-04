@@ -64,7 +64,8 @@ export async function POST(req: Request) {
       shortLink: opportunityRequest.shortLink,
       coverImageUrl: opportunityRequest?.coverImage
         ? await uploadFileToR2(file, uniqueId)
-        : null
+        : null,
+      deadline: opportunityRequest.deadline
     });
 
     const result = await db

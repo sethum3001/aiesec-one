@@ -5,4 +5,5 @@ export type OpportunityRequest = {
   originalUrl: string;
   shortLink: string;
   coverImage?: File | null;
+  deadline: string;
 };

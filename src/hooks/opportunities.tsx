@@ -17,7 +17,8 @@ function useCreateOpportunity() {
         title: opportunity.title,
         description: opportunity.description,
         originalUrl: opportunity.originalUrl,
-        shortLink: SHORT_LINK_PREFIXES.OPPORTUNITIES + opportunity.shortLink
+        shortLink: SHORT_LINK_PREFIXES.OPPORTUNITIES + opportunity.shortLink,
+        deadline: opportunity.deadline
       };
       formData.append("data", JSON.stringify(resourceData));
       if (opportunity.coverImage) {
@@ -49,7 +50,18 @@ function useGetOpportunities() {
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
-      return (await response.json()).data;
+      const responseData = await response.json();
+
+      // Filter the data based on the deadline date
+      const currentDate = new Date();
+      const filteredData = responseData.data.filter(
+        (opportunity: OpportunityResponse) => {
+          const deadlineDate = new Date(opportunity.deadline);
+          return deadlineDate >= currentDate;
+        }
+      );
+
+      return filteredData;
     },
     refetchOnWindowFocus: false
   });
@@ -64,17 +76,21 @@ function useUpdateOpportunity() {
         title: opportunity.title,
         description: opportunity.description,
         originalUrl: opportunity.originalUrl,
-        shortLink: SHORT_LINK_PREFIXES.OPPORTUNITIES + opportunity.shortLink
+        shortLink: SHORT_LINK_PREFIXES.OPPORTUNITIES + opportunity.shortLink,
+        deadline: opportunity.deadline
       };
       formData.append("data", JSON.stringify(resourceData));
       if (opportunity.coverImage) {
         formData.append("file", opportunity.coverImage);
       }
 
-      const response = await fetch(API_ENDPOINTS.OPPORTUNITIES, {
-        method: "PUT",
-        body: formData
-      });
+      const response = await fetch(
+        `${API_ENDPOINTS.OPPORTUNITIES}/${opportunity._id}`,
+        {
+          method: "PUT",
+          body: formData
+        }
+      );
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
