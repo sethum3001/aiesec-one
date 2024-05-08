@@ -23,7 +23,7 @@ import {
   Tooltip
 } from "@mantine/core";
 import { modals } from "@mantine/modals";
-import { IconEdit, IconLink, IconTrash } from "@tabler/icons-react";
+import { IconEdit, IconLink, IconTrash, IconEye } from "@tabler/icons-react";
 import classes from "./opportunities.module.scss";
 import { OpportunityResponse } from "@/types/OpportunityResponse";
 import {
@@ -33,6 +33,8 @@ import {
   useUpdateOpportunity
 } from "@/hooks/opportunities";
 import { validateRequired, validateUrl } from "@/util/dataUtils";
+import { Router } from "next/router";
+import { useRouter } from "next/navigation";
 
 function validateOpportunity(opportunity: OpportunityResponse) {
   return {
@@ -232,6 +234,13 @@ const OpportunitiesPage = () => {
       onConfirm: () => deleteOpportunity(row.original._id)
     });
 
+  const router = useRouter();
+
+  const handleView = (row: MRT_Row<OpportunityResponse>) => {
+    const urlWithId = `${row.original.shortLink}`;
+    router.push(urlWithId);
+  };
+
   const table = useMantineReactTable({
     columns,
     data: fetchedOpportunities,
@@ -297,6 +306,15 @@ const OpportunitiesPage = () => {
             onClick={() => openDeleteConfirmModal(row)}
           >
             <IconTrash />
+          </ActionIcon>
+        </Tooltip>
+        <Tooltip label="View">
+          <ActionIcon
+            variant="subtle"
+            size="sm"
+            onClick={() => handleView(row)}
+          >
+            <IconEye />
           </ActionIcon>
         </Tooltip>
       </Flex>
