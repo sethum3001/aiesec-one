@@ -53,15 +53,15 @@ function useGetOpportunities() {
       const responseData = await response.json();
 
       // Filter the data based on the deadline date
-      const currentDate = new Date();
-      const filteredData = responseData.data.filter(
-        (opportunity: OpportunityResponse) => {
-          const deadlineDate = new Date(opportunity.deadline);
-          return deadlineDate >= currentDate;
-        }
-      );
+      // const currentDate = new Date();
+      // const filteredData = responseData.data.filter(
+      //   (opportunity: OpportunityResponse) => {
+      //     const deadlineDate = new Date(opportunity.deadline);
+      //     return deadlineDate >= currentDate;
+      //   }
+      // );
 
-      return filteredData;
+      return responseData.data;
     },
     refetchOnWindowFocus: false
   });

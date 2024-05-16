@@ -34,55 +34,71 @@ export default function RedirectedOpportunity({
   params: { id: string };
 }) {
   const [data, setData] = useState<OpportunityResponse | null>(null);
+  const [deadlineExpired, setDeadlineExpired] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
     const fetchData = async () => {
-      const data = await fetchOriginalUrl(params.id as string);
-      setData(data);
+      const fetchedData = await fetchOriginalUrl(params.id as string);
+      setData(fetchedData);
     };
+
     fetchData();
-  }, [params.id]);
+  }, [params.id]); // Include params.id in the dependency array
 
-  if (data) {
-    const handleRedirect = () => {
-      router.push(data.originalUrl);
-    };
+  // Check if data and deadline exist
+  useEffect(() => {
+    if (data && data.deadline) {
+      const deadlineDate = new Date(data.deadline);
+      const currentDate = new Date();
 
-    return (
-      <Box className={styles.container}>
-        <Card className={styles.card}>
-          <Card.Section>
-            {data && data.coverImageUrl ? (
-              <Image src={data.coverImageUrl} alt={data.title} height={160} />
-            ) : (
-              <Image
-                src="https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-7.png"
-                alt="dummy image"
-                height={160}
-              />
-            )}
-          </Card.Section>
-          <Group>
-            <Text fz="md" fw={500}>
-              {data.title}
-            </Text>
-            <Text fz="sm" c="dimmed">
-              {data.deadline}
-            </Text>
-          </Group>
-          <Text mt="sm" mb="md" c="dimmed" fz="sm">
-            {data.description}
-          </Text>
-          <Button onClick={handleRedirect} className={styles.button}>
-            Apply Now
-          </Button>
-        </Card>
-      </Box>
-    );
-  } else {
+      // Check if the deadline is expired
+      setDeadlineExpired(deadlineDate < currentDate);
+    }
+  }, [data]); // Include data in the dependency array
+
+  if (!data) {
     return (
       <LoadingOverlay zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} />
     );
   }
+
+  const handleRedirect = () => {
+    router.push(data.originalUrl);
+  };
+
+  return (
+    <Box className={styles.container}>
+      <Card className={styles.card}>
+        <Card.Section>
+          {data.coverImageUrl ? (
+            <Image src={data.coverImageUrl} alt={data.title} height={160} />
+          ) : (
+            <Image
+              src="https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-7.png"
+              alt="dummy image"
+              height={160}
+            />
+          )}
+        </Card.Section>
+        <Group>
+          <Text fz="md" fw={500}>
+            {data.title}
+          </Text>
+          <Text fz="sm" c="dimmed">
+            {data.deadline}
+          </Text>
+        </Group>
+        <Text mt="sm" mb="md" c="dimmed" fz="sm">
+          {data.description}
+        </Text>
+        <Button disabled={deadlineExpired} onClick={handleRedirect}>
+          Apply Now
+        </Button>
+        {deadlineExpired && (
+          <p className={styles.deadline}>The deadline has expired</p>
+        )}
+      </Card>
+    </Box>
+  );
 }
