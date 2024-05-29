@@ -81,7 +81,7 @@ export default function RedirectedOpportunity({
             />
           )}
         </Card.Section>
-        <Group>
+        <Group className={styles.cardGroup}>
           <Text fz="md" fw={500}>
             {data.title}
           </Text>
