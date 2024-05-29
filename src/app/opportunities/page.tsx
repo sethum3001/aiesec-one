@@ -30,13 +30,17 @@ import {
   useCreateOpportunity,
   useDeleteOpportunity,
   useGetOpportunities,
-  useUpdateOpportunity
+  useUpdateOpportunity,
+  shortLinkAvailability
 } from "@/hooks/opportunities";
 import { validateRequired, validateUrl } from "@/util/dataUtils";
 import { Router } from "next/router";
 import { useRouter } from "next/navigation";
 
-function validateOpportunity(opportunity: OpportunityResponse) {
+function validateOpportunity(
+  opportunity: OpportunityResponse,
+  shortLinkStatus: Boolean
+) {
   return {
     title: !validateRequired(opportunity.title) ? "Title is Required" : "",
     // description: !validateRequired(opportunity.description) ? "Description is Required" : "",
@@ -47,7 +51,9 @@ function validateOpportunity(opportunity: OpportunityResponse) {
         : "",
     shortLink: !validateRequired(opportunity.shortLink)
       ? "Short link is required"
-      : "",
+      : !shortLinkStatus
+        ? "Link is not available"
+        : "",
     deadline: !validateRequired(opportunity.deadline)
       ? "Deadline is Required"
       : ""
@@ -60,6 +66,7 @@ const OpportunitiesPage = () => {
     Record<string, string | undefined>
   >({});
   const [shortLinkInModal, setShortLinkInModal] = useState<string>("");
+  const [shortLinkStatus, setShortLinkStatus] = useState<boolean>(false);
 
   const resetInputs = () => {
     setValidationErrors({});
@@ -70,6 +77,20 @@ const OpportunitiesPage = () => {
     if (event.target.files) {
       setFileInModal(event.target.files[0]);
     }
+  };
+
+  const checkShortLinkAvailability = (shortLinkInModal: string) => {
+    shortLinkAvailability(shortLinkInModal)
+      .then((data) => {
+        if (data.exists) {
+          setShortLinkStatus(false); //not available
+        } else {
+          setShortLinkStatus(true); // available
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   };
 
   const columns = useMemo<MRT_ColumnDef<OpportunityResponse>[]>(
@@ -107,7 +128,7 @@ const OpportunitiesPage = () => {
         mantineEditTextInputProps: {
           type: "url",
           required: true,
-          error: validationErrors?.link,
+          error: validationErrors?.originalUrl,
           onFocus: () =>
             setValidationErrors({
               ...validationErrors,
@@ -139,8 +160,9 @@ const OpportunitiesPage = () => {
               </span>
             ),
             required: true,
-            error: validationErrors?.url,
+            error: validationErrors?.shortLink,
             onChange: (event: ChangeEvent<HTMLInputElement>) => {
+              checkShortLinkAvailability(event.target.value);
               setShortLinkInModal(event.target.value);
             },
             onFocus: () =>
@@ -167,7 +189,13 @@ const OpportunitiesPage = () => {
         header: "Deadline",
         mantineEditTextInputProps: {
           type: "date",
-          required: true
+          required: true,
+          error: validationErrors?.deadline,
+          onFocus: () =>
+            setValidationErrors({
+              ...validationErrors,
+              url: undefined
+            })
         }
       }
     ],
@@ -194,7 +222,7 @@ const OpportunitiesPage = () => {
   // Handlers for CRUD operations
   const handleCreateOpportunity: MRT_TableOptions<OpportunityResponse>["onCreatingRowSave"] =
     async ({ values, exitCreatingMode }) => {
-      const newValidationErrors = validateOpportunity(values);
+      const newValidationErrors = validateOpportunity(values, shortLinkStatus);
       if (Object.values(newValidationErrors).some((error) => error)) {
         setValidationErrors(newValidationErrors);
         return;
@@ -208,7 +236,7 @@ const OpportunitiesPage = () => {
 
   const handleEditOpportunity: MRT_TableOptions<OpportunityResponse>["onEditingRowSave"] =
     async ({ row, values, table }) => {
-      const newValidationErrors = validateOpportunity(values);
+      const newValidationErrors = validateOpportunity(values, shortLinkStatus);
       if (Object.values(newValidationErrors).some((error) => error)) {
         setValidationErrors(newValidationErrors);
         return;

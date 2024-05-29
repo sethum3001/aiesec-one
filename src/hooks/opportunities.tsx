@@ -52,15 +52,6 @@ function useGetOpportunities() {
       }
       const responseData = await response.json();
 
-      // Filter the data based on the deadline date
-      // const currentDate = new Date();
-      // const filteredData = responseData.data.filter(
-      //   (opportunity: OpportunityResponse) => {
-      //     const deadlineDate = new Date(opportunity.deadline);
-      //     return deadlineDate >= currentDate;
-      //   }
-      // );
-
       return responseData.data;
     },
     refetchOnWindowFocus: false
@@ -142,9 +133,24 @@ function useDeleteOpportunity() {
   });
 }
 
+async function shortLinkAvailability(shortLink: string) {
+  const response = await fetch(
+    `${API_ENDPOINTS.OPPORTUNITIES}?shortLink=${shortLink}`,
+    {
+      method: "GET"
+    }
+  );
+  if (!response.ok) {
+    throw new Error("Network response was not ok");
+  }
+  const responseData = await response.json();
+  return { exists: responseData.exists, message: responseData.message };
+}
+
 export {
   useCreateOpportunity,
   useGetOpportunities,
   useUpdateOpportunity,
-  useDeleteOpportunity
+  useDeleteOpportunity,
+  shortLinkAvailability
 };
