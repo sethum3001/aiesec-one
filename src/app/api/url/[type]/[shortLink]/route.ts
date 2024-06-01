@@ -27,7 +27,7 @@ export async function GET(
       if (opportunity) {
         return successResponse(
           SUCCESS_MESSAGES.OPPORTUNITY_URL_FETCHED,
-          opportunity.originalUrl
+          opportunity
         );
       } else {
         return errorResponse(

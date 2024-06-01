@@ -4,7 +4,8 @@ import {
   COLLECTIONS,
   ERROR_MESSAGES,
   HTTP_STATUS,
-  SUCCESS_MESSAGES
+  SUCCESS_MESSAGES,
+  SHORT_LINK_PREFIXES
 } from "@/lib/constants";
 import {
   createdResponse,
@@ -14,23 +15,58 @@ import {
 import { r2Client } from "@/lib/r2Client";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
 import { uuid } from "uuidv4";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function GET() {
+export async function GET(req: NextRequest) {
+  let opportunities;
+
+  const shortLink = req.nextUrl.searchParams.get("shortLink");
+
   try {
     const db = (await clientPromise).db();
 
-    const opportunities = await db
-      .collection(COLLECTIONS.OPPORTUNITIES)
-      .find({})
-      .toArray();
+    if (shortLink) {
+      const opportunity = await db
+        .collection(COLLECTIONS.OPPORTUNITIES)
+        .findOne({ shortLink: SHORT_LINK_PREFIXES.OPPORTUNITIES + shortLink });
 
-    return successResponse(
-      SUCCESS_MESSAGES.OPPORTUNITIES_FETCHED,
-      opportunities
-    );
+      if (opportunity) {
+        return new Response(
+          JSON.stringify({ exists: true, message: "Short Link already taken" }),
+          {
+            status: 200,
+            headers: { "Content-Type": "application/json" }
+          }
+        );
+      } else {
+        return new Response(
+          JSON.stringify({ exists: false, message: "Short Link is not taken" }),
+          {
+            status: 200,
+            headers: { "Content-Type": "application/json" }
+          }
+        );
+      }
+    } else {
+      opportunities = await db
+        .collection(COLLECTIONS.OPPORTUNITIES)
+        .find({})
+        .toArray();
+
+      return successResponse(
+        SUCCESS_MESSAGES.OPPORTUNITIES_FETCHED,
+        opportunities
+      );
+    }
   } catch (error) {
     console.error(error);
-    return errorResponse(ERROR_MESSAGES.OPPORTUNITIES_FETCH_FAILED, error);
+    return new Response(
+      JSON.stringify({ message: "Error fetching opportunities" }),
+      {
+        status: 500,
+        headers: { "Content-Type": "application/json" }
+      }
+    );
   }
 }
 
@@ -64,7 +100,8 @@ export async function POST(req: Request) {
       shortLink: opportunityRequest.shortLink,
       coverImageUrl: opportunityRequest?.coverImage
         ? await uploadFileToR2(file, uniqueId)
-        : null
+        : null,
+      deadline: opportunityRequest.deadline
     });
 
     const result = await db

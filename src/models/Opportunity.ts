@@ -17,6 +17,10 @@ const opportunitySchema = new Schema({
   },
   coverImageUrl: {
     type: String
+  },
+  deadline: {
+    type: String,
+    required: true
   }
 });
 

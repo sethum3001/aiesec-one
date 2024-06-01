@@ -17,7 +17,8 @@ function useCreateOpportunity() {
         title: opportunity.title,
         description: opportunity.description,
         originalUrl: opportunity.originalUrl,
-        shortLink: SHORT_LINK_PREFIXES.OPPORTUNITIES + opportunity.shortLink
+        shortLink: SHORT_LINK_PREFIXES.OPPORTUNITIES + opportunity.shortLink,
+        deadline: opportunity.deadline
       };
       formData.append("data", JSON.stringify(resourceData));
       if (opportunity.coverImage) {
@@ -49,7 +50,9 @@ function useGetOpportunities() {
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
-      return (await response.json()).data;
+      const responseData = await response.json();
+
+      return responseData.data;
     },
     refetchOnWindowFocus: false
   });
@@ -64,17 +67,21 @@ function useUpdateOpportunity() {
         title: opportunity.title,
         description: opportunity.description,
         originalUrl: opportunity.originalUrl,
-        shortLink: SHORT_LINK_PREFIXES.OPPORTUNITIES + opportunity.shortLink
+        shortLink: SHORT_LINK_PREFIXES.OPPORTUNITIES + opportunity.shortLink,
+        deadline: opportunity.deadline
       };
       formData.append("data", JSON.stringify(resourceData));
       if (opportunity.coverImage) {
         formData.append("file", opportunity.coverImage);
       }
 
-      const response = await fetch(API_ENDPOINTS.OPPORTUNITIES, {
-        method: "PUT",
-        body: formData
-      });
+      const response = await fetch(
+        `${API_ENDPOINTS.OPPORTUNITIES}/${opportunity._id}`,
+        {
+          method: "PUT",
+          body: formData
+        }
+      );
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
@@ -126,9 +133,24 @@ function useDeleteOpportunity() {
   });
 }
 
+async function shortLinkAvailability(shortLink: string) {
+  const response = await fetch(
+    `${API_ENDPOINTS.OPPORTUNITIES}?shortLink=${shortLink}`,
+    {
+      method: "GET"
+    }
+  );
+  if (!response.ok) {
+    throw new Error("Network response was not ok");
+  }
+  const responseData = await response.json();
+  return { exists: responseData.exists, message: responseData.message };
+}
+
 export {
   useCreateOpportunity,
   useGetOpportunities,
   useUpdateOpportunity,
-  useDeleteOpportunity
+  useDeleteOpportunity,
+  shortLinkAvailability
 };

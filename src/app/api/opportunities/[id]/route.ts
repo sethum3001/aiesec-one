@@ -9,6 +9,10 @@ import {
   SUCCESS_MESSAGES
 } from "@/lib/constants";
 import { errorResponse, successResponse } from "@/util/apiUtils";
+import { uuid } from "uuidv4";
+import Opportunity from "@/models/Opportunity";
+import { PutObjectCommand } from "@aws-sdk/client-s3";
+import { r2Client } from "@/lib/r2Client";
 
 export async function GET(
   req: NextRequest,
@@ -54,8 +58,6 @@ export async function PUT(
 ) {
   try {
     const { id } = context.params;
-    const { title, url, description, link, shortLink, covImg, covImgUnique } =
-      await req.json();
 
     if (!isValidId(id)) {
       return errorResponse(
@@ -65,6 +67,25 @@ export async function PUT(
       );
     }
 
+    const formData = await req.formData();
+    const file = formData.get("file") as File;
+    const data = formData.get("data");
+    let opportunityRequest = null;
+
+    if (data) {
+      try {
+        opportunityRequest = JSON.parse(data.toString());
+      } catch (error) {
+        console.error("Error parsing opportunityRequest data:", error);
+        return errorResponse(
+          ERROR_MESSAGES.OPPORTUNITY_CREATE_FAILED,
+          error,
+          HTTP_STATUS.BAD_REQUEST
+        );
+      }
+    }
+
+    const uniqueId = uuid();
     const db = (await clientPromise).db();
 
     // Update the document
@@ -72,13 +93,14 @@ export async function PUT(
       { _id: new ObjectId(id) },
       {
         $set: {
-          title,
-          url,
-          description,
-          link,
-          shortLink,
-          covImg,
-          covImgUnique
+          title: opportunityRequest.title,
+          description: opportunityRequest.description,
+          originalUrl: opportunityRequest.originalUrl,
+          shortLink: opportunityRequest.shortLink,
+          coverImageUrl: opportunityRequest?.coverImage
+            ? await uploadFileToR2(file, uniqueId)
+            : null,
+          deadline: opportunityRequest.deadline
         }
       }
     );
@@ -124,5 +146,25 @@ export async function DELETE(
   } catch (error) {
     console.error(error);
     return errorResponse(ERROR_MESSAGES.OPPORTUNITY_DELETE_FAILED, error);
+  }
+}
+
+async function uploadFileToR2(file: File, uniqueId: string) {
+  try {
+    const bucketName = process.env.S3_BUCKET_NAME;
+    const key = `${uniqueId}`;
+
+    const command = new PutObjectCommand({
+      Bucket: bucketName,
+      Key: key,
+      Body: file,
+      ContentType: file.type
+    });
+
+    await r2Client.send(command);
+    return `s3://${bucketName}/${key}`;
+  } catch (error) {
+    console.error("Error uploading file to S3:", error);
+    throw error;
   }
 }
