@@ -121,7 +121,7 @@ const OpportunitiesPage = () => {
       },
       {
         accessorKey: "originalUrl",
-        header: "Original URL",
+        header: "Application Link",
         enableClickToCopy: true,
         enableSorting: false,
         enableColumnActions: false,
@@ -138,7 +138,7 @@ const OpportunitiesPage = () => {
       },
       {
         accessorKey: "shortLink",
-        header: "Short Link",
+        header: "Opportunity Link",
         enableClickToCopy: true,
         mantineEditTextInputProps: ({ cell, column, row, table }) => {
           return {

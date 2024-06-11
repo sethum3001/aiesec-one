@@ -4,6 +4,7 @@
   align-items: center;
   padding: 20px;
   height: 100vh;
+  box-sizing: border-box;
 }
 
 .card {
@@ -13,11 +14,18 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column; /* Align items vertically */
+  box-sizing: border-box;
 }
 
 .card img {
   width: 100%;
   border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.cardGroup {
+  display: flex;
+  justify-content: space-between;
   margin-bottom: 10px;
 }
 
@@ -38,7 +46,7 @@
 }
 
 .button {
-  margin-top: auto; /* Stick the button to the bottom */
+  margin-top: auto; 
   background-color: #007bff;
   color: #fff;
   padding: 10px 20px;
@@ -52,7 +60,57 @@
   background-color: #0056b3;
 }
 
-.deadline{
+.deadline {
   color: #EF4444;
   font-size: 14px;
+}
+
+/* Media Queries for Responsiveness */
+
+@media (max-width: 768px) {
+  .card {
+    width: 80%;
+  }
+
+  .cardGroup {
+    flex-direction: column;
+  }
+
+  .card-title {
+    font-size: 18px;
+  }
+
+  .card-deadline,
+  .card-description {
+    font-size: 14px;
+  }
+
+  .button {
+    padding: 8px 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 10px;
+      }
+
+  .card {
+    width: 100%;
+    padding: 10px;
+  }
+
+  .card-title {
+    font-size: 16px;
+  }
+
+  .card-deadline,
+  .card-description {
+    font-size: 12px;
+  }
+
+  .button {
+    padding: 6px 12px;
+    font-size: 14px;
+  }
 }
