@@ -42,6 +42,7 @@ export default function Login() {
     }
   };
 
+  // If session exists, navigate to the home page
   if (session != null) {
     setTimeout(() => {
       router.push("/");

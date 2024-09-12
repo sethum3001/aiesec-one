@@ -9,6 +9,7 @@ import Loading from "@/app/loading";
 
 import "./globals.scss";
 
+// Load the Inter font with Latin subset.
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -46,9 +47,10 @@ export default function RootLayout({
       </head>
 
       <body className={inter.className}>
-        <Suspense fallback={<Loading />}>
+        <Suspense fallback={<Loading />}> {/* Handles lazy loading with a fallback loading spinner. */}
+          {/* Wrapping the app inside Providers for global state, auth, etc. */}
           <Providers>
-            <MainAppShell>{children}</MainAppShell>
+            <MainAppShell>{children}</MainAppShell> {/*Core structure for the AIESEC One UI. */}
           </Providers>
         </Suspense>
       </body>

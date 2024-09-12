@@ -1,5 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 
+// Define the schema for the Opportunity model
 const opportunitySchema = new Schema({
   title: {
     type: String,
@@ -24,5 +25,6 @@ const opportunitySchema = new Schema({
   }
 });
 
+// Export the Opportunity model, or use the existing one if it has already been defined
 export default mongoose.models.Opportunity ||
   mongoose.model("Opportunity", opportunitySchema);

@@ -1,5 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 
+// Define the schema for the Resource model
 const resourceSchema = new Schema({
   title: {
     type: String,
@@ -23,5 +24,6 @@ const resourceSchema = new Schema({
   }
 });
 
+// Export the Resource model, or use the existing one if it has already been defined
 export default mongoose.models.Resource ||
   mongoose.model("Resource", resourceSchema);

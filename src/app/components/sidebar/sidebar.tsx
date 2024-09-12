@@ -24,14 +24,15 @@ import {
   IconUserCircle
 } from "@tabler/icons-react";
 
+// Define the props for the NavbarLink component
 interface NavbarLinkProps {
-  icon: Icon;
-  label: string;
-  active?: boolean;
-
-  onClick?(): void;
+    icon: Icon; // Icon to display for the link
+    label: string; // Tooltip label for the link
+    active?: boolean; // Flag to indicate if the link is active
+    onClick?(): void; // Optional onClick handler for the link
 }
 
+// Renders individual sidebar links with a tooltip and an icon
 function NavbarLink({ icon: Icon, label, active, onClick }: NavbarLinkProps) {
   return (
     <Tooltip label={label} position="right" transitionProps={{ duration: 150 }}>
@@ -46,6 +47,7 @@ function NavbarLink({ icon: Icon, label, active, onClick }: NavbarLinkProps) {
   );
 }
 
+// Data for the sidebar links: each link has an icon, label, and a route (link)
 const sidebarData = [
   { icon: IconHome, label: "Home", link: "/" },
   { icon: IconSparkles, label: "Opportunities", link: "/opportunities" },
@@ -54,16 +56,18 @@ const sidebarData = [
   { icon: IconUserCircle, label: "Groups", link: "/groups" }
 ];
 
+// Renders the navigation bar
 export default function Sidebar() {
   const { data } = useSession();
   const [active, setActive] = useState<number | null>(null);
   const router = useRouter();
 
+    // Map through sidebarData to generate NavbarLink components for each item
   const links = sidebarData.map((link, index) => (
     <NavbarLink
-      {...link}
-      key={link.label}
-      active={index === active}
+      {...link} // Spread properties of the link object into the component props
+      key={link.label} // Use label as unique key
+      active={index === active} // Set active state if the current link is selected
       onClick={() => {
         if (link.link) {
           setActive(index);
@@ -73,6 +77,7 @@ export default function Sidebar() {
     />
   ));
 
+    // Styles for the AIESEC logo
   const imageStyles: React.CSSProperties = {
     marginTop: rem(8)
   };

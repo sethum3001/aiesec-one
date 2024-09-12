@@ -8,6 +8,7 @@ import {
 } from "@/lib/constants";
 import { ResourceResponse } from "@/types/ResourceResponse";
 
+// Custom hook for creating a new opportunity
 function useCreateOpportunity() {
   const queryClient = useQueryClient();
   return useMutation({
@@ -40,6 +41,7 @@ function useCreateOpportunity() {
   });
 }
 
+// Custom hook for fetching opportunities
 function useGetOpportunities() {
   return useQuery<OpportunityResponse[]>({
     queryKey: [QUERY_KEYS.OPPORTUNITIES],
@@ -58,6 +60,7 @@ function useGetOpportunities() {
   });
 }
 
+// Custom hook for updating an existing opportunity
 function useUpdateOpportunity() {
   const queryClient = useQueryClient();
   return useMutation({
@@ -103,6 +106,7 @@ function useUpdateOpportunity() {
   });
 }
 
+// Custom hook for deleting an opportunity
 function useDeleteOpportunity() {
   const queryClient = useQueryClient();
   return useMutation({
@@ -126,13 +130,14 @@ function useDeleteOpportunity() {
             (opportunityResponse: OpportunityResponse) =>
               opportunityResponse._id !== id
           )
-      );
+      );// Update the cache to remove the deleted opportunity <----
     },
     onSettled: () =>
       queryClient.invalidateQueries({ queryKey: ["opportunities"] })
   });
 }
 
+// Function to check the availability of a short link
 async function shortLinkAvailability(shortLink: string) {
   const response = await fetch(
     `${API_ENDPOINTS.OPPORTUNITIES}?shortLink=${shortLink}`,

@@ -34,6 +34,7 @@ import {
 } from "@/hooks/resources";
 import { validateRequired, validateUrl } from "@/util/dataUtils";
 
+// Function to validate a resource, checking for required fields and valid URLs
 function validateResource(resource: ResourceResponse) {
   return {
     title: !validateRequired(resource.title) ? "Title is Required" : "",
@@ -53,6 +54,7 @@ function validateResource(resource: ResourceResponse) {
   };
 }
 
+// Main component for displaying and managing groups
 const GroupsPage = () => {
   const [validationErrors, setValidationErrors] = useState<
     Record<string, string | undefined>
@@ -65,6 +67,7 @@ const GroupsPage = () => {
     setShortLinkInModal("");
   };
 
+    // useMemo to define columns of the table, each column has header and validation
   const columns = useMemo<MRT_ColumnDef<ResourceResponse>[]>(
     () => [
       {
@@ -125,7 +128,7 @@ const GroupsPage = () => {
   const { mutateAsync: deleteResource, isLoading: isDeletingResource } =
     useDeleteResource();
 
-  // Handlers for CRUD operations
+  // Handlers for CRUD operations related to resource
   const handleCreateResource: MRT_TableOptions<ResourceResponse>["onCreatingRowSave"] =
     async ({ values, exitCreatingMode }) => {
       const newValidationErrors = validateResource(values);
@@ -165,13 +168,14 @@ const GroupsPage = () => {
       onConfirm: () => deleteResource(row.original._id)
     });
 
+    // Initialize the MantineReactTable hook with table options and state
   const table = useMantineReactTable({
     columns,
-    data: fetchedResources,
+    data: fetchedResources, // Fetched resources data
     createDisplayMode: "modal", //default ('row', and 'custom' are also available)
     editDisplayMode: "modal", //default ('row', 'cell', 'table', and 'custom' are also available)
-    enableEditing: true,
-    getRowId: (row) => row._id,
+    enableEditing: true, // Enable editing functionality
+    getRowId: (row) => row._id, // Define how to get row ID
     mantineToolbarAlertBannerProps: isLoadingResourcesError
       ? {
           color: "red",
@@ -183,11 +187,11 @@ const GroupsPage = () => {
         minHeight: "500px"
       }
     },
-    onCreatingRowCancel: () => resetInputs(),
-    onCreatingRowSave: handleCreateResource,
-    onEditingRowCancel: () => resetInputs(),
-    onEditingRowSave: handleEditResource,
-    positionActionsColumn: "last",
+    onCreatingRowCancel: () => resetInputs(), // Reset inputs on canceling row creation
+    onCreatingRowSave: handleCreateResource, // Handle row creation
+    onEditingRowCancel: () => resetInputs(), // Reset inputs on canceling row editing
+    onEditingRowSave: handleEditResource, // Handle row editing
+    positionActionsColumn: "last", // Place action column at the last position
     renderCreateRowModalContent: ({ table, row, internalEditComponents }) => (
       <Stack>
         <Title order={3}>Create Group</Title>

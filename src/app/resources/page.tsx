@@ -233,7 +233,8 @@ const ResourcesPage = () => {
       onConfirm: () => deleteResource(row.original._id)
     });
 
-  const table = useMantineReactTable({
+    // Table configuration, including rendering modal content for create/edit actions
+    const table = useMantineReactTable({
     columns,
     data: fetchedResources,
     createDisplayMode: "modal", //default ('row', and 'custom' are also available)

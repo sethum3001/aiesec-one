@@ -9,6 +9,7 @@ import "mantine-react-table/styles.css";
 export default function MainAppShell({
   children
 }: Readonly<{ children: React.ReactNode }>) {
+    // Use the session hook to get the authentication status.
   const { status } = useSession();
 
   if (status === "loading") return <Loading />;

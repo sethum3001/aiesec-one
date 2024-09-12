@@ -5,14 +5,15 @@ import {
   API_ENDPOINTS,
   QUERY_KEYS,
   SHORT_LINK_PREFIXES
-} from "@/lib/constants";
+} from "@/lib/constants"; // Import constants for API endpoints, query keys, and link prefixes
 
+// Custom hook for creating a resource
 function useCreateResource() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (resource: ResourceRequest) => {
       console.log(resource);
-      resource.shortLink = SHORT_LINK_PREFIXES.RESOURCES + resource.shortLink;
+      resource.shortLink = SHORT_LINK_PREFIXES.RESOURCES + resource.shortLink; // Prepend the short link prefix
       const response = await fetch(API_ENDPOINTS.RESOURCES, {
         method: "POST",
         headers: {
@@ -20,7 +21,7 @@ function useCreateResource() {
         },
         body: JSON.stringify(resource)
       });
-      if (!response.ok) {
+      if (!response.ok) { // Check if response is OK
         throw new Error("Network response was not ok");
       }
       return response.json();
@@ -30,11 +31,12 @@ function useCreateResource() {
   });
 }
 
+// Custom hook for fetching resources
 function useGetResources() {
   return useQuery<ResourceResponse[]>({
-    queryKey: [QUERY_KEYS.RESOURCES],
+    queryKey: [QUERY_KEYS.RESOURCES], // Define query key for resource fetching
     queryFn: async () => {
-      const response = await fetch(API_ENDPOINTS.RESOURCES);
+      const response = await fetch(API_ENDPOINTS.RESOURCES); // Fetch resources from API
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
@@ -44,13 +46,14 @@ function useGetResources() {
   });
 }
 
+// Custom hook for updating a resource
 function useUpdateResource() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (resource: ResourceRequest) => {
-      resource.shortLink = SHORT_LINK_PREFIXES.RESOURCES + resource.shortLink;
+      resource.shortLink = SHORT_LINK_PREFIXES.RESOURCES + resource.shortLink; // Prepend the short link prefix
       const response = await fetch(
-        `${API_ENDPOINTS.RESOURCES}/${resource._id}`,
+        `${API_ENDPOINTS.RESOURCES}/${resource._id}`, // Construct URL with resource ID
         {
           method: "PUT",
           headers: {
@@ -68,21 +71,22 @@ function useUpdateResource() {
       queryClient.setQueryData([QUERY_KEYS.RESOURCES], (prevResources: any) =>
         prevResources?.map((prevResource: ResourceResponse) =>
           prevResource._id === newResourceInfo._id
-            ? newResourceInfo
+            ? newResourceInfo // Update the resource in the cache
             : prevResource
         )
       );
     },
     onSettled: () =>
-      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.RESOURCES] })
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.RESOURCES] }) // Invalidate and refetch resource queries on mutation
   });
 }
 
+// Custom hook for deleting a resource
 function useDeleteResource() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (id: string) => {
-      const response = await fetch(`${API_ENDPOINTS.RESOURCES}/${id}`, {
+      const response = await fetch(`${API_ENDPOINTS.RESOURCES}/${id}`, { // Construct URL with resource ID
         method: "DELETE",
         headers: {
           "Content-Type": "application/json"
@@ -96,12 +100,12 @@ function useDeleteResource() {
     onMutate: (id: string) => {
       queryClient.setQueryData([QUERY_KEYS.RESOURCES], (prevResources: any) =>
         prevResources?.filter(
-          (resourceResponse: ResourceResponse) => resourceResponse._id !== id
+          (resourceResponse: ResourceResponse) => resourceResponse._id !== id // Remove deleted resource from cache
         )
       );
     },
     onSettled: () =>
-      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.RESOURCES] })
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.RESOURCES] }) // Invalidate and refetch resource queries on mutation
   });
 }
 

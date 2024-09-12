@@ -14,9 +14,10 @@ import Opportunity from "@/models/Opportunity";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
 import { r2Client } from "@/lib/r2Client";
 
+// GET request handler to fetch an opportunity by ID
 export async function GET(
   req: NextRequest,
-  context: { params: { id: string } }
+  context: { params: { id: string } } // Extract `id` from the request context.
 ) {
   try {
     // Extract the dynamic parameter (id) from the path parameter
@@ -30,7 +31,7 @@ export async function GET(
       );
     }
 
-    const db = (await clientPromise).db();
+    const db = (await clientPromise).db(); // Get a database connection
 
     // Convert the dynamic parameter to an ObjectId and query the database
     const opportunity = await db
@@ -38,30 +39,31 @@ export async function GET(
       .findOne({ _id: new ObjectId(id) });
 
     if (opportunity) {
-      return successResponse(SUCCESS_MESSAGES.OPPORTUNITY_FETCHED, opportunity);
+      return successResponse(SUCCESS_MESSAGES.OPPORTUNITY_FETCHED, opportunity); // Return success if found
     } else {
       return errorResponse(
-        ERROR_MESSAGES.OPPORTUNITY_NOT_FOUND,
+        ERROR_MESSAGES.OPPORTUNITY_NOT_FOUND, // Return error if not found
         null,
         HTTP_STATUS.NOT_FOUND
       );
     }
   } catch (error) {
     console.error(error);
-    return errorResponse(ERROR_MESSAGES.OPPORTUNITY_FETCH_FAILED, error);
+    return errorResponse(ERROR_MESSAGES.OPPORTUNITY_FETCH_FAILED, error); // Handle server error
   }
 }
 
+// PUT request handler to update an opportunity by ID
 export async function PUT(
   req: NextRequest,
-  context: { params: { id: string } }
+  context: { params: { id: string } } // Extract `id` from the request context
 ) {
   try {
-    const { id } = context.params;
+    const { id } = context.params; // Extract ID from the context
 
     if (!isValidId(id)) {
       return errorResponse(
-        ERROR_MESSAGES.OPPORTUNITY_ID_INVALID,
+        ERROR_MESSAGES.OPPORTUNITY_ID_INVALID, // Return error if ID is invalid
         null,
         HTTP_STATUS.BAD_REQUEST
       );
@@ -72,6 +74,7 @@ export async function PUT(
     const data = formData.get("data");
     let opportunityRequest = null;
 
+    // Parse the data field into a JSON object
     if (data) {
       try {
         opportunityRequest = JSON.parse(data.toString());
@@ -85,8 +88,8 @@ export async function PUT(
       }
     }
 
-    const uniqueId = uuid();
-    const db = (await clientPromise).db();
+    const uniqueId = uuid(); // Generate a unique ID for file uploads
+    const db = (await clientPromise).db(); // Get a database connection
 
     // Update the document
     const result = await db.collection(COLLECTIONS.OPPORTUNITIES).updateOne(
@@ -98,30 +101,31 @@ export async function PUT(
           originalUrl: opportunityRequest.originalUrl,
           shortLink: opportunityRequest.shortLink,
           coverImageUrl: opportunityRequest?.coverImage
-            ? await uploadFileToR2(file, uniqueId)
+            ? await uploadFileToR2(file, uniqueId) // Upload file if available
             : null,
-          deadline: opportunityRequest.deadline
+          deadline: opportunityRequest.deadline // Update deadline
         }
       }
     );
 
     if (result.modifiedCount > 0) {
-      return successResponse(SUCCESS_MESSAGES.OPPORTUNITY_UPDATED, { _id: id });
+      return successResponse(SUCCESS_MESSAGES.OPPORTUNITY_UPDATED, { _id: id }); // Return success if update succeeded
     } else {
-      return errorResponse(ERROR_MESSAGES.OPPORTUNITY_NOT_FOUND);
+      return errorResponse(ERROR_MESSAGES.OPPORTUNITY_NOT_FOUND); // Return error if document not found
     }
   } catch (error) {
     console.error(error);
-    return errorResponse(ERROR_MESSAGES.OPPORTUNITY_UPDATE_FAILED, error);
+    return errorResponse(ERROR_MESSAGES.OPPORTUNITY_UPDATE_FAILED, error); // Handle server error
   }
 }
 
+// DELETE request handler to remove an opportunity by ID
 export async function DELETE(
   req: NextRequest,
-  context: { params: { id: string } }
+  context: { params: { id: string } } // Extract `id` from the request context
 ) {
   try {
-    const { id } = context.params;
+    const { id } = context.params; // Extract ID from the context
 
     if (!isValidId(id)) {
       return errorResponse(
@@ -149,6 +153,7 @@ export async function DELETE(
   }
 }
 
+// Helper function to upload a file to R2 (S3-bucket service)
 async function uploadFileToR2(file: File, uniqueId: string) {
   try {
     const bucketName = process.env.S3_BUCKET_NAME;

@@ -14,10 +14,10 @@ const queryClient = new QueryClient();
 
 const Providers = ({ children }: Props) => {
   return (
-    <SessionProvider>
-      <MantineProvider>
-        <QueryClientProvider client={queryClient}>
-          <ModalsProvider>{children}</ModalsProvider>
+    <SessionProvider> {/* SessionProvider handles user authentication state, using NextAuth. */}
+      <MantineProvider> {/* Wraps the app with Mantine's UI components and theme configuration. */}
+        <QueryClientProvider client={queryClient}>  {/*To manage server-side data fetching for query client */}
+          <ModalsProvider>{children}</ModalsProvider> {/* Manages modal dialogs provided by Mantine. */}
         </QueryClientProvider>
       </MantineProvider>
     </SessionProvider>
