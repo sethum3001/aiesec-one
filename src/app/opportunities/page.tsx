@@ -37,6 +37,7 @@ import { validateRequired, validateUrl } from "@/util/dataUtils";
 import { Router } from "next/router";
 import { useRouter } from "next/navigation";
 
+// Function to validate the opportunity form fields
 function validateOpportunity(
   opportunity: OpportunityResponse,
   shortLinkStatus: Boolean
@@ -61,6 +62,7 @@ function validateOpportunity(
 }
 
 const OpportunitiesPage = () => {
+  // States for managing file input, validation errors, short link, and its status
   const [fileInModal, setFileInModal] = React.useState<File>();
   const [validationErrors, setValidationErrors] = useState<
     Record<string, string | undefined>
@@ -68,17 +70,20 @@ const OpportunitiesPage = () => {
   const [shortLinkInModal, setShortLinkInModal] = useState<string>("");
   const [shortLinkStatus, setShortLinkStatus] = useState<boolean>(false);
 
+  // Resets the input fields and errors
   const resetInputs = () => {
     setValidationErrors({});
     setShortLinkInModal("");
   };
 
+  // Handles file input changes for the cover image
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
       setFileInModal(event.target.files[0]);
     }
   };
 
+  // Checks if the short link is available
   const checkShortLinkAvailability = (shortLinkInModal: string) => {
     shortLinkAvailability(shortLinkInModal)
       .then((data) => {
@@ -93,6 +98,7 @@ const OpportunitiesPage = () => {
       });
   };
 
+  // Defines the table columns using useMemo for better performance
   const columns = useMemo<MRT_ColumnDef<OpportunityResponse>[]>(
     () => [
       {
@@ -219,7 +225,7 @@ const OpportunitiesPage = () => {
   const { mutateAsync: deleteOpportunity, isLoading: isDeletingOpportunity } =
     useDeleteOpportunity();
 
-  // Handlers for CRUD operations
+  // Handle create operation for opportunity
   const handleCreateOpportunity: MRT_TableOptions<OpportunityResponse>["onCreatingRowSave"] =
     async ({ values, exitCreatingMode }) => {
       const newValidationErrors = validateOpportunity(values, shortLinkStatus);
@@ -234,6 +240,8 @@ const OpportunitiesPage = () => {
       exitCreatingMode();
     };
 
+    
+  // Handle edit operation for opportunity
   const handleEditOpportunity: MRT_TableOptions<OpportunityResponse>["onEditingRowSave"] =
     async ({ row, values, table }) => {
       const newValidationErrors = validateOpportunity(values, shortLinkStatus);
@@ -248,6 +256,8 @@ const OpportunitiesPage = () => {
       table.setEditingRow(null); //exit editing mode
     };
 
+    
+  // Open delete confirmation modal
   const openDeleteConfirmModal = (row: MRT_Row<OpportunityResponse>) =>
     modals.openConfirmModal({
       title: "Confirmation",
@@ -264,11 +274,15 @@ const OpportunitiesPage = () => {
 
   const router = useRouter();
 
+  // Handle viewing opportunity details
   const handleView = (row: MRT_Row<OpportunityResponse>) => {
     const urlWithId = `${row.original.shortLink}`;
     router.push(urlWithId);
   };
 
+  
+
+  // Mantine React Table configuration
   const table = useMantineReactTable({
     columns,
     data: fetchedOpportunities,
