@@ -26,14 +26,14 @@ import {
 import { modals } from "@mantine/modals";
 import { IconEdit, IconTrash } from "@tabler/icons-react";
 import classes from "./members.module.scss";
-import { ResourceResponse } from "@/app/types/ResourceResponse";
+import { ResourceResponse } from "@/types/ResourceResponse";
 import {
   useCreateResource,
   useDeleteResource,
   useGetResources,
   useUpdateResource
-} from "@/app/hooks/resources";
-import { validateRequired, validateUrl } from "@/app/util/dataUtils";
+} from "@/hooks/resources";
+import { validateRequired, validateUrl } from "@/util/dataUtils";
 
 function validateResource(resource: ResourceResponse) {
   return {
