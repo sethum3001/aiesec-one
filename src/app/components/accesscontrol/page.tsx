@@ -3,28 +3,29 @@
 import "@mantine/core/styles.css";
 import "@mantine/dates/styles.css";
 import "mantine-react-table/styles.css";
-import React, { ChangeEvent, useMemo, useState } from "react";
+import "bootstrap-icons/font/bootstrap-icons.css";
+import { useMemo, useState } from "react";
 import {
+  MRT_EditActionButtons,
   MantineReactTable,
   type MRT_ColumnDef,
-  MRT_EditActionButtons,
   type MRT_Row,
   type MRT_TableOptions,
   useMantineReactTable
 } from "mantine-react-table";
 import {
   ActionIcon,
-  Box,
   Button,
   Flex,
   Stack,
   Text,
   Title,
-  Tooltip
+  Tooltip,
+  Box
 } from "@mantine/core";
 import { modals } from "@mantine/modals";
-import { IconEdit, IconLink, IconTrash } from "@tabler/icons-react";
-import classes from "./resources.module.scss";
+import { IconEdit, IconTrash } from "@tabler/icons-react";
+import classes from "./members.module.scss";
 import { ResourceResponse } from "@/app/types/ResourceResponse";
 import {
   useCreateResource,
@@ -37,15 +38,9 @@ import { validateRequired, validateUrl } from "@/app/util/dataUtils";
 function validateResource(resource: ResourceResponse) {
   return {
     title: !validateRequired(resource.title) ? "Title is Required" : "",
+    url: !validateUrl(resource.url) ? "Invalid URL Format" : "",
     // description: !validateRequired(resource.description) ? "Description is Required" : "",
-    originalUrl: !validateRequired(resource.originalUrl)
-      ? "Original URL is required"
-      : !validateUrl(resource.originalUrl)
-        ? "Invalid URL, please enter full URL"
-        : "",
-    shortLink: !validateRequired(resource.shortLink)
-      ? "Short link is required"
-      : "",
+    link: !validateUrl(resource.link) ? "Invalid Link Format" : "",
     // functions: !validateRequired(resource.functions) ? "Functions are Required" : "",
     keywords: !validateRequired(resource.keywords)
       ? "Keywords are Required"
@@ -53,131 +48,58 @@ function validateResource(resource: ResourceResponse) {
   };
 }
 
-const ResourcesPage = () => {
+const MembersPage = () => {
   const [validationErrors, setValidationErrors] = useState<
     Record<string, string | undefined>
   >({});
 
-  const [shortLinkInModal, setShortLinkInModal] = useState<string>("");
-
-  const resetInputs = () => {
-    setValidationErrors({});
-    setShortLinkInModal("");
-  };
-
   const columns = useMemo<MRT_ColumnDef<ResourceResponse>[]>(
     () => [
       {
-        accessorKey: "title",
-        header: "Title",
-        mantineEditTextInputProps: {
-          type: "text",
-          required: true,
-          error: validationErrors?.title
-        }
+        accessorKey: "name",
+        header: "Name"
       },
       {
-        accessorKey: "description",
-        header: "Description",
-        mantineEditTextInputProps: {
-          type: "text",
-          error: validationErrors?.description,
-          onFocus: () =>
-            setValidationErrors({
-              ...validationErrors,
-              description: undefined
-            })
-        }
+        accessorKey: "role",
+        header: "Role"
       },
       {
-        accessorKey: "originalUrl",
-        header: "Original URL",
-        enableClickToCopy: true,
-        enableSorting: false,
-        enableColumnActions: false,
-        mantineEditTextInputProps: {
-          type: "url",
-          required: true,
-          error: validationErrors?.link,
-          onFocus: () =>
-            setValidationErrors({
-              ...validationErrors,
-              link: undefined
-            })
-        }
+        accessorKey: "entity",
+        header: "Entity"
       },
       {
-        accessorKey: "shortLink",
-        header: "Short Link",
-        enableClickToCopy: true,
-        mantineEditTextInputProps: ({ cell, column, row, table }) => {
-          return {
-            type: "text",
-            inputWrapperOrder: ["label", "input", "error", "description"],
-            description: (
-              <span
-                style={{
-                  paddingTop: 10,
-                  fontSize: "1.2em",
-                  fontWeight: 600,
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: 8
-                }}
-              >
-                <IconLink size={16} /> https://one.aiesec.lk/r/
-                {shortLinkInModal}
-              </span>
-            ),
-            required: true,
-            error: validationErrors?.url,
-            onChange: (event: ChangeEvent<HTMLInputElement>) => {
-              setShortLinkInModal(event.target.value);
-            },
-            onFocus: () =>
-              setValidationErrors({
-                ...validationErrors,
-                url: undefined
-              })
-          };
-        }
+        accessorKey: "email",
+        header: "Email"
       },
       {
-        accessorKey: "functions",
-        header: "Functions",
-        description: "Comma separated list of functions",
-        mantineEditTextInputProps: {
-          type: "text",
-          required: true,
-          error: validationErrors?.functions,
-          onFocus: () =>
-            setValidationErrors({
-              ...validationErrors,
-              functions: undefined
-            })
-        }
+        accessorKey: "expa_id",
+        header: "Expa ID"
       },
       {
-        accessorKey: "keywords",
-        header: "Keywords",
-        description: "Comma separated list of keywords",
-        mantineEditTextInputProps: {
-          type: "text",
-          required: true,
-          error: validationErrors?.keywords,
-          onFocus: () =>
-            setValidationErrors({
-              ...validationErrors,
-              keywords: undefined
-            })
-        }
+        accessorKey: "status",
+        header: "Status",
+        Cell: ({ cell }) => (
+          <div
+            style={{
+              height: "10px",
+              width: "10px",
+              backgroundColor: cell.getValue() === "Active" ? "green" : "red",
+              borderRadius: "50%",
+              display: "inline-block"
+            }}
+          />
+        )
+      },
+      {
+        accessorKey: "view",
+        header: "View",
+        Cell: () => <i className="bi-eye"></i> // Use the correct class for the eye icon
       }
     ],
-    [validationErrors, shortLinkInModal]
+    [validationErrors]
   );
 
   // Custom hooks for CRUD operations
-  // @ts-ignore
   const { mutateAsync: createResource, isLoading: isCreatingResource } =
     useCreateResource();
   const {
@@ -186,10 +108,8 @@ const ResourcesPage = () => {
     isFetching: isFetchingResources,
     isLoading: isLoadingResources
   } = useGetResources();
-  // @ts-ignore
   const { mutateAsync: updateResource, isLoading: isUpdatingResource } =
     useUpdateResource();
-  // @ts-ignore
   const { mutateAsync: deleteResource, isLoading: isDeletingResource } =
     useDeleteResource();
 
@@ -201,7 +121,7 @@ const ResourcesPage = () => {
         setValidationErrors(newValidationErrors);
         return;
       }
-      resetInputs();
+      setValidationErrors({});
       await createResource(values);
       exitCreatingMode();
     };
@@ -213,7 +133,7 @@ const ResourcesPage = () => {
         setValidationErrors(newValidationErrors);
         return;
       }
-      resetInputs();
+      setValidationErrors({});
       console.log(values);
       await updateResource({ ...values, _id: row.original._id });
       table.setEditingRow(null); //exit editing mode
@@ -251,9 +171,9 @@ const ResourcesPage = () => {
         minHeight: "500px"
       }
     },
-    onCreatingRowCancel: () => resetInputs(),
+    onCreatingRowCancel: () => setValidationErrors({}),
     onCreatingRowSave: handleCreateResource,
-    onEditingRowCancel: () => resetInputs(),
+    onEditingRowCancel: () => setValidationErrors({}),
     onEditingRowSave: handleEditResource,
     positionActionsColumn: "last",
     renderCreateRowModalContent: ({ table, row, internalEditComponents }) => (
@@ -300,29 +220,53 @@ const ResourcesPage = () => {
     state: {
       isLoading: isLoadingResources,
       isSaving: isCreatingResource || isUpdatingResource || isDeletingResource,
-      showAlertBanner: isLoadingResourcesError
+      showAlertBanner: isLoadingResourcesError,
+      showProgressBars: isFetchingResources
     }
   });
 
   return (
     <div className={classes.body}>
+      <Title mt={8} mb={24} order={1} style={{ color: "#1C7ED6" }}>
+        Members
+      </Title>
       <Box
         my={20}
         style={{
           display: "flex",
-          flexDirection: "row",
-          justifyContent: "space-between"
+          flexDirection: "row"
         }}
       >
-        <Title mt={8} mb={24} order={1} style={{ color: "#1C7ED6" }}>
-          Resources
-        </Title>
-        <Button
-          onClick={() => {
-            table.setCreatingRow(true);
-          }}
-        >
-          Create Resource
+        <div style={{ position: "relative" }}>
+          <input
+            type="text"
+            placeholder="Search Members.."
+            style={{ paddingLeft: "55px", width: "619px", height: "48px" }}
+          />
+          <i
+            className="bi bi-search"
+            style={{
+              position: "absolute",
+              top: "50%",
+              left: "25px",
+              transform: "translateY(-50%)"
+            }}
+          ></i>
+        </div>
+        <Button style={{ height: "48px", left: "35px" }}>
+          <i
+            className="bi bi-person-plus-fill"
+            style={{ marginRight: "5px" }}
+          ></i>{" "}
+          Import Members
+        </Button>
+        <Button style={{ height: "48px", left: "55px" }}>
+          <i className="bi bi-key-fill" style={{ marginRight: "5px" }}></i>
+          Access Control
+        </Button>
+        <Button style={{ height: "48px", left: "75px" }}>
+          <i className="bi bi-people-fill" style={{ marginRight: "5px" }}></i>
+          User Groups
         </Button>
       </Box>
       <div>
@@ -332,4 +276,4 @@ const ResourcesPage = () => {
   );
 };
 
-export default ResourcesPage;
+export default MembersPage;
