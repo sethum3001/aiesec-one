@@ -38,9 +38,9 @@ import { validateRequired, validateUrl } from "@/util/dataUtils";
 function validateResource(resource: ResourceResponse) {
   return {
     title: !validateRequired(resource.title) ? "Title is Required" : "",
-    url: !validateUrl(resource.url) ? "Invalid URL Format" : "",
+    url: !validateUrl(resource.originalUrl) ? "Invalid URL Format" : "",
     // description: !validateRequired(resource.description) ? "Description is Required" : "",
-    link: !validateUrl(resource.link) ? "Invalid Link Format" : "",
+    link: !validateUrl(resource.shortLink) ? "Invalid Link Format" : "",
     // functions: !validateRequired(resource.functions) ? "Functions are Required" : "",
     keywords: !validateRequired(resource.keywords)
       ? "Keywords are Required"
@@ -227,11 +227,12 @@ const MembersPage = () => {
 
   return (
     <div className={classes.body}>
-      <Title mt={8} mb={24} order={1} style={{ color: "#1C7ED6" }}>
+      <Title mt={8} mb={24} ml={15} order={1} style={{ color: "#1C7ED6" }}>
         Access Control
       </Title>
       <Box
         my={20}
+        ml={15}
         style={{
           display: "flex",
           flexDirection: "row"
@@ -241,7 +242,7 @@ const MembersPage = () => {
           <input
             type="text"
             placeholder="Search Members.."
-            style={{ paddingLeft: "55px", width: "619px", height: "48px" }}
+            style={{ paddingLeft: "75px", width: "619px", height: "48px" }}
           />
           <i
             className="bi bi-search"
