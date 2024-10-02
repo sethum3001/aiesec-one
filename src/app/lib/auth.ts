@@ -1,7 +1,7 @@
 import { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
-import clientPromise from "@/lib/mongodb";
-import { COLLECTIONS } from "@/lib/constants";
+import clientPromise from "./mongodb";
+import { COLLECTIONS } from "./constants";
 
 export const authOptions: NextAuthOptions = {
   providers: [

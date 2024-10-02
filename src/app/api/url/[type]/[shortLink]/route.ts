@@ -1,13 +1,13 @@
 import { NextRequest } from "next/server";
-import { errorResponse, successResponse } from "@/util/apiUtils";
+import { errorResponse, successResponse } from "@/app/util/apiUtils";
 import {
   COLLECTIONS,
   ERROR_MESSAGES,
   HTTP_STATUS,
   SHORT_LINK_PREFIXES,
   SUCCESS_MESSAGES
-} from "@/lib/constants";
-import clientPromise from "@/lib/mongodb";
+} from "@/app/lib/constants";
+import clientPromise from "@/app/lib/mongodb";
 
 export async function GET(
   req: NextRequest,

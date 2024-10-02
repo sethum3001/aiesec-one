@@ -1,18 +1,18 @@
-import clientPromise from "@/lib/mongodb";
+import clientPromise from "@/app/lib/mongodb";
 import { ObjectId } from "mongodb";
 import { NextRequest } from "next/server";
-import { isValidId } from "@/util/dataUtils";
+import { isValidId } from "@/app/util/dataUtils";
 import {
   COLLECTIONS,
   ERROR_MESSAGES,
   HTTP_STATUS,
   SUCCESS_MESSAGES
-} from "@/lib/constants";
-import { errorResponse, successResponse } from "@/util/apiUtils";
+} from "@/app/lib/constants";
+import { errorResponse, successResponse } from "@/app/util/apiUtils";
 import { uuid } from "uuidv4";
 import Opportunity from "@/models/Opportunity";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
-import { r2Client } from "@/lib/r2Client";
+import { r2Client } from "@/app/lib/r2Client";
 
 export async function GET(
   req: NextRequest,

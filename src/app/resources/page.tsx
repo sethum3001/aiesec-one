@@ -242,9 +242,9 @@ const ResourcesPage = () => {
     getRowId: (row) => row._id,
     mantineToolbarAlertBannerProps: isLoadingResourcesError
       ? {
-          color: "red",
-          children: "Error loading data"
-        }
+        color: "red",
+        children: "Error loading data"
+      }
       : undefined,
     mantineTableContainerProps: {
       style: {

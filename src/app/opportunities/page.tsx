@@ -32,8 +32,8 @@ import {
   useGetOpportunities,
   useUpdateOpportunity,
   shortLinkAvailability
-} from "@/hooks/opportunities";
-import { validateRequired, validateUrl } from "@/util/dataUtils";
+} from "@/app/hooks/opportunities";
+import { validateRequired, validateUrl } from "@/app/util/dataUtils";
 import { Router } from "next/router";
 import { useRouter } from "next/navigation";
 
@@ -283,9 +283,9 @@ const OpportunitiesPage = () => {
     getRowId: (row) => row._id,
     mantineToolbarAlertBannerProps: isLoadingOpportunitiesError
       ? {
-          color: "red",
-          children: "Error loading data"
-        }
+        color: "red",
+        children: "Error loading data"
+      }
       : undefined,
     mantineTableContainerProps: {
       style: {

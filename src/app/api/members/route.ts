@@ -9,11 +9,7 @@ import { stat } from "fs";
 const jsonParser = json();
 
 // Disable default body parsing
-export const config = {
-  api: {
-    bodyParser: false
-  }
-};
+export const dynamic = "force-dynamic";
 
 // Function to fetch data from the GraphQL API
 

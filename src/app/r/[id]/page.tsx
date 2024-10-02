@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { API_ENDPOINTS, APP_DOMAIN, SHORT_LINK_TAGS } from "@/lib/constants";
+import { API_ENDPOINTS, APP_DOMAIN, SHORT_LINK_TAGS } from "@/app/lib/constants";
 
 async function fetchOriginalUrl(shortLink: string) {
   const response = await fetch(

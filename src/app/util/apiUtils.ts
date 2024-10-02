@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { HTTP_STATUS } from "@/lib/constants";
+import { HTTP_STATUS } from "@/app/lib/constants";
 
 /**
  * Utility function to send a common success response object.

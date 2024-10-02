@@ -1,4 +1,4 @@
-import clientPromise from "@/lib/mongodb";
+import clientPromise from "@/app/lib/mongodb";
 import Opportunity from "@/models/Opportunity";
 import {
   COLLECTIONS,
@@ -6,13 +6,13 @@ import {
   HTTP_STATUS,
   SUCCESS_MESSAGES,
   SHORT_LINK_PREFIXES
-} from "@/lib/constants";
+} from "@/app/lib/constants";
 import {
   createdResponse,
   errorResponse,
   successResponse
-} from "@/util/apiUtils";
-import { r2Client } from "@/lib/r2Client";
+} from "@/app/util/apiUtils";
+import { r2Client } from "@/app/lib/r2Client";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
 import { uuid } from "uuidv4";
 import { NextRequest, NextResponse } from "next/server";

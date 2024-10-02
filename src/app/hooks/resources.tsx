@@ -5,7 +5,7 @@ import {
   API_ENDPOINTS,
   QUERY_KEYS,
   SHORT_LINK_PREFIXES
-} from "@/lib/constants";
+} from "@/app/lib/constants";
 
 function useCreateResource() {
   const queryClient = useQueryClient();

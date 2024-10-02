@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { API_ENDPOINTS, APP_DOMAIN, SHORT_LINK_TAGS } from "@/lib/constants";
+import { API_ENDPOINTS, APP_DOMAIN, SHORT_LINK_TAGS } from "@/app/lib/constants";
 import { OpportunityResponse } from "@/types/OpportunityResponse";
 import {
   Box,

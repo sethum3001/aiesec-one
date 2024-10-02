@@ -5,7 +5,7 @@ import {
   API_ENDPOINTS,
   QUERY_KEYS,
   SHORT_LINK_PREFIXES
-} from "@/lib/constants";
+} from "@/app/lib/constants";
 import { ResourceResponse } from "@/types/ResourceResponse";
 
 function useCreateOpportunity() {

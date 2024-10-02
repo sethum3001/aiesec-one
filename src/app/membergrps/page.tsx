@@ -25,15 +25,15 @@ import {
 } from "@mantine/core";
 import { modals } from "@mantine/modals";
 import { IconEdit, IconTrash } from "@tabler/icons-react";
-import classes from "./membergrps.module.scss";
+import classes from "@/app/membergrps/membergrps.module.scss";
 import { ResourceResponse } from "@/types/ResourceResponse";
 import {
   useCreateResource,
   useDeleteResource,
   useGetResources,
   useUpdateResource
-} from "@/hooks/resources";
-import { validateRequired, validateUrl } from "@/util/dataUtils";
+} from "@/app/hooks/resources";
+import { validateRequired, validateUrl } from "@/app/util/dataUtils";
 
 function validateResource(resource: ResourceResponse) {
   return {
@@ -96,7 +96,7 @@ const MembersPage = () => {
         Cell: () => <i className="bi-eye"></i> // Use the correct class for the eye icon
       }
     ],
-    [validationErrors]
+    []
   );
 
   // Custom hooks for CRUD operations
@@ -162,9 +162,9 @@ const MembersPage = () => {
     getRowId: (row) => row._id,
     mantineToolbarAlertBannerProps: isLoadingResourcesError
       ? {
-          color: "red",
-          children: "Error loading data"
-        }
+        color: "red",
+        children: "Error loading data"
+      }
       : undefined,
     mantineTableContainerProps: {
       style: {

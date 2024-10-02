@@ -1,14 +1,14 @@
-import clientPromise from "@/lib/mongodb";
+import clientPromise from "@/app/lib/mongodb";
 import { ObjectId } from "mongodb";
 import { NextRequest } from "next/server";
-import { isValidId } from "@/util/dataUtils";
+import { isValidId } from "@/app/util/dataUtils";
 import {
   COLLECTIONS,
   ERROR_MESSAGES,
   HTTP_STATUS,
   SUCCESS_MESSAGES
-} from "@/lib/constants";
-import { errorResponse, successResponse } from "@/util/apiUtils";
+} from "@/app/lib/constants";
+import { errorResponse, successResponse } from "@/app/util/apiUtils";
 import { ResourceRequest } from "@/types/ResourceRequest";
 
 export async function GET(

@@ -1,11 +1,11 @@
-import clientPromise from "@/lib/mongodb";
+import clientPromise from "@/app/lib/mongodb";
 import Resource from "@/models/Resource";
-import { COLLECTIONS, ERROR_MESSAGES, SUCCESS_MESSAGES } from "@/lib/constants";
+import { COLLECTIONS, ERROR_MESSAGES, SUCCESS_MESSAGES } from "@/app/lib/constants";
 import {
   createdResponse,
   errorResponse,
   successResponse
-} from "@/util/apiUtils";
+} from "@/app/util/apiUtils";
 import { ResourceRequest } from "@/types/ResourceRequest";
 
 export async function GET() {
