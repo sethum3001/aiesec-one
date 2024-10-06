@@ -5,6 +5,7 @@ import "@mantine/dates/styles.css";
 import "mantine-react-table/styles.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import { useMemo, useState } from "react";
+// import  Link  from 'next/link';
 import {
   MRT_EditActionButtons,
   MantineReactTable,
@@ -48,7 +49,7 @@ function validateResource(resource: ResourceResponse) {
   };
 }
 
-const MembersPage = () => {
+const MemberGroupsPage = () => {
   const [validationErrors, setValidationErrors] = useState<
     Record<string, string | undefined>
   >({});
@@ -277,4 +278,4 @@ const MembersPage = () => {
   );
 };
 
-export default MembersPage;
+export default MemberGroupsPage;

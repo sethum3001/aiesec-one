@@ -5,6 +5,7 @@ import "@mantine/dates/styles.css";
 import "mantine-react-table/styles.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import { useMemo, useState } from "react";
+// import  Link  from 'next/link';
 import {
   MRT_EditActionButtons,
   MantineReactTable,
@@ -24,6 +25,8 @@ import {
   Box
 } from "@mantine/core";
 import { modals } from "@mantine/modals";
+import ImportMembersModal from "@/app/modals/importMembers.tsx";
+import { useDisclosure } from "@mantine/hooks";
 import { IconEdit, IconTrash } from "@tabler/icons-react";
 import classes from "@/app/accesscontrol/members.module.scss";
 import { ResourceResponse } from "@/types/ResourceResponse";
@@ -48,7 +51,9 @@ function validateResource(resource: ResourceResponse) {
   };
 }
 
-const MembersPage = () => {
+const AccessControlPage = () => {
+  const [opened, { open, close }] = useDisclosure(false);
+
   const [validationErrors, setValidationErrors] = useState<
     Record<string, string | undefined>
   >({});
@@ -261,10 +266,18 @@ const MembersPage = () => {
           ></i>{" "}
           Member List
         </Button>
-        <Button style={{ height: "48px", left: "55px" }}>
-          <i className="bi bi-key-fill" style={{ marginRight: "5px" }}></i>
+
+        <Button 
+          style={{ height: "48px", left: "55px" }}
+          onClick={open}
+        >
+          <i
+            className="bi bi-person-plus-fill"
+            style={{ marginRight: "5px" }}
+          ></i>
           Import Members
         </Button>
+
         <Button style={{ height: "48px", left: "75px" }}>
           <i className="bi bi-people-fill" style={{ marginRight: "5px" }}></i>
           User Groups
@@ -273,8 +286,10 @@ const MembersPage = () => {
       <div>
         <MantineReactTable table={table} />
       </div>
+
+      <ImportMembersModal opened={opened} onClose={close} />
     </div>
   );
 };
 
-export default MembersPage;
+export default AccessControlPage;
