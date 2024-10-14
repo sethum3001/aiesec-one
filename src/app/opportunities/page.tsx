@@ -3,7 +3,6 @@
 import "@mantine/core/styles.css";
 import "@mantine/dates/styles.css";
 import "mantine-react-table/styles.css";
-import "./opportunities.module.scss";
 import React, { ChangeEvent, useMemo, useState } from "react";
 import {
   MantineReactTable,
@@ -382,7 +381,7 @@ const OpportunitiesPage = () => {
             Opportunities
           </Title>
           <Button
-          className={classes.button}
+            className={classes.button}
             onClick={() => {
               table.setCreatingRow(true);
             }}
