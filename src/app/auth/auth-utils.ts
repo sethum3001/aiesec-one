@@ -5,8 +5,7 @@ export function isLoggedIn(): boolean {
   const accessToken = cookies().get("access_token");
 
   if (
-    accessToken &&
-    accessToken.value &&
+    accessToken?.value &&
     accessToken.value !== "" &&
     accessToken.value !== null
   ) {
@@ -15,8 +14,7 @@ export function isLoggedIn(): boolean {
 
   const refresh_token = cookies().get("refresh_token");
   return !!(
-    refresh_token &&
-    refresh_token.value &&
+    refresh_token?.value &&
     refresh_token.value !== "" &&
     refresh_token.value !== null
   );
@@ -25,8 +23,7 @@ export function isLoggedIn(): boolean {
 export function isAccessTokenPresent(): boolean {
   const accessToken = cookies().get("access_token");
   return !!(
-    accessToken &&
-    accessToken.value &&
+    accessToken?.value &&
     accessToken.value !== "" &&
     accessToken.value !== null
   );
@@ -42,6 +39,8 @@ export async function getAccessTokenFromOauth(
     redirect_uri: process.env.AUTH_REDIRECT_URI!,
     code: code
   };
+
+  console.log("CODE : ", code, " 🦄");
 
   return await fetch(`${process.env.GIS_AUTH_ENDPOINT}/oauth/token`, {
     method: "POST",
@@ -67,8 +66,7 @@ export async function refreshAccessToken(): Promise<GetTokenResponse> {
   let refresh_token = cookies().get("refresh_token");
   if (
     !(
-      refresh_token &&
-      refresh_token.value &&
+      refresh_token?.value &&
       refresh_token.value !== "" &&
       refresh_token.value !== null
     )

@@ -6,7 +6,7 @@ import {
   OperationVariables,
   TypedDocumentNode
 } from "@apollo/client";
-import { getAccessToken } from "../app/auth/auth-utils";
+import { getAccessToken } from "@/app/auth/auth-utils";
 
 const APOLLO_CLIENTS = new Map();
 
@@ -25,9 +25,7 @@ export async function runQuery(
       uri: process.env.GIS_API_ENDPOINT,
       cache: new InMemoryCache(),
       headers: {
-        authorization: getAccessToken(),
-        Accept: "application/json", // Ensure this is correct
-        "Content-Type": "application/json" // Ensure this is correct
+        authorization: getAccessToken()
       }
     });
     APOLLO_CLIENTS.set(getAccessToken(), client);
@@ -63,9 +61,7 @@ export async function runQueryWithAccessToken(
     uri: process.env.GIS_API_ENDPOINT,
     cache: new InMemoryCache(),
     headers: {
-      authorization: getAccessToken(),
-      Accept: "application/json", // Ensure this is correct
-      "Content-Type": "application/json" // Ensure this is correct
+      authorization: accessToken
     }
   });
 

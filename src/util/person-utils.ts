@@ -19,8 +19,7 @@ const WHITELISTED_ENTITIES = [
 export function isPersonIdPresent(): boolean {
   const personId = cookies().get("person_id");
   return !!(
-    personId &&
-    personId.value &&
+    personId?.value &&
     personId.value !== "" &&
     personId.value !== null
   );
@@ -29,12 +28,7 @@ export function isPersonIdPresent(): boolean {
 export async function getPersonId(accessToken?: string): Promise<number> {
   console.log("☠ Starting getPersonId function");
   const personId = cookies().get("person_id");
-  if (
-    personId &&
-    personId.value &&
-    personId.value !== "" &&
-    personId.value !== null
-  ) {
+  if (personId?.value && personId.value !== "" && personId.value !== null) {
     console.log("Returning personId from cookie:", personId.value);
     return parseInt(personId.value);
   }

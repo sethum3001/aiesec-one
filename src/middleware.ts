@@ -34,7 +34,7 @@ export async function middleware(request: NextRequest) {
 
   const response = NextResponse.next();
   if (!isAccessTokenPresent()) {
-    console.log("No access token found: " + request.url);
+    console.log("No access token found: 🚀" + request.url);
     let refreshTokenResponse: GetTokenResponse;
 
     try {
