@@ -16,6 +16,25 @@ const WHITELISTED_ENTITIES = [
   1559 // Tunisia
 ];
 
+const VALID_OFFICE_IDS = [
+  "1623", // Sri Lanka
+  222, //CC
+  872, //CN
+  1340, //CS
+  2204, //KANDY
+  1821, // MC SRI LANKA
+  4535, //NIBM
+  2186, //NSBM
+  5490, //RAJARATA
+  2175, //RUHUNA
+  2188, //SLIIT
+  221 //USJ
+];
+
+const ADMIN_MC = ["MCP", "MCVP"];
+
+const ADMIN_LC = ["LCP", "LCVP"];
+
 export function isPersonIdPresent(): boolean {
   const personId = cookies().get("person_id");
   return !!(
@@ -254,4 +273,58 @@ export async function getAccessibleEntitiesWithNames(): Promise<
   return officeIds.filter(
     (office, index, self) => index === self.findIndex((t) => t.id === office.id)
   );
+}
+
+export async function getCurrentPersonUserRole() {
+  let role = "MEMBER";
+  let isValidOffice = false;
+
+  const query = gql`
+    {
+      currentPerson {
+        id
+        full_name
+        current_positions {
+          id
+          office {
+            id
+            tag
+            name
+          }
+          role {
+            id
+            tag
+            name
+          }
+        }
+      }
+    }
+  `;
+
+  const queryResponse = await runQuery(query);
+  console.log(queryResponse.currentPerson);
+
+  for (const position of queryResponse.currentPerson.current_positions) {
+    if (VALID_OFFICE_IDS.includes(position.office.id)) {
+      console.log(position.office.id);
+      isValidOffice = true;
+      break;
+    }
+  }
+
+  if (!isValidOffice) {
+    throw new Error("Unauthorized");
+  }
+
+  for (const position of queryResponse.currentPerson.current_positions) {
+    if (ADMIN_MC.includes(position.role.name)) {
+      role = "ADMIN_MC";
+      break;
+    }
+    if (ADMIN_LC.includes(position.role.name) && role !== "ADMIN_MC") {
+      role = "ADMIN_LC";
+    }
+  }
+
+  return role;
 }

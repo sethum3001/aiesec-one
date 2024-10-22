@@ -7,7 +7,12 @@ import {
   refreshAccessToken
 } from "./app/auth/auth-utils";
 import { GetTokenResponse } from "./app/auth/auth-types";
-import { getPersonId, isPersonIdPresent } from "./util/person-utils";
+import {
+  getCurrentPersonUserRole,
+  getPersonId,
+  isPersonIdPresent
+} from "./util/person-utils";
+import authService from "./services/auth.service";
 
 export async function middleware(request: NextRequest) {
   const lastUrl = `${process.env.BASE_URL}${request.nextUrl.pathname}`;
@@ -71,7 +76,11 @@ export async function middleware(request: NextRequest) {
 
   if (!isPersonIdPresent()) {
     const personId = await getPersonId(getAccessToken());
-    response.cookies.set("person_id", personId.toString(), {
+    const jwtToken = authService.generateAccessToken(
+      personId.toString(),
+      await getCurrentPersonUserRole()
+    );
+    response.cookies.set("jwtToken", await jwtToken, {
       httpOnly: true,
       secure: true,
       sameSite: "strict"
