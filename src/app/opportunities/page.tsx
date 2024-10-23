@@ -3,7 +3,13 @@
 import "@mantine/core/styles.css";
 import "@mantine/dates/styles.css";
 import "mantine-react-table/styles.css";
-import React, { ChangeEvent, useMemo, useState } from "react";
+import React, {
+  ChangeEvent,
+  Fragment,
+  useEffect,
+  useMemo,
+  useState
+} from "react";
 import {
   MantineReactTable,
   type MRT_ColumnDef,
@@ -36,6 +42,38 @@ import {
 import { validateRequired, validateUrl } from "@/util/dataUtils";
 import { Router } from "next/router";
 import { useRouter } from "next/navigation";
+import { jwtVerify } from "jose";
+import { environment } from "@/config/env.config";
+import Cookies from "js-cookie";
+import authService from "../../services/auth.service";
+
+const getRoleFromSession = async (): Promise<string | null> => {
+  const token = Cookies.get("session");
+  if (!token) {
+    return null;
+  }
+
+  try {
+    const userType = await authService.verifyAccessToken(token);
+    return userType as string;
+  } catch (error) {
+    console.error("Invalid or expired token", error);
+    return null;
+  }
+};
+
+let userType = "MEMBER";
+
+getRoleFromSession()
+  .then((role) => {
+    console.log("USER ROLE : ", role);
+    userType = role || "MEMBER";
+    console.log("USER TYPE", userType);
+  })
+  .catch((error) => {
+    console.error("Error getting role:", error);
+    userType = "MEMBER";
+  });
 
 function validateOpportunity(
   opportunity: OpportunityResponse,
@@ -317,25 +355,29 @@ const OpportunitiesPage = () => {
     ),
     renderRowActions: ({ row, table }) => (
       <Flex gap="md">
-        <Tooltip label="Edit">
-          <ActionIcon
-            variant="subtle"
-            size="sm"
-            onClick={() => table.setEditingRow(row)}
-          >
-            <IconEdit />
-          </ActionIcon>
-        </Tooltip>
-        <Tooltip label="Delete">
-          <ActionIcon
-            variant="subtle"
-            size="sm"
-            color="red"
-            onClick={() => openDeleteConfirmModal(row)}
-          >
-            <IconTrash />
-          </ActionIcon>
-        </Tooltip>
+        {["ADMIN_MC", "ADMIN_LC"].includes(userType ? userType : "MEMBER") && (
+          <Fragment>
+            <Tooltip label="Edit">
+              <ActionIcon
+                variant="subtle"
+                size="sm"
+                onClick={() => table.setEditingRow(row)}
+              >
+                <IconEdit />
+              </ActionIcon>
+            </Tooltip>
+            <Tooltip label="Delete">
+              <ActionIcon
+                variant="subtle"
+                size="sm"
+                color="red"
+                onClick={() => openDeleteConfirmModal(row)}
+              >
+                <IconTrash />
+              </ActionIcon>
+            </Tooltip>
+          </Fragment>
+        )}
         <Tooltip label="View">
           <ActionIcon
             variant="subtle"
@@ -347,6 +389,7 @@ const OpportunitiesPage = () => {
         </Tooltip>
       </Flex>
     ),
+
     state: {
       isLoading: isLoadingOpportunities,
       isSaving:

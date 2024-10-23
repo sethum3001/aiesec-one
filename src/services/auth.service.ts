@@ -19,8 +19,10 @@ const generateAccessToken = async (
 const verifyAccessToken = async (token: string) => {
   try {
     const secret = new TextEncoder().encode(environment.accessTokenSecret);
-    const { payload } = await jwtVerify(token, secret); // Verify the token and get the payload
-    return { decodedToken: payload, error: null }; // Return the decoded token
+    const {
+      payload: { userType }
+    } = await jwtVerify(token, secret); // Verify the token and get the payload
+    return userType; // Return the decoded token
   } catch (error) {
     if (error instanceof errors.JWTExpired) {
       return { decodedToken: null, error: "expired" }; // Handle expired token

@@ -18,17 +18,17 @@ const WHITELISTED_ENTITIES = [
 
 const VALID_OFFICE_IDS = [
   "1623", // Sri Lanka
-  222, //CC
-  872, //CN
-  1340, //CS
-  2204, //KANDY
-  1821, // MC SRI LANKA
-  4535, //NIBM
-  2186, //NSBM
-  5490, //RAJARATA
-  2175, //RUHUNA
-  2188, //SLIIT
-  221 //USJ
+  "222", //CC
+  "872", //CN
+  "1340", //CS
+  "2204", //KANDY
+  "1821", // MC SRI LANKA
+  "4535", //NIBM
+  "2186", //NSBM
+  "5490", //RAJARATA
+  "2175", //RUHUNA
+  "2188", //SLIIT
+  "221" //USJ
 ];
 
 const ADMIN_MC = ["MCP", "MCVP"];

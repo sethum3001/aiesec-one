@@ -76,12 +76,12 @@ export async function middleware(request: NextRequest) {
 
   if (!isPersonIdPresent()) {
     const personId = await getPersonId(getAccessToken());
-    const jwtToken = authService.generateAccessToken(
+    const session = authService.generateAccessToken(
       personId.toString(),
       await getCurrentPersonUserRole()
     );
-    response.cookies.set("jwtToken", await jwtToken, {
-      httpOnly: true,
+    response.cookies.set("session", await session, {
+      httpOnly: false,
       secure: true,
       sameSite: "strict"
     });
