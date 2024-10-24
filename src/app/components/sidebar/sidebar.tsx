@@ -20,8 +20,7 @@ import {
   IconLinkPlus,
   IconLogout,
   IconSparkles,
-  IconUsersGroup,
-  IconUserCircle
+  IconUsersGroup
 } from "@tabler/icons-react";
 
 interface NavbarLinkProps {
@@ -50,8 +49,7 @@ const sidebarData = [
   { icon: IconHome, label: "Home", link: "/" },
   { icon: IconSparkles, label: "Opportunities", link: "/opportunities" },
   { icon: IconLinkPlus, label: "Resources", link: "/resources" },
-  { icon: IconUsersGroup, label: "Members", link: "/members" },
-  { icon: IconUserCircle, label: "Groups", link: "/groups" }
+  { icon: IconUsersGroup, label: "Members", link: "/members" }
 ];
 
 export default function Sidebar() {
