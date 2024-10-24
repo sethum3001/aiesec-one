@@ -77,6 +77,7 @@ export async function middleware(request: NextRequest) {
   const session = request.cookies.get("session")?.value;
   if (!session) {
     if (!isPersonIdPresent()) {
+      console.log("SESSION");
       const personId = await getPersonId(getAccessToken());
       const userRole = await getCurrentPersonUserRole();
       const sessionToken = await authService.generateAccessToken(
