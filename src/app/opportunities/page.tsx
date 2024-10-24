@@ -271,7 +271,7 @@ const OpportunitiesPage = () => {
   const router = useRouter();
 
   const handleView = (row: MRT_Row<OpportunityResponse>) => {
-    const urlWithId = ${row.original.shortLink};
+    const urlWithId = `${row.original.shortLink}`;
     router.push(urlWithId);
   };
 
@@ -362,23 +362,18 @@ const OpportunitiesPage = () => {
     }
   });
 
-
   return (
     <div className={classes.body}>
-      <Box
-        className={classes.box}
-      >
+      <Box className={classes.box}>
         <Title
           className={classes.title}
-          mt={8} 
+          mt={8}
           mb={20}
-          ml={15} 
-          order={1} 
-          style={{ 
-            color: "#1C7ED6",
-          }}
+          ml={15}
+          order={1}
+          style={{ color: "#1C7ED6" }}
         >
-            Opportunities
+          Opportunities
         </Title>
         <Button
           className={classes.button}
@@ -386,11 +381,11 @@ const OpportunitiesPage = () => {
             table.setCreatingRow(true);
           }}
         >
-            Create Opportunity
+          Create Opportunity
         </Button>
       </Box>
       <div style={{ overflowX: "auto", width: "100%" }}>
-        <MantineReactTable table={table} style={{ width: "100%", tableLayout: "auto" }}/>
+        <MantineReactTable table={table}  />
       </div>
     </div>
   );
