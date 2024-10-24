@@ -152,11 +152,17 @@ const OpportunitiesPage = () => {
                   fontWeight: 600,
                   display: "inline-flex",
                   alignItems: "center",
-                  gap: 8
+                  gap: 8,
+                  maxWidth: '100%', 
+                  overflow: 'visible', 
+                  whiteSpace: 'normal', 
+                  wordWrap: 'break-word', 
                 }}
               >
-                <IconLink size={16} /> https://one.aiesec.lk/opp/
-                {shortLinkInModal}
+                <IconLink size={16} /> 
+                <span style={{ flexShrink: 1, overflowWrap: 'break-word' }}>
+                  https://one.aiesec.lk/opp/ {shortLinkInModal}
+                </span>
               </span>
             ),
             required: true,
@@ -289,7 +295,8 @@ const OpportunitiesPage = () => {
       : undefined,
     mantineTableContainerProps: {
       style: {
-        minHeight: "500px"
+        minHeight: "500px",
+        overflowX: "auto"
       }
     },
     onCreatingRowCancel: resetInputs,
@@ -355,31 +362,37 @@ const OpportunitiesPage = () => {
     }
   });
 
+
   return (
-    <div className={classes.body}>
-      <Box
-        my={20}
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "space-between"
-        }}
-      >
-        <Title mt={8} mb={24} order={1} style={{ color: "#1C7ED6" }}>
-          Opportunities
-        </Title>
-        <Button
-          onClick={() => {
-            table.setCreatingRow(true);
-          }}
+      <div className={classes.body}>
+        <Box
+          className={classes.box}
         >
-          Create Opportunity
-        </Button>
-      </Box>
-      <div>
-        <MantineReactTable table={table} />
+          <Title
+            className={classes.title}
+            mt={8} 
+            mb={20}
+            ml={15} 
+            order={1} 
+            style={{ 
+              color: "#1C7ED6",
+            }}
+            >
+            Opportunities
+          </Title>
+          <Button
+            className={classes.button}
+            onClick={() => {
+              table.setCreatingRow(true);
+            }}
+          >
+            Create Opportunity
+          </Button>
+        </Box>
+        <div style={{ overflowX: "auto", width: "100%" }}>
+          <MantineReactTable table={table} style={{ width: '100%', tableLayout: 'auto' }}/>
+        </div>
       </div>
-    </div>
   );
 };
 
