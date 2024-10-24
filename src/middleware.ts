@@ -78,11 +78,11 @@ export async function middleware(request: NextRequest) {
   if (!session) {
     if (!isPersonIdPresent()) {
       console.log("SESSION");
-      const personId = await getPersonId(getAccessToken());
-      const userRole = await getCurrentPersonUserRole();
+      // const personId = await getPersonId(getAccessToken());
+      const { role, personId } = await getCurrentPersonUserRole();
       const sessionToken = await authService.generateAccessToken(
         personId.toString(),
-        userRole
+        role
       );
 
       response.cookies.set("session", sessionToken, {
@@ -98,7 +98,7 @@ export async function middleware(request: NextRequest) {
       response.cookies.delete("session");
 
       const personId = await getPersonId(getAccessToken());
-      const userType = await getCurrentPersonUserRole();
+      const { role: userType } = await getCurrentPersonUserRole();
       const sessionToken = await authService.generateAccessToken(
         personId.toString(),
         userType
