@@ -123,14 +123,14 @@ const ResourcesPage = () => {
                   display: "inline-flex",
                   alignItems: "center",
                   gap: 8,
-                  maxWidth: '100%', 
-                  overflow: 'visible', 
-                  whiteSpace: 'normal', 
-                  wordWrap: 'break-word', 
+                  maxWidth: "100%", 
+                  overflow: "visible", 
+                  whiteSpace: "normal", 
+                  wordWrap: "break-word", 
                 }}
               >
                 <IconLink size={16} /> 
-                <span style={{ flexShrink: 1, overflowWrap: 'break-word' }}>
+                <span style={{ flexShrink: 1, overflowWrap: "break-word" }}>
                   https://one.aiesec.lk/r/ {shortLinkInModal}
                 </span>
               </span>
@@ -248,9 +248,9 @@ const ResourcesPage = () => {
     getRowId: (row) => row._id,
     mantineToolbarAlertBannerProps: isLoadingResourcesError
       ? {
-          color: "red",
-          children: "Error loading data"
-        }
+        color: "red",
+        children: "Error loading data"
+      }
       : undefined,
     mantineTableContainerProps: {
       style: {
