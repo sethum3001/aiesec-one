@@ -6,7 +6,7 @@ import {
   OperationVariables,
   TypedDocumentNode
 } from "@apollo/client";
-import { getAccessToken } from "@/app/auth/auth-utils";
+import { getAccessToken } from "@/app/api/auth/auth-utils";
 
 const APOLLO_CLIENTS = new Map();
 

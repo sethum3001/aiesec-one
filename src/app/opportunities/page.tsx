@@ -40,40 +40,8 @@ import {
   shortLinkAvailability
 } from "@/hooks/opportunities";
 import { validateRequired, validateUrl } from "@/util/dataUtils";
-import { Router } from "next/router";
 import { useRouter } from "next/navigation";
-import { jwtVerify } from "jose";
-import { environment } from "@/config/env.config";
-import Cookies from "js-cookie";
-import authService from "../../services/auth.service";
-
-const getRoleFromSession = async (): Promise<string | null> => {
-  const token = Cookies.get("session");
-  if (!token) {
-    return null;
-  }
-
-  try {
-    const userType = await authService.verifyAccessToken(token);
-    return userType as string;
-  } catch (error) {
-    console.error("Invalid or expired token", error);
-    return null;
-  }
-};
-
-let userType = "MEMBER";
-
-getRoleFromSession()
-  .then((role) => {
-    console.log("USER ROLE : ", role);
-    userType = role || "MEMBER";
-    console.log("USER TYPE", userType);
-  })
-  .catch((error) => {
-    console.error("Error getting role:", error);
-    userType = "MEMBER";
-  });
+import { useAuth } from "@/hooks/useAuth";
 
 function validateOpportunity(
   opportunity: OpportunityResponse,
@@ -99,6 +67,7 @@ function validateOpportunity(
 }
 
 const OpportunitiesPage = () => {
+  const { userType, isLoading } = useAuth();
   const [fileInModal, setFileInModal] = React.useState<File>();
   const [validationErrors, setValidationErrors] = useState<
     Record<string, string | undefined>

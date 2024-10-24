@@ -5,8 +5,8 @@ import {
   isAccessTokenPresent,
   isLoggedIn,
   refreshAccessToken
-} from "./app/auth/auth-utils";
-import { GetTokenResponse } from "./app/auth/auth-types";
+} from "./app/api/auth/auth-utils";
+import { GetTokenResponse } from "./app/api/auth/auth-types";
 import {
   getCurrentPersonUserRole,
   getPersonId,
@@ -74,17 +74,43 @@ export async function middleware(request: NextRequest) {
     });
   }
 
-  if (!isPersonIdPresent()) {
-    const personId = await getPersonId(getAccessToken());
-    const session = authService.generateAccessToken(
-      personId.toString(),
-      await getCurrentPersonUserRole()
-    );
-    response.cookies.set("session", await session, {
-      httpOnly: false,
-      secure: true,
-      sameSite: "strict"
-    });
+  const session = request.cookies.get("session")?.value;
+  if (!session) {
+    if (!isPersonIdPresent()) {
+      const personId = await getPersonId(getAccessToken());
+      const userRole = await getCurrentPersonUserRole();
+      const sessionToken = await authService.generateAccessToken(
+        personId.toString(),
+        userRole
+      );
+
+      response.cookies.set("session", sessionToken, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "strict"
+      });
+    }
+  } else {
+    const userType = (await authService.verifyAccessToken(session)) as string;
+
+    if (!userType) {
+      response.cookies.delete("session");
+
+      const personId = await getPersonId(getAccessToken());
+      const userType = await getCurrentPersonUserRole();
+      const sessionToken = await authService.generateAccessToken(
+        personId.toString(),
+        userType
+      );
+
+      response.cookies.set("session", sessionToken, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "strict"
+      });
+    }
+
+    response.headers.set("x-user-type", userType);
   }
 
   return response;

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
-import { getAccessTokenFromOauth } from "../../app/auth/auth-utils";
-import { GetTokenResponse } from "../../app/auth/auth-types";
+import { getAccessTokenFromOauth } from "./auth-utils";
+import { GetTokenResponse } from "./auth-types";
 
 export async function GET(request: NextRequest) {
   const code: string = request.nextUrl.searchParams.get("code") as string;

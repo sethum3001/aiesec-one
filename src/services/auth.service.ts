@@ -8,26 +8,25 @@ const generateAccessToken = async (
 ): Promise<string> => {
   const secret = new TextEncoder().encode(environment.accessTokenSecret);
   const token = await new SignJWT({ userId, userType })
-    .setProtectedHeader({ alg: "HS256" }) // Set the signing algorithm
-    .setExpirationTime(environment.accessTokenExpiration) // Set expiration
-    .sign(secret); // Sign the token with the secret key
+    .setProtectedHeader({ alg: "HS256" })
+    .setExpirationTime(environment.accessTokenExpiration)
+    .sign(secret);
 
   return token;
 };
 
-// Function to verify an access token
 const verifyAccessToken = async (token: string) => {
   try {
     const secret = new TextEncoder().encode(environment.accessTokenSecret);
     const {
       payload: { userType }
-    } = await jwtVerify(token, secret); // Verify the token and get the payload
-    return userType; // Return the decoded token
+    } = await jwtVerify(token, secret);
+    return userType;
   } catch (error) {
     if (error instanceof errors.JWTExpired) {
-      return { decodedToken: null, error: "expired" }; // Handle expired token
+      return { decodedToken: null, error: "expired" };
     }
-    return { decodedToken: null, error: "invalid" }; // Handle invalid token
+    return { decodedToken: null, error: "invalid" };
   }
 };
 

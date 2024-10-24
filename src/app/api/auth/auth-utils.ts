@@ -1,5 +1,5 @@
 import { cookies } from "next/headers";
-import { GetTokenResponse } from "@/app/auth/auth-types";
+import { GetTokenResponse } from "@/app/api/auth/auth-types";
 
 export function isLoggedIn(): boolean {
   const accessToken = cookies().get("access_token");
