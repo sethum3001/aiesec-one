@@ -277,6 +277,7 @@ export async function getAccessibleEntitiesWithNames(): Promise<
 
 export async function getCurrentPersonUserRole() {
   let role = "MEMBER";
+  let personId = "";
   let isValidOffice = false;
 
   const query = gql`
@@ -304,6 +305,7 @@ export async function getCurrentPersonUserRole() {
   const queryResponse = await runQuery(query);
   console.log(queryResponse.currentPerson);
 
+  personId = queryResponse.currentPerson.id;
   for (const position of queryResponse.currentPerson.current_positions) {
     if (VALID_OFFICE_IDS.includes(position.office.id)) {
       console.log(position.office.id);
@@ -326,5 +328,5 @@ export async function getCurrentPersonUserRole() {
     }
   }
 
-  return role;
+  return { role, personId };
 }
