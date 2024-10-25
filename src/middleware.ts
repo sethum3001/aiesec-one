@@ -96,7 +96,6 @@ export async function middleware(request: NextRequest) {
 
     if (!userType) {
       response.cookies.delete("session");
-
       const { role, personId } = await getCurrentPersonUserRole();
       const sessionToken = await authService.generateAccessToken(
         personId.toString(),
