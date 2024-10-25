@@ -302,7 +302,8 @@ export async function getCurrentPersonUserRole() {
     }
   `;
 
-  const queryResponse = await runQuery(query);
+  const queryResponse = await runQuery(query, { fetchPolicy: "network-only" });
+
   console.log(queryResponse.currentPerson);
 
   personId = queryResponse.currentPerson.id;
