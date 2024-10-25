@@ -303,7 +303,6 @@ export async function getCurrentPersonUserRole() {
   `;
 
   const queryResponse = await runQuery(query);
-  console.log(queryResponse.currentPerson);
 
   personId = queryResponse.currentPerson.id;
   for (const position of queryResponse.currentPerson.current_positions) {
